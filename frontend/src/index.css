@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply min-h-screen;
+  }
+}
+
+/* ── 全局通知动画 ── */
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 text-white px-4 py-2.5 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-outline {
+    @apply border border-gray-300 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .input-field {
+    @apply w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all;
+  }
+}
+
+/* ── 移动端适配 ── */
+@media (max-width: 640px) {
+  .btn-primary, .btn-outline {
+    @apply py-3 text-sm min-h-[44px];
+  }
+  .input-field {
+    @apply py-3 text-base min-h-[44px];
+  }
+  .query-card { @apply !p-3; }
+  .reply-dialog { @apply !m-0 !rounded-none !max-w-full !h-full !flex !flex-col; }
+  .reply-dialog-content { @apply !flex-1; }
+  .table-responsive { @apply overflow-x-auto -mx-4 px-4; }
+  .modal-mobile { @apply !m-0 !rounded-none !max-w-full min-h-screen !h-auto; }
+}
+
+@media (max-width: 480px) {
+  .role-grid-3 { grid-template-columns: 1fr; }
+  .modal-mobile { @apply min-h-screen; }
+}
+
+/* ── 滚动条美化 ── */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}

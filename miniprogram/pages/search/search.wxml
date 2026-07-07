@@ -1,0 +1,55 @@
+<view class="search-page">
+  <!-- 分类 Tab -->
+  <scroll-view class="category-tabs" scroll-x>
+    <view class="tab-list">
+      <view wx:for="{{categories}}" wx:key="key" class="tab-item {{activeCategory === item.key ? 'active' : ''}}" data-key="{{item.key}}" bindtap="selectCategory">
+        <text>{{item.icon}} {{item.label}}</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 搜索框 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="输入始发港+目的港，如 CAN-SGN" value="{{keyword}}" bindinput="onKeywordInput" bindfocus="onFocus" bindblur="onBlur" confirm-type="search" bindconfirm="doSearch" />
+    <button class="btn-primary btn-search" bindtap="doSearch" disabled="{{loading}}">{{loading ? '搜索中' : '搜索'}}</button>
+  </view>
+
+  <!-- 搜索历史 -->
+  <view wx:if="{{showHistory && searchHistory.length > 0}}" class="search-history card">
+    <view class="history-header">
+      <text class="history-title">最近搜索</text>
+      <text class="clear-btn" bindtap="clearHistory">清空</text>
+    </view>
+    <view class="history-list">
+      <text wx:for="{{searchHistory}}" wx:key="index" class="history-item" data-kw="{{item}}" bindtap="selectHistory">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 加载 -->
+  <view wx:if="{{loading}}" class="loading-center"><text>搜索中...</text></view>
+
+  <!-- 推送提示 -->
+  <view wx:if="{{results && results.push_message}}" class="push-banner">{{results.push_message}}</view>
+
+  <!-- 结果列表 -->
+  <view wx:if="{{results && results.data && results.data.length > 0}}" class="result-list">
+    <view wx:for="{{results.data}}" wx:key="id" class="result-card card" data-item="{{item}}" bindtap="contactDialog">
+      <view class="route-row">
+        <text class="origin">{{item.origin_port || item.region}}</text>
+        <text class="arrow">→</text>
+        <text class="dest">{{item.dest_port || '?'}}</text>
+        <text wx:if="{{item.airline_code}}" class="tag tag-primary airline-tag">{{item.airline_code}}</text>
+      </view>
+      <text wx:if="{{item.notes}}" class="notes">{{item.notes}}</text>
+      <view class="meta">
+        <text wx:if="{{item.contact_info}}" class="contact">{{item.contact_info}}</text>
+        <text wx:if="{{item.valid_from}}" class="date">{{item.valid_from}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空结果 -->
+  <view wx:elif="{{results && results.data && results.data.length === 0 && !loading}}" class="empty-state">
+    <text>未找到匹配的推广信息</text>
+  </view>
+</view>

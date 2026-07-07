@@ -1,0 +1,16 @@
+<view style="padding:20rpx 24rpx;">
+  <text style="font-size:32rpx;font-weight:700;display:block;margin-bottom:8rpx;">🛡️ 风险代理查询</text>
+  <text style="font-size:24rpx;color:#6b7280;display:block;margin-bottom:20rpx;">管理员已确认的避雷公司名单，合作前请先查询。</text>
+
+  <input class="input-field" placeholder="输入公司名称搜索..." value="{{searchQuery}}" bindinput="onSearchInput" style="margin-bottom:20rpx;" />
+
+  <view wx:if="{{loading}}" class="loading-center"><text>加载中...</text></view>
+  <view wx:elif="{{alerts.length === 0}}" class="empty-state"><text>暂无避雷名单</text></view>
+  <view wx:else>
+    <text style="font-size:22rpx;color:#9ca3af;display:block;margin-bottom:12rpx;">共 {{alerts.length}} 家公司被列入避雷名单</text>
+    <view wx:for="{{filtered || alerts}}" wx:key="id" class="card" style="margin-bottom:12rpx;padding:20rpx;border-left:6rpx solid #dc2626;background:#fef2f2;">
+      <text style="font-weight:600;font-size:26rpx;color:#dc2626;display:block;margin-bottom:4rpx;">{{item.target_company}}</text>
+      <text style="font-size:24rpx;color:#b91c1c;">⚠️ 被 {{item.complaint_count}} 家公司投诉，存在严重风险</text>
+    </view>
+  </view>
+</view>

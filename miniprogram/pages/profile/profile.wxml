@@ -1,0 +1,37 @@
+<view class="profile-page">
+  <view style="display:flex;align-items:center;gap:24rpx;padding:32rpx 0;">
+    <view style="width:100rpx;height:100rpx;background:#1a56db;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:40rpx;font-weight:600;">
+      {{user?.display_name?.substring(0, 1) || '?'}}
+    </view>
+    <view style="flex:1;">
+      <text style="font-size:32rpx;font-weight:600;color:#1f2937;display:block;">{{user?.display_name || '未登录'}}</text>
+      <text style="font-size:26rpx;color:#6b7280;display:block;margin-top:4rpx;">{{user?.company_name || ''}}</text>
+      <text style="font-size:22rpx;color:#9ca3af;display:block;margin-top:4rpx;">
+        {{user?.role === 'forwarder' ? '货运代理' : user?.role === 'trader' ? '外贸行业' : user?.role === 'admin' ? '管理员' : ''}}
+      </text>
+    </view>
+  </view>
+
+  <view class="card" style="padding:0 24rpx;">
+    <view class="menu-item" bindtap="goComplaints" style="display:flex;justify-content:space-between;align-items:center;padding:24rpx 0;font-size:28rpx;">
+      <text>📢 吐槽专区</text><text style="color:#d1d5db;font-size:32rpx;">›</text>
+    </view>
+    <view class="menu-item" bindtap="goRisk" style="display:flex;justify-content:space-between;align-items:center;padding:24rpx 0;font-size:28rpx;border-top:2rpx solid #f3f4f6;">
+      <text>🛡️ 风险代理查询</text><text style="color:#d1d5db;font-size:32rpx;">›</text>
+    </view>
+  </view>
+
+  <view class="card" style="margin-top:16rpx;">
+    <view style="display:flex;justify-content:space-between;padding:16rpx 0;font-size:26rpx;">
+      <text style="color:#6b7280;">邮箱</text><text>{{user?.email || '--'}}</text>
+    </view>
+    <view style="display:flex;justify-content:space-between;padding:16rpx 0;font-size:26rpx;border-top:2rpx solid #f3f4f6;">
+      <text style="color:#6b7280;">手机号</text><text>{{user?.phone || '--'}}</text>
+    </view>
+    <view style="display:flex;justify-content:space-between;padding:16rpx 0;font-size:26rpx;border-top:2rpx solid #f3f4f6;">
+      <text style="color:#6b7280;">用户名</text><text>{{user?.username || '--'}}</text>
+    </view>
+  </view>
+
+  <button class="btn-outline" bindtap="logout" style="margin-top:40rpx;">退出登录</button>
+</view>

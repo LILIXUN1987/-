@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>123共享外贸物流社区 - 广告海报合集</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#f0f2f5;font-family:'PingFang SC','Microsoft YaHei',sans-serif;}
+
+/* 顶部导航 */
+.top-bar{background:#1a365d;color:#fff;padding:16px 20px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.15);}
+.top-bar h1{font-size:18px;font-weight:700;letter-spacing:2px;}
+.top-bar p{font-size:12px;opacity:0.7;margin-top:2px;}
+.nav-tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-tab{padding:5px 14px;border-radius:16px;font-size:11px;cursor:pointer;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);transition:all 0.2s;white-space:nowrap;}
+.nav-tab:hover{background:rgba(255,255,255,0.2);color:#fff;}
+.nav-tab.active{background:#fff;color:#1a365d;font-weight:600;}
+
+/* 海报容器 */
+.posters{max-width:620px;margin:20px auto;padding:0 10px;}
+.poster{display:none;}
+.poster.active{display:block;}
+.poster-inner{background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.12);margin-bottom:20px;}
+.poster-inner .header{position:relative;overflow:hidden;}
+
+/* 底部导航按钮 */
+.bottom-nav{display:flex;justify-content:space-between;gap:12px;margin-top:4px;margin-bottom:24px;}
+.bottom-nav button{flex:1;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.btn-prev{background:#e5e7eb;color:#374151;}
+.btn-prev:hover{background:#d1d5db;}
+.btn-next{background:#2563eb;color:#fff;}
+.btn-next:hover{background:#1d4ed8;}
+.page-dot{text-align:center;font-size:12px;color:#9ca3af;margin-bottom:8px;}
+
+/* 公用组件 */
+.tag{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:11px;margin-bottom:12px;backdrop-filter:blur(4px);}
+.header h1{font-size:28px;font-weight:700;letter-spacing:2px;line-height:1.3;}
+.header .sub{font-size:14px;opacity:0.8;margin-top:6px;line-height:1.5;}
+.body{padding:28px 32px;}
+.cta-btn{border-radius:14px;padding:16px;text-align:center;color:#fff;font-size:16px;font-weight:700;letter-spacing:1px;}
+.cta-btn span{font-size:12px;font-weight:400;opacity:0.8;display:block;margin-top:4px;}
+.footer{text-align:center;padding:14px;font-size:11px;color:#9ca3af;}
+
+/* 对比 */
+.before-after{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.ba-box{border-radius:12px;padding:16px;}
+.ba-box.before{background:#fef2f2;border:1px solid #fecaca;}
+.ba-box.after{background:#f0fdf4;border:1px solid #bbf7d0;}
+.ba-box .t{font-size:13px;font-weight:700;margin-bottom:8px;}
+.ba-box.before .t{color:#dc2626;}
+.ba-box.after .t{color:#16a34a;}
+.ba-box ul{list-style:none;font-size:12px;line-height:2;color:#374151;}
+.ba-box.before ul li::before{content:'✗ ';color:#dc2626;}
+.ba-box.after ul li::before{content:'✓ ';color:#16a34a;}
+
+/* 步骤 */
+.steps{background:#f8fafc;border-radius:12px;padding:20px;margin-bottom:20px;}
+.steps h3{font-size:13px;color:#1e293b;margin-bottom:12px;}
+.sr{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start;}
+.sn{width:24px;height:24px;background:#2563eb;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.st{font-size:12px;color:#374151;line-height:1.5;}
+
+/* 流程 */
+.flow{background:#f0fdf4;border:2px solid #bbf7d0;border-radius:14px;padding:20px;margin-bottom:24px;}
+.flow-title{font-size:13px;font-weight:700;color:#065f46;margin-bottom:12px;text-align:center;}
+.fs{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.fa{text-align:center;color:#059669;font-size:16px;padding:1px 0;}
+.fb{flex:1;background:#fff;border:1px solid #d1fae5;border-radius:8px;padding:10px 14px;font-size:12px;color:#374151;line-height:1.4;}
+.fi{width:28px;height:28px;background:#059669;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;}
+
+/* 统计卡片 */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.sc{border-radius:12px;padding:16px;text-align:center;}
+.sc.b{background:#eff6ff;border:1px solid #bfdbfe;}
+.sc.g{background:#f0fdf4;border:1px solid #bbf7d0;}
+.sc.p{background:#faf5ff;border:1px solid #e9d5ff;}
+.sc.a{background:#fffbeb;border:1px solid #fde68a;}
+.sc .num{font-size:28px;font-weight:800;}
+.sc.b .num{color:#2563eb;}
+.sc.g .num{color:#16a34a;}
+.sc.p .num{color:#7e22ce;}
+.sc.a .num{color:#d97706;}
+.sc .lb{font-size:12px;color:#6b7280;margin-top:2px;}
+
+/* 功能网格 */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.fc{border-radius:12px;padding:14px;border:1.5px solid #e5e7eb;}
+.fc .fi{font-size:20px;margin-bottom:4px;}
+.fc .ft{font-size:13px;font-weight:600;color:#1e293b;margin-bottom:2px;}
+.fc .fd{font-size:11px;color:#6b7280;line-height:1.5;}
+.bl{border-left:4px solid #2563eb;}
+.gn{border-left:4px solid #16a34a;}
+.pu{border-left:4px solid #7e22ce;}
+.am{border-left:4px solid #d97706;}
+.rd{border-left:4px solid #dc2626;}
+.te{border-left:4px solid #0d9488;}
+
+/* 通知卡片 */
+.nc{display:flex;gap:10px;margin-top:10px;}
+.nci{flex:1;background:#fff;border:1px solid #fde68a;border-radius:8px;padding:12px;text-align:center;}
+.nci .ico{font-size:20px;margin-bottom:2px;}
+.nci .lb{font-size:11px;color:#92400e;font-weight:600;}
+.nci .de{font-size:10px;color:#a16207;margin-top:2px;}
+
+/* 数据行 */
+.tr{display:flex;gap:10px;margin-bottom:6px;}
+.ti{flex:1;background:#f0fdf4;border:1px solid #d1fae5;border-radius:8px;padding:10px;}
+.ti .rt{font-size:13px;font-weight:700;color:#065f46;}
+.ti .mt{font-size:11px;color:#6b7280;margin-top:2px;}
+
+/* 流程(风控) */
+.cr{display:flex;flex-direction:column;align-items:center;margin-bottom:24px;}
+.ci{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid #e5e7eb;border-radius:10px;padding:12px 16px;width:100%;margin-bottom:2px;}
+.ci .n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.ci .n.r{background:#dc2626;}
+.ci .n.y{background:#d97706;}
+.ci .n.l{background:#ca8a04;}
+.ci .n.g{background:#16a34a;}
+.ci .ct{font-size:12px;color:#374151;flex:1;}
+.ca{color:#9ca3af;font-size:14px;padding:1px 0;}
+
+/* 自动跟进 */
+.tl{background:#f8fafc;border-radius:12px;padding:16px 18px;margin-bottom:20px;}
+.tl h3{font-size:13px;color:#1e3a5f;margin-bottom:10px;}
+.tlr{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;color:#475569;}
+.tlr .d{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.tlr .d.grn{background:#16a34a;}
+.tlr .d.blu{background:#2563eb;}
+.tlr .d.amb{background:#d97706;}
+
+/* 提示框 */
+.hb{background:#fffbeb;border:2px solid #fde68a;border-radius:12px;padding:16px;margin-bottom:20px;}
+.hb h3{font-size:13px;color:#92400e;margin-bottom:6px;}
+.hb p{font-size:12px;color:#78350f;line-height:1.7;}
+
+/* 特色数字 */
+.stats-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
+.sr-item{text-align:center;}
+.sr-item .num{font-size:24px;font-weight:800;color:#2563eb;}
+.sr-item .lb{font-size:11px;color:#6b7280;}
+
+/* 数据看板-对照 */
+.ask-box{background:#f8fafc;border-radius:12px;padding:16px;margin-bottom:20px;text-align:center;}
+.ask-box h3{font-size:14px;color:#1e293b;margin-bottom:10px;}
+.ask-row{display:flex;justify-content:center;gap:24px;font-size:12px;color:#475569;line-height:1.8;}
+.ask-row .q{color:#dc2626;font-weight:700;}
+.ask-row .a{color:#16a34a;font-weight:700;}
+
+@media(max-width:500px){
+  .body{padding:20px 16px;}
+  .header h1{font-size:22px;}
+  .before-after{grid-template-columns:1fr;}
+  .fg{grid-template-columns:1fr;}
+  .sg{grid-template-columns:1fr 1fr;}
+  .stats-row{gap:10px;}
+}
+
+/* 打印 */
+@media print{body{background:#fff;padding:0;}.top-bar{display:none;}.bottom-nav{display:none;}}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>⛵ 123共享外贸物流社区</h1>
+  <p>货代获客推广 · 广告海报合集</p>
+  <div class="nav-tabs" id="navTabs"></div>
+</div>
+
+<div class="posters" id="posters">
+
+<!-- 1. 快速录入 -->
+<div class="poster" data-title="快速录入">
+<div class="poster-inner">
+  <div class="header" style="background:linear-gradient(135deg,#1a365d,#2563eb);padding:36px 32px;color:#fff;">
+    <div class="tag">📢 货代推广新方式</div>
+    <h1>录一次，管一天<br>客户搜港口自己找上门</h1>
+    <div class="sub">不用再在微信群里刷屏了</div>
+  </div>
+  <div class="body">
+    <div class="before-after">
+      <div class="ba-box before"><div class="t">❌ 以前</div><ul><li>每天在10个群发同样内容</li><li>发完30秒被刷上去</li><li>客户搜不到你的信息</li></ul></div>
+      <div class="ba-box after"><div class="t">✅ 现在</div><ul><li>系统录一次全天展示</li><li>客户搜港口找到你</li><li>AI自动解析入库</li><li>每晚自动清空更新</li></ul></div>
+    </div>
+    <div class="steps">
+      <h3>📋 三步搞定</h3>
+      <div class="sr"><div class="sn">1</div><div class="st">输入舱位信息：<strong>「广州-LAX 下周大仓位 2000KG 12CBM 5元/KG」</strong></div></div>
+      <div class="sr"><div class="sn">2</div><div class="st">AI 自动解析为结构化数据，入库展示</div></div>
+      <div class="sr"><div class="sn">3</div><div class="st">客户搜「广州-洛杉矶」或「CAN-LAX」，你的推广就在那里</div></div>
+    </div>
+    <div style="background:#1e293b;color:#e2e8f0;border-radius:10px;padding:12px 16px;font-family:monospace;font-size:12px;line-height:1.6;margin-bottom:20px;">
+      📝 输入示例：<br>深圳NH-LAX 固定包板(BSA) D1/3/6 全程时效3-4天<br>可接带锂电 ▶收夏威夷 HNL / 洛杉矶 LAX 的货
+    </div>
+    <div class="cta-btn" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">免费入驻 · 立即发布<span>123共享外贸物流社区 · 货代获客新渠道</span></div>
+    <div class="footer">🛡️ 他不再被坑 · 您不再缺货</div>
+  </div>
+</div>
+</div>
+
+<!-- 2. 自动询价推送 -->
+<div class="poster" data-title="自动询价">
+<div class="poster-inner">
+  <div class="header" style="background:linear-gradient(135deg,#064e3b,#059669);padding:36px 32px;color:#fff;">
+    <div class="tag">🎯 精准获客</div>
+    <h1>客户搜港口<br>自动推到你的收件箱</h1>
+    <div class="sub">不用等客户加微信 · 不用群发求报价</div>
+  </div>
+  <div class="body">
+    <div class="flow">
+      <div class="flow-title">🔄 询价推送链路</div>
+      <div class="fs"><div class="fi">🔍</div><div class="fb">客户搜「广州-洛杉矶」并填写件数+重量+体积</div></div>
+      <div class="fa">⬇</div>
+      <div class="fs"><div class="fi">⚡</div><div class="fb">系统自动匹配你的推广信息</div></div>
+      <div class="fa">⬇</div>
+      <div class="fs"><div class="fi">📬</div><div class="fb">站内信 + 邮件双重通知到你的收件箱</div></div>
+      <div class="fa">⬇</div>
+      <div class="fs"><div class="fi">💬</div><div class="fb">你打开收件箱 → 直接回复客户 → 报价成交</div></div>
+    </div>
+    <div class="hb">
+      <h3>📬 你会收到的通知</h3>
+      <div class="nc">
+        <div class="nci"><div class="ico">📧</div><div class="lb">站内信</div><div class="de">「您的推广已获得精准匹配」</div></div>
+        <div class="nci"><div class="ico">📨</div><div class="lb">邮件</div><div class="de">「您有新的询价，请及时回复」</div></div>
+      </div>
+      <p style="font-size:10px;color:#a16207;text-align:center;margin-top:8px;">⚡ 首次对话发邮件，后续只发站内信，不打扰你</p>
+    </div>
+    <div class="fg">
+      <div class="fc gn"><div class="fi">🌍</div><div class="ft">全品类覆盖</div><div class="fd">空运/海运/陆运/快递</div></div>
+      <div class="fc bl"><div class="fi">🤖</div><div class="ft">智能匹配</div><div class="fd">自动识别港口和航线</div></div>
+      <div class="fc pu"><div class="fi">📊</div><div class="ft">数据跟踪</div><div class="fd">浏览数、询价数一目了然</div></div>
+      <div class="fc am"><div class="fi">🔔</div><div class="ft">实时通知</div><div class="fd">站内信+邮件双保险</div></div>
+    </div>
+    <div class="cta-btn" style="background:linear-gradient(135deg,#059669,#047857);">躺着也能接到询价<span>123共享外贸物流社区 · 精准匹配 · 自动推送</span></div>
+    <div class="footer">🛡️ 他不再被坑 · 您不再缺货</div>
+  </div>
+</div>
+</div>
+
+<!-- 3. 推广统计 -->
+<div class="poster" data-title="推广统计">
+<div class="poster-inner">
+  <div class="header" style="background:linear-gradient(135deg,#581c87,#7e22ce);padding:36px 32px;color:#fff;">
+    <div class="tag">📊 数据驱动</div>
+    <h1>你的推广效果<br>数据说话</h1>
+    <div class="sub">不再盲目刷屏 · 每条数据都看得见</div>
+  </div>
+  <div class="body">
+    <div class="sg">
+      <div class="sc b"><div class="num">28</div><div class="lb">推广总数</div></div>
+      <div class="sc g"><div class="num">22</div><div class="lb">有效推广</div></div>
+      <div class="sc p"><div class="num">156</div><div class="lb">累计浏览</div></div>
+      <div class="sc a"><div class="num">12</div><div class="lb">累计询价</div></div>
+    </div>
+    <div class="ask-box">
+      <h3>🤔 这些问题，数据来回答</h3>
+      <div class="ask-row"><div><span class="q">Q:</span> 我的推广有人看吗？<br><span class="a">A:</span> 累计浏览 156 次</div><div><span class="q">Q:</span> 哪个航线最热？<br><span class="a">A:</span> 广州-LAX 46次浏览</div></div>
+    </div>
+    <div style="background:#f0fdf4;border:2px solid #bbf7d0;border-radius:12px;padding:16px;margin-bottom:20px;">
+      <h3 style="font-size:13px;color:#065f46;margin-bottom:10px;">📈 航线维度分析</h3>
+      <div class="tr"><div class="ti"><div class="rt">广州 → LAX</div><div class="mt">👁️ 46次浏览 · 💬 3次询价 · 6.5%转化</div></div><div class="ti"><div class="rt">深圳 → SGN</div><div class="mt">👁️ 32次浏览 · 💬 2次询价 · 6.3%转化</div></div></div>
+      <div class="tr"><div class="ti"><div class="rt">上海 → FRA</div><div class="mt">👁️ 18次浏览 · 💬 1次询价 · 5.6%转化</div></div><div class="ti"><div class="rt">广州 → DAC</div><div class="mt">👁️ 12次浏览 · 💬 0次询价</div></div></div>
+    </div>
+    <div class="cta-btn" style="background:linear-gradient(135deg,#7e22ce,#581c87);">用数据说话，不再盲打<span>123共享外贸物流社区 · 我的推广统计</span></div>
+    <div class="footer">🛡️ 他不再被坑 · 您不再缺货</div>
+  </div>
+</div>
+</div>
+
+<!-- 4. 行业口碑风控 -->
+<div class="poster" data-title="行业口碑">
+<div class="poster-inner">
+  <div class="header" style="background:linear-gradient(135deg,#7f1d1d,#dc2626);padding:36px 32px;color:#fff;">
+    <div class="tag">🛡️ 行业自律</div>
+    <h1>合作前先搜一搜<br>不再被不诚信货代坑</h1>
+    <div class="sub">行业黑名单共享 · 全员避雷警告</div>
+  </div>
+  <div class="body">
+    <div class="cr">
+      <div class="ci"><div class="n r">1</div><div class="ct">遇到不诚信合作方 ➜ 在「吐槽专区」发布投诉</div></div><div class="ca">⬇</div>
+      <div class="ci"><div class="n y">2</div><div class="ct">同一公司被 ≥2 家不同公司投诉 ➜ 系统自动预警</div></div><div class="ca">⬇</div>
+      <div class="ci"><div class="n l">3</div><div class="ct">管理员审核批准 ➜ 全员弹窗避雷警告</div></div><div class="ca">⬇</div>
+      <div class="ci"><div class="n g">4</div><div class="ct">全员看到黑名单 ➜ 合作前先搜一搜</div></div>
+    </div>
+    <div class="hb" style="background:#fef2f2;border-color:#fecaca;">
+      <h3 style="color:#991b1b;">⚠️ 真实案例</h3>
+      <p style="color:#7f1d1d;">某货代公司被 3 家外贸公司投诉——拖货、乱收费、失联。<br>系统累计 5 条投诉后触发风控 → 管理员审核批准 →<strong>全员收到避雷弹窗：该公司已被标记为高风险。</strong></p>
+    </div>
+    <div class="fg">
+      <div class="fc rd"><div class="fi">🔍</div><div class="ft">合作前查口碑</div><div class="fd">搜公司名，看有无被投诉</div></div>
+      <div class="fc am"><div class="fi">📢</div><div class="ft">一键发吐槽</div><div class="fd">遇到坑，帮他人避雷</div></div>
+      <div class="fc gn"><div class="fi">🏢</div><div class="ft">诚信受益</div><div class="fd">好货代更受信任</div></div>
+      <div class="fc pu"><div class="fi">🛡️</div><div class="ft">全员避雷</div><div class="fd">≥5投诉 → 全员警告</div></div>
+    </div>
+    <div class="cta-btn" style="background:linear-gradient(135deg,#dc2626,#991b1b);">诚信经营 · 口碑共享<span>123共享外贸物流社区 · 吐槽专区 · 风控中心</span></div>
+    <div class="footer">🛡️ 他不再被坑 · 您不再缺货</div>
+  </div>
+</div>
+</div>
+
+<!-- 5. 展会批量导入 -->
+<div class="poster" data-title="批量导入">
+<div class="poster-inner">
+  <div class="header" style="background:linear-gradient(135deg,#1e3a5f,#0369a1);padding:36px 32px;color:#fff;">
+    <div class="tag">📇 展会神器</div>
+    <h1>收了一百张名片？<br>一键批量导入</h1>
+    <div class="sub">系统自动创建账号 + 发送邮件通知 + 自动跟进提醒</div>
+  </div>
+  <div class="body">
+    <div class="before-after">
+      <div class="ba-box before"><div class="t">❌ 以前</div><ul><li>一张一张手动注册</li><li>每张要填邮箱验证码</li><li>注册完还要微信通知</li><li>没登录的忘记了就忘了</li></ul></div>
+      <div class="ba-box after"><div class="t">✅ 现在</div><ul><li>Excel 批量导入</li><li>一键创建所有账号</li><li>自动发邮件通知</li><li>未登录自动提醒跟进</li></ul></div>
+    </div>
+    <div class="steps">
+      <h3>📋 操作步骤</h3>
+      <div class="sr"><div class="sn">1</div><div class="st">整理名片到 Excel：姓名 | 公司名 | 手机号 | 邮箱</div></div>
+      <div class="sr"><div class="sn">2</div><div class="st">上传 Excel → 系统自动处理</div></div>
+      <div class="sr"><div class="sn">3</div><div class="st">每个邮箱自动收到开通通知（含用户名+密码）</div></div>
+      <div class="sr"><div class="sn">4</div><div class="st">系统自动跟进未登录用户</div></div>
+    </div>
+    <div class="tl">
+      <h3>⏰ 自动跟进时间线</h3>
+      <div class="tlr"><div class="d grn"></div><strong>开通当天</strong> — 邮件通知：账号已开通，用户名+密码</div>
+      <div class="tlr"><div class="d blu"></div><strong>3天后未登录</strong> — 再次邮件提醒</div>
+      <div class="tlr"><div class="d amb"></div><strong>之后每7天</strong> — 持续提醒，直到用户登录</div>
+    </div>
+    <div class="cta-btn" style="background:linear-gradient(135deg,#0369a1,#1e3a5f);">📤 展会名片批量导入<span>123共享外贸物流社区 · 管理员后台一键操作</span></div>
+    <div class="footer">🛡️ 他不再被坑 · 您不再缺货</div>
+  </div>
+</div>
+</div>
+
+<!-- 6. 完整功能介绍 -->
+<div class="poster" data-title="功能介绍">
+<div class="poster-inner">
+  <div class="header" style="background:linear-gradient(135deg,#1a365d,#2563eb,#1d4ed8);padding:36px 32px;color:#fff;text-align:center;">
+    <div style="font-size:36px;margin-bottom:6px;">⛵</div>
+    <h1 style="font-size:24px;">123 共享外贸物流社区</h1>
+    <div class="sub" style="letter-spacing:2px;">货代获客 · 外贸查舱 · 行业口碑</div>
+  </div>
+  <div class="body">
+    <div class="fg">
+      <div class="fc bl"><div class="fi">📢</div><div class="ft">快速录入推广</div><div class="fd">自然语言输入，AI自动解析入库。每晚自动清空更新。</div></div>
+      <div class="fc gn"><div class="fi">🎯</div><div class="ft">客户主动询价</div><div class="fd">搜港口→匹配推广→站内信+邮件推送</div></div>
+      <div class="fc pu"><div class="fi">📊</div><div class="ft">推广效果统计</div><div class="fd">每条航线浏览数、询价数、转化率一目了然</div></div>
+      <div class="fc am"><div class="fi">🏢</div><div class="ft">企业认证</div><div class="fd">营业执照审核认证，客户更信任，询价率翻倍</div></div>
+      <div class="fc rd"><div class="fi">🛡️</div><div class="ft">吐槽专区·风控</div><div class="fd">行业黑名单共享，不诚信公司全员避雷警告</div></div>
+      <div class="fc te"><div class="fi">💬</div><div class="ft">站内信沟通</div><div class="fd">客户询价直达收件箱，不用加微信直接沟通</div></div>
+    </div>
+    <div class="stats-row">
+      <div class="sr-item"><div class="num">10+</div><div class="lb">推广品类</div></div>
+      <div class="sr-item"><div class="num">1000+</div><div class="lb">港口/城市覆盖</div></div>
+      <div class="sr-item"><div class="num" style="font-size:22px;">📨</div><div class="lb">站内信+邮件</div></div>
+      <div class="sr-item"><div class="num" style="font-size:22px;">🔄</div><div class="lb">每日更新</div></div>
+    </div>
+    <div class="cta-btn" style="background:linear-gradient(135deg,#1e40af,#1d4ed8);">🎯 免费入驻 · 立即注册<span>123共享外贸物流社区 · 货代获客新渠道</span></div>
+    <div class="footer">🛡️ 他不再被坑 · 您不再缺货 · 共建诚信物流社区</div>
+  </div>
+</div>
+</div>
+
+</div>
+
+<!-- 底部导航 -->
+<div style="max-width:620px;margin:0 auto;padding:0 10px;">
+  <div class="page-dot" id="pageDot">1 / 6</div>
+  <div class="bottom-nav">
+    <button class="btn-prev" id="prevBtn">◀ 上一张</button>
+    <button class="btn-next" id="nextBtn">下一张 ▶</button>
+  </div>
+</div>
+
+<script>
+const posters = document.querySelectorAll('.poster');
+const tabs = document.getElementById('navTabs');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const pageDot = document.getElementById('pageDot');
+let current = 0;
+
+function show(idx) {
+  if (idx < 0) idx = posters.length - 1;
+  if (idx >= posters.length) idx = 0;
+  current = idx;
+  posters.forEach((p, i) => {
+    p.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.nav-tab').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+  pageDot.textContent = (idx + 1) + ' / ' + posters.length;
+  posters[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// 生成导航标签
+posters.forEach((p, i) => {
+  const btn = document.createElement('div');
+  btn.className = 'nav-tab' + (i === 0 ? ' active' : '');
+  btn.textContent = p.dataset.title;
+  btn.onclick = () => show(i);
+  tabs.appendChild(btn);
+});
+
+prevBtn.onclick = () => show(current - 1);
+nextBtn.onclick = () => show(current + 1);
+
+// 键盘左右键
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') show(current - 1);
+  if (e.key === 'ArrowRight') show(current + 1);
+});
+</script>
+
+</body>
+</html>

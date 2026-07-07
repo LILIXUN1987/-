@@ -1,0 +1,16 @@
+<view style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:60rpx 40rpx;background:linear-gradient(135deg,#eff6ff 0%,#e8effd 100%);">
+  <view style="text-align:center;max-width:600rpx;">
+    <view style="font-size:100rpx;margin-bottom:20rpx;">🚢</view>
+    <text style="font-size:40rpx;font-weight:700;color:#1f2937;display:block;">123共享外贸物流社区</text>
+    <text style="font-size:26rpx;color:#6b7280;margin-top:16rpx;display:block;line-height:1.6;">国际物流行业内部货代+外贸免费沟通平台</text>
+    <view style="margin:40rpx 0;text-align:left;">
+      <view style="padding:16rpx 0;font-size:28rpx;color:#374151;">🔍 秒查全球口岸舱位价格</view>
+      <view style="padding:16rpx 0;font-size:28rpx;color:#374151;">📢 不再复制粘贴发微信好友</view>
+      <view style="padding:16rpx 0;font-size:28rpx;color:#374151;">🛡️ 合作前查口碑避免踩坑</view>
+    </view>
+    <view style="margin-top:40rpx;">
+      <button class="btn-primary" bindtap="goLogin">去登录</button>
+      <button class="btn-outline" bindtap="goRegister" style="margin-top:20rpx;">去注册</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,1132 @@
+[
+  {
+    "code": "AA",
+    "en": "American Airlines",
+    "zh": "美国美洲航空"
+  },
+  {
+    "code": "2G",
+    "en": "Cargo Italia",
+    "zh": "意大利货运航空"
+  },
+  {
+    "code": "CO",
+    "en": "Continental Airlines",
+    "zh": "美国大陆航空公司"
+  },
+  {
+    "code": "DL",
+    "en": "Delta AirLines",
+    "zh": "美国达美航空公司"
+  },
+  {
+    "code": "NW",
+    "en": "North West Airlines",
+    "zh": "美国西北航空"
+  },
+  {
+    "code": "AC",
+    "en": "Air Canada",
+    "zh": "加拿大航空"
+  },
+  {
+    "code": "UA",
+    "en": "United Airlines",
+    "zh": "美国联合航空"
+  },
+  {
+    "code": "CP",
+    "en": "Canadian Airlines Int'l",
+    "zh": "加拿大国际航空公司"
+  },
+  {
+    "code": "LH",
+    "en": "Lufthansa",
+    "zh": "德国汉莎航空"
+  },
+  {
+    "code": "FX",
+    "en": "Fedex Airline",
+    "zh": "美国联邦航空"
+  },
+  {
+    "code": "AS",
+    "en": "Alaska Airlines",
+    "zh": "阿拉斯加航空公司"
+  },
+  {
+    "code": "US",
+    "en": "US Airways",
+    "zh": "美国航空"
+  },
+  {
+    "code": "RG",
+    "en": "Varig",
+    "zh": "里约格朗德"
+  },
+  {
+    "code": "KA",
+    "en": "Dragon Air",
+    "zh": "港龙航空"
+  },
+  {
+    "code": "LA",
+    "en": "Lan Cargo",
+    "zh": "智利航空"
+  },
+  {
+    "code": "TP",
+    "en": "TAP AIR PORTUQAL",
+    "zh": "TAP葡萄牙航空"
+  },
+  {
+    "code": "CY",
+    "en": "Cyprus Airways",
+    "zh": "塞浦路斯航空公司"
+  },
+  {
+    "code": "OA",
+    "en": "Olympic Airways",
+    "zh": "奥林匹克航空公司"
+  },
+  {
+    "code": "AZ",
+    "en": "Alitalia",
+    "zh": "意大利航空公司"
+  },
+  {
+    "code": "AF",
+    "en": "Air France",
+    "zh": "法国航空"
+  },
+  {
+    "code": "IC",
+    "en": "INDIAN AIRLINES",
+    "zh": "印度航空公司"
+  },
+  {
+    "code": "OK",
+    "en": "Czech Airlines",
+    "zh": "捷克航空公司"
+  },
+  {
+    "code": "SV",
+    "en": "Saudi Arabia Airlines",
+    "zh": "沙特阿拉伯航空公司"
+  },
+  {
+    "code": "RB",
+    "en": "Syrian Arab Airlines",
+    "zh": "叙利亚阿拉伯航空公司"
+  },
+  {
+    "code": "ET",
+    "en": "Ethiopian airlines",
+    "zh": "埃塞俄比亚航空"
+  },
+  {
+    "code": "KL",
+    "en": "KLM CARGO",
+    "zh": "荷兰皇家航空"
+  },
+  {
+    "code": "ME",
+    "en": "Middle East Airlines",
+    "zh": "中东航空公司"
+  },
+  {
+    "code": "MS",
+    "en": "Egyptair airlines",
+    "zh": "航空"
+  },
+  {
+    "code": "PO",
+    "en": "Polar air cargo",
+    "zh": "美国博立航空"
+  },
+  {
+    "code": "QF",
+    "en": "Qantas",
+    "zh": "澳大利亚快达航空"
+  },
+  {
+    "code": "SA",
+    "en": "South African Airways",
+    "zh": "南非航空公司"
+  },
+  {
+    "code": "NZ",
+    "en": "Air New Zealand",
+    "zh": "新西兰航空"
+  },
+  {
+    "code": "IR",
+    "en": "Iran air",
+    "zh": "伊朗航空公司"
+  },
+  {
+    "code": "PR",
+    "en": "Philippine airlines",
+    "zh": "菲律宾航空公司"
+  },
+  {
+    "code": "AI",
+    "en": "Air India",
+    "zh": "印度航空"
+  },
+  {
+    "code": "AY",
+    "en": "Finnair cargo",
+    "zh": "芬兰航空"
+  },
+  {
+    "code": "CK",
+    "en": "China Cargo Airlines",
+    "zh": "中国货运航空公司"
+  },
+  {
+    "code": "LY",
+    "en": "El al cargo",
+    "zh": "以色列航空"
+  },
+  {
+    "code": "JU",
+    "en": "Jugoslovenski Aerotransport",
+    "zh": "南斯拉夫航空运输公司"
+  },
+  {
+    "code": "SK",
+    "en": "Sas airlines",
+    "zh": "北欧航空"
+  },
+  {
+    "code": "JS",
+    "en": "Air koryo",
+    "zh": "朝鲜航空公司"
+  },
+  {
+    "code": "AH",
+    "en": "Air algerie",
+    "zh": "阿尔及利亚航空"
+  },
+  {
+    "code": "BA",
+    "en": "British airways",
+    "zh": "英国航空"
+  },
+  {
+    "code": "GA",
+    "en": "Garuda indonesia",
+    "zh": "印尼航空"
+  },
+  {
+    "code": "MP",
+    "en": "Martinair Cargo",
+    "zh": "荷兰马丁航空"
+  },
+  {
+    "code": "JL",
+    "en": "Japan airlines",
+    "zh": "日本航空"
+  },
+  {
+    "code": "MX",
+    "en": "Mexicana",
+    "zh": "墨西哥"
+  },
+  {
+    "code": "AM",
+    "en": "Aeromexico Airlines",
+    "zh": "墨西哥航空公司"
+  },
+  {
+    "code": "AT",
+    "en": "Royal Air Maroc",
+    "zh": "摩洛哥皇家航空"
+  },
+  {
+    "code": "QR",
+    "en": "Qatar airways",
+    "zh": "卡塔尔航空"
+  },
+  {
+    "code": "CX",
+    "en": "Cathay pacific cargo",
+    "zh": "国泰航空公司"
+  },
+  {
+    "code": "3V",
+    "en": "TNT Airways",
+    "zh": "TNT航空公司"
+  },
+  {
+    "code": "UM",
+    "en": "Air zimbabwe",
+    "zh": "津巴布韦航空"
+  },
+  {
+    "code": "CV",
+    "en": "Cargolux airlines",
+    "zh": "卢森堡航空"
+  },
+  {
+    "code": "EK",
+    "en": "Emirates",
+    "zh": "阿联酋航空"
+  },
+  {
+    "code": "KE",
+    "en": "Korean air",
+    "zh": "大韩航空"
+  },
+  {
+    "code": "DW",
+    "en": "Aero-Charter",
+    "zh": "乌克兰航空货运"
+  },
+  {
+    "code": "JI",
+    "en": "Jade Cargo Int'l",
+    "zh": "翡翠国际货运"
+  },
+  {
+    "code": "FV",
+    "en": "Pulkovo aviation enterprise",
+    "zh": "俄罗斯普尔科沃航空"
+  },
+  {
+    "code": "NH",
+    "en": "Ana all nippon airways",
+    "zh": "全日空航空"
+  },
+  {
+    "code": "PK",
+    "en": "Pakistan international airlines",
+    "zh": "巴基斯坦航空公司"
+  },
+  {
+    "code": "TG",
+    "en": "Thai airway",
+    "zh": "泰国航空"
+  },
+  {
+    "code": "MH",
+    "en": "Maskargo",
+    "zh": "马来西亚航空"
+  },
+  {
+    "code": "JD",
+    "en": "Japan Air System",
+    "zh": "日本航空系统"
+  },
+  {
+    "code": "TK",
+    "en": "Turkey airlines",
+    "zh": "土耳其航空"
+  },
+  {
+    "code": "HY",
+    "en": "Uzbekistan airways",
+    "zh": "乌兹别克斯坦航空"
+  },
+  {
+    "code": "OS",
+    "en": "Austrian cargo",
+    "zh": "奥地利航空"
+  },
+  {
+    "code": "EF",
+    "en": "Far Eastern Air Transport",
+    "zh": "英远东航空运输"
+  },
+  {
+    "code": "XF",
+    "en": "Vladivostok air",
+    "zh": "海参崴航空"
+  },
+  {
+    "code": "LD",
+    "en": "Air HongKong",
+    "zh": "香港航空"
+  },
+  {
+    "code": "OM",
+    "en": "Mongolian airlines",
+    "zh": "蒙古航空公司"
+  },
+  {
+    "code": "CI",
+    "en": "China Airlines",
+    "zh": "中华航空公司"
+  },
+  {
+    "code": "5S",
+    "en": "Global Aviation and Services",
+    "zh": "全球航空服务"
+  },
+  {
+    "code": "SC",
+    "en": "ShanDong Airlines",
+    "zh": "山东航空"
+  },
+  {
+    "code": "JW",
+    "en": "ARROW AIR",
+    "zh": "箭航"
+  },
+  {
+    "code": "5X",
+    "en": "UPS Air Cargo",
+    "zh": "UPS"
+  },
+  {
+    "code": "VI",
+    "en": "Airbridge Cargo",
+    "zh": "伏尔加航空"
+  },
+  {
+    "code": "S7",
+    "en": "Siberia airlines",
+    "zh": "新西伯利亚航空"
+  },
+  {
+    "code": "ER",
+    "en": "DHL",
+    "zh": "敦豪航空"
+  },
+  {
+    "code": "KC",
+    "en": "Air astana",
+    "zh": "哈萨克斯坦航空"
+  },
+  {
+    "code": "ZH",
+    "en": "Shenzhen Airlines",
+    "zh": "深圳航空"
+  },
+  {
+    "code": "8V",
+    "en": "Astral Aviation",
+    "zh": "星际航空"
+  },
+  {
+    "code": "E3",
+    "en": "Domodedovo airlines",
+    "zh": "多莫迪多沃航空"
+  },
+  {
+    "code": "7B",
+    "en": "Krasnoyarsk airlines",
+    "zh": "克拉斯诺雅茨克航空"
+  },
+  {
+    "code": "SU",
+    "en": "Aeroflot",
+    "zh": "俄罗斯航空"
+  },
+  {
+    "code": "WN",
+    "en": "Southwest Airlines",
+    "zh": "西南航空公司"
+  },
+  {
+    "code": "T5",
+    "en": "Turkmenistan airlines",
+    "zh": "土库曼斯坦航空"
+  },
+  {
+    "code": "RU",
+    "en": "Airbridge cargo",
+    "zh": "伏尔加第聂伯航空"
+  },
+  {
+    "code": "9W",
+    "en": "Jet Airways (India) Limited",
+    "zh": "印度杰特航空公司"
+  },
+  {
+    "code": "UL",
+    "en": "Srilankan airlines",
+    "zh": "斯里兰卡航空公司"
+  },
+  {
+    "code": "EY",
+    "en": "Etihad cristal cargo",
+    "zh": "阿联酋阿提哈德航空"
+  },
+  {
+    "code": "SQ",
+    "en": "Singapore airlines",
+    "zh": "新加坡航空"
+  },
+  {
+    "code": "BT",
+    "en": "AIR BALTIC",
+    "zh": "波罗的海航空"
+  },
+  {
+    "code": "NX",
+    "en": "Air macau",
+    "zh": "澳门航空"
+  },
+  {
+    "code": "BR",
+    "en": "EVA AIRWAYS",
+    "zh": "长荣航空"
+  },
+  {
+    "code": "5C",
+    "en": "CAL Cargo Airlines",
+    "zh": "华航货运航空公司"
+  },
+  {
+    "code": "KQ",
+    "en": "Kenya Airways",
+    "zh": "肯尼亚航空公司"
+  },
+  {
+    "code": "LX",
+    "en": "Swiss International Air Lines",
+    "zh": "瑞士国际航空公司"
+  },
+  {
+    "code": "MF",
+    "en": "XiaMen Airlines",
+    "zh": "厦门航空"
+  },
+  {
+    "code": "VN",
+    "en": "Vietnam airlines",
+    "zh": "越南航空公司"
+  },
+  {
+    "code": "MU",
+    "en": "China eastern",
+    "zh": "中国东方航空"
+  },
+  {
+    "code": "CZ",
+    "en": "China southern",
+    "zh": "中国南方航空"
+  },
+  {
+    "code": "GD",
+    "en": "Grandstar Cargo Int'l Airlines Co. Ltd",
+    "zh": "银河国际货运航空有限公司"
+  },
+  {
+    "code": "8Y",
+    "en": "China postal airlines",
+    "zh": "中国邮政航空"
+  },
+  {
+    "code": "KN",
+    "en": "China United Airlines",
+    "zh": "中国联航"
+  },
+  {
+    "code": "D7",
+    "en": "AIRASIA",
+    "zh": "亚航"
+  },
+  {
+    "code": "N8",
+    "en": "Hong Kong Airlines",
+    "zh": "香港航空"
+  },
+  {
+    "code": "VV",
+    "en": "Aerosvit airlines",
+    "zh": "乌克兰航空"
+  },
+  {
+    "code": "Y8",
+    "en": "Yangtze River Express Co. Ltd",
+    "zh": "扬子江快运航空有限公司"
+  },
+  {
+    "code": "3U",
+    "en": "SiChuan Airlines",
+    "zh": "四川航空"
+  },
+  {
+    "code": "HU",
+    "en": "Hainan airlines cargo",
+    "zh": "海南航空"
+  },
+  {
+    "code": "QN",
+    "en": "Air Armenia",
+    "zh": "亚美尼亚航空"
+  },
+  {
+    "code": "VS",
+    "en": "Virgin Atlantic Airways Ltd",
+    "zh": "维珍航空公司"
+  },
+  {
+    "code": "KZ",
+    "en": "Nippon cargo airlines",
+    "zh": "日本货物航空"
+  },
+  {
+    "code": "OZ",
+    "en": "Asiana airlines",
+    "zh": "韩亚航空"
+  },
+  {
+    "code": "IJ",
+    "en": "Great Wall Airlines",
+    "zh": "长城航空"
+  },
+  {
+    "code": "D5",
+    "en": "DHL AERO EXPRESO",
+    "zh": "敦豪航空快报"
+  },
+  {
+    "code": "UX",
+    "en": "AIR EUROPA CARGO",
+    "zh": "欧洲货运航空"
+  },
+  {
+    "code": "CA",
+    "en": "Air china",
+    "zh": "中国国际航空"
+  },
+  {
+    "code": "EMS",
+    "en": "EMS",
+    "zh": "全球邮政特快专递"
+  },
+  {
+    "code": "HO",
+    "en": "Juneyao Airlines",
+    "zh": "吉祥航空"
+  },
+  {
+    "code": "FM",
+    "en": "Shanghai Airlines",
+    "zh": "上海航空"
+  },
+  {
+    "code": "9C",
+    "en": "Spring Airlines",
+    "zh": "春秋航空"
+  },
+  {
+    "code": "GS",
+    "en": "Tianjin Airlines",
+    "zh": "天津航空"
+  },
+  {
+    "code": "PN",
+    "en": "West Air (China)",
+    "zh": "西部航空"
+  },
+  {
+    "code": "G5",
+    "en": "China Express Airlines",
+    "zh": "华夏航空"
+  },
+  {
+    "code": "BK",
+    "en": "Okay Airways",
+    "zh": "奥凯航空"
+  },
+  {
+    "code": "KY",
+    "en": "Kunming Airlines",
+    "zh": "昆明航空"
+  },
+  {
+    "code": "GJ",
+    "en": "Loong Air",
+    "zh": "长龙航空"
+  },
+  {
+    "code": "EU",
+    "en": "Chengdu Airlines",
+    "zh": "成都航空"
+  },
+  {
+    "code": "NS",
+    "en": "Hebei Airlines",
+    "zh": "河北航空"
+  },
+  {
+    "code": "FU",
+    "en": "Fuzhou Airlines",
+    "zh": "福州航空"
+  },
+  {
+    "code": "UQ",
+    "en": "Urumqi Air",
+    "zh": "乌鲁木齐航空"
+  },
+  {
+    "code": "DR",
+    "en": "Ruili Airlines",
+    "zh": "瑞丽航空"
+  },
+  {
+    "code": "TV",
+    "en": "Tibet Airlines",
+    "zh": "西藏航空"
+  },
+  {
+    "code": "QW",
+    "en": "Qingdao Airlines",
+    "zh": "青岛航空"
+  },
+  {
+    "code": "YG",
+    "en": "YTO Cargo Airlines",
+    "zh": "圆通航空"
+  },
+  {
+    "code": "GT",
+    "en": "Air Guilin",
+    "zh": "桂林航空"
+  },
+  {
+    "code": "GX",
+    "en": "GX Airlines",
+    "zh": "北部湾航空"
+  },
+  {
+    "code": "HT",
+    "en": "Tianjin Air Cargo",
+    "zh": "天津货运航空"
+  },
+  {
+    "code": "8L",
+    "en": "Lucky Air",
+    "zh": "祥鹏航空"
+  },
+  {
+    "code": "AQ",
+    "en": "9 Air",
+    "zh": "九元航空"
+  },
+  {
+    "code": "A6",
+    "en": "Air Travel / Hongtu Airlines",
+    "zh": "湖南航空"
+  },
+  {
+    "code": "RY",
+    "en": "Jiangxi Air",
+    "zh": "江西航空"
+  },
+  {
+    "code": "JR",
+    "en": "Joy Air",
+    "zh": "幸福航空"
+  },
+  {
+    "code": "HX",
+    "en": "Hong Kong Airlines",
+    "zh": "香港航空"
+  },
+  {
+    "code": "UO",
+    "en": "Hong Kong Express",
+    "zh": "香港快运航空"
+  },
+  {
+    "code": "RH",
+    "en": "Hong Kong Air Cargo",
+    "zh": "香港货运航空"
+  },
+  {
+    "code": "AE",
+    "en": "Mandarin Airlines",
+    "zh": "华信航空"
+  },
+  {
+    "code": "B7",
+    "en": "UNI Air",
+    "zh": "立荣航空"
+  },
+  {
+    "code": "6E",
+    "en": "IndiGo",
+    "zh": "靛蓝航空"
+  },
+  {
+    "code": "BG",
+    "en": "Biman Bangladesh Airlines",
+    "zh": "孟加拉航空"
+  },
+  {
+    "code": "BI",
+    "en": "Royal Brunei Airlines",
+    "zh": "文莱皇家航空"
+  },
+  {
+    "code": "GF",
+    "en": "Gulf Air",
+    "zh": "海湾航空"
+  },
+  {
+    "code": "KU",
+    "en": "Kuwait Airways",
+    "zh": "科威特航空"
+  },
+  {
+    "code": "WY",
+    "en": "Oman Air",
+    "zh": "阿曼航空"
+  },
+  {
+    "code": "FJ",
+    "en": "Fiji Airways",
+    "zh": "斐济航空"
+  },
+  {
+    "code": "AK",
+    "en": "AirAsia",
+    "zh": "亚洲航空"
+  },
+  {
+    "code": "FD",
+    "en": "Thai AirAsia",
+    "zh": "泰国亚洲航空"
+  },
+  {
+    "code": "QZ",
+    "en": "Indonesia AirAsia",
+    "zh": "印尼亚洲航空"
+  },
+  {
+    "code": "TR",
+    "en": "Scoot",
+    "zh": "酷航"
+  },
+  {
+    "code": "SL",
+    "en": "Thai Lion Air",
+    "zh": "泰国狮航"
+  },
+  {
+    "code": "OD",
+    "en": "Malindo Air",
+    "zh": "马印航空"
+  },
+  {
+    "code": "IB",
+    "en": "Iberia",
+    "zh": "西班牙伊比利亚航空"
+  },
+  {
+    "code": "LO",
+    "en": "LOT Polish Airlines",
+    "zh": "波兰航空"
+  },
+  {
+    "code": "FI",
+    "en": "Icelandair",
+    "zh": "冰岛航空"
+  },
+  {
+    "code": "FR",
+    "en": "Ryanair",
+    "zh": "瑞安航空"
+  },
+  {
+    "code": "W6",
+    "en": "Wizz Air",
+    "zh": "威兹航空"
+  },
+  {
+    "code": "EW",
+    "en": "Eurowings",
+    "zh": "欧洲之翼"
+  },
+  {
+    "code": "SN",
+    "en": "Brussels Airlines",
+    "zh": "布鲁塞尔航空"
+  },
+  {
+    "code": "OU",
+    "en": "Croatia Airlines",
+    "zh": "克罗地亚航空"
+  },
+  {
+    "code": "RO",
+    "en": "TAROM",
+    "zh": "罗马尼亚航空"
+  },
+  {
+    "code": "DY",
+    "en": "Norwegian Air",
+    "zh": "挪威航空"
+  },
+  {
+    "code": "VY",
+    "en": "Vueling",
+    "zh": "西班牙伏林航空"
+  },
+  {
+    "code": "TO",
+    "en": "Transavia France",
+    "zh": "法国泛航航空"
+  },
+  {
+    "code": "HV",
+    "en": "Transavia",
+    "zh": "荷兰泛航航空"
+  },
+  {
+    "code": "DE",
+    "en": "Condor",
+    "zh": "神鹰航空"
+  },
+  {
+    "code": "B6",
+    "en": "JetBlue Airways",
+    "zh": "捷蓝航空"
+  },
+  {
+    "code": "AV",
+    "en": "Avianca",
+    "zh": "哥伦比亚航空"
+  },
+  {
+    "code": "CM",
+    "en": "Copa Airlines",
+    "zh": "巴拿马航空"
+  },
+  {
+    "code": "AR",
+    "en": "Aerolineas Argentinas",
+    "zh": "阿根廷航空"
+  },
+  {
+    "code": "AD",
+    "en": "Azul Brazilian Airlines",
+    "zh": "巴西蓝色航空"
+  },
+  {
+    "code": "G3",
+    "en": "GOL Linhas Aereas",
+    "zh": "巴西高尔航空"
+  },
+  {
+    "code": "NK",
+    "en": "Spirit Airlines",
+    "zh": "精神航空"
+  },
+  {
+    "code": "TU",
+    "en": "Tunisair",
+    "zh": "突尼斯航空"
+  },
+  {
+    "code": "DT",
+    "en": "TAAG Angola Airlines",
+    "zh": "安哥拉航空"
+  },
+  {
+    "code": "WB",
+    "en": "RwandAir",
+    "zh": "卢旺达航空"
+  },
+  {
+    "code": "KP",
+    "en": "ASKY Airlines",
+    "zh": "ASKY航空"
+  },
+  {
+    "code": "5Y",
+    "en": "Atlas Air",
+    "zh": "阿特拉斯航空"
+  },
+  {
+    "code": "7L",
+    "en": "Silk Way West Airlines",
+    "zh": "丝绸之路西部航空"
+  },
+  {
+    "code": "UC",
+    "en": "LATAM Cargo Chile",
+    "zh": "LATAM货运智利"
+  },
+  {
+    "code": "M3",
+    "en": "LATAM Cargo Brasil",
+    "zh": "LATAM货运巴西"
+  },
+  {
+    "code": "GB",
+    "en": "ABX Air",
+    "zh": "ABX航空"
+  },
+  {
+    "code": "QY",
+    "en": "European Air Transport (DHL)",
+    "zh": "DHL欧洲航空运输"
+  },
+  {
+    "code": "M4",
+    "en": "Poste Air Cargo",
+    "zh": "意大利邮政货运航空"
+  },
+  {
+    "code": "W8",
+    "en": "Cargojet Airways",
+    "zh": "加拿大货运航空"
+  },
+  {
+    "code": "MB",
+    "en": "MNG Airlines",
+    "zh": "MNG航空(土耳其货运)"
+  },
+  {
+    "code": "6U",
+    "en": "ACT Airlines",
+    "zh": "ACT航空(土耳其货运)"
+  },
+  {
+    "code": "WE",
+    "en": "Thai Smile Airways",
+    "zh": "泰国微笑航空"
+  },
+  {
+    "code": "UV",
+    "en": "Saudi Airlines Cargo",
+    "zh": "沙特货运航空"
+  },
+  {
+    "code": "B2",
+    "en": "Belavia",
+    "zh": "白俄罗斯航空"
+  },
+  {
+    "code": "JJ",
+    "en": "LATAM Brasil",
+    "zh": "LATAM巴西航空"
+  },
+  {
+    "code": "VA",
+    "en": "Virgin Australia",
+    "zh": "维珍澳洲航空"
+  },
+  {
+    "code": "JQ",
+    "en": "Jetstar Airways",
+    "zh": "捷星航空"
+  },
+  {
+    "code": "TT",
+    "en": "Tigerair Australia",
+    "zh": "澳洲虎航"
+  },
+  {
+    "code": "4U",
+    "en": "Germanwings",
+    "zh": "德国之翼"
+  },
+  {
+    "code": "AB",
+    "en": "Air Berlin",
+    "zh": "柏林航空"
+  },
+  {
+    "code": "EN",
+    "en": "Air Dolomiti",
+    "zh": "多洛米蒂航空"
+  },
+  {
+    "code": "A3",
+    "en": "Aegean Airlines",
+    "zh": "爱琴海航空"
+  },
+  {
+    "code": "FB",
+    "en": "Bulgaria Air",
+    "zh": "保加利亚航空"
+  },
+  {
+    "code": "W5",
+    "en": "Mahan Air",
+    "zh": "伊朗马汉航空"
+  },
+  {
+    "code": "EP",
+    "en": "Iran Aseman Airlines",
+    "zh": "伊朗阿斯曼航空"
+  },
+  {
+    "code": "IZ",
+    "en": "Arkia Israel Airlines",
+    "zh": "以色列阿基亚航空"
+  },
+  {
+    "code": "H9",
+    "en": "Himalaya Airlines",
+    "zh": "喜马拉雅航空"
+  },
+  {
+    "code": "RA",
+    "en": "Nepal Airlines",
+    "zh": "尼泊尔航空"
+  },
+  {
+    "code": "PG",
+    "en": "Bangkok Airways",
+    "zh": "曼谷航空"
+  },
+  {
+    "code": "DD",
+    "en": "Nok Air",
+    "zh": "飞鸟航空"
+  },
+  {
+    "code": "VJ",
+    "en": "Vietjet Air",
+    "zh": "越捷航空"
+  },
+  {
+    "code": "5J",
+    "en": "Cebu Pacific",
+    "zh": "宿务太平洋航空"
+  },
+  {
+    "code": "8M",
+    "en": "Myanmar Airways International",
+    "zh": "缅甸国际航空"
+  },
+  {
+    "code": "UB",
+    "en": "Myanmar National Airlines",
+    "zh": "缅甸国家航空"
+  },
+  {
+    "code": "I9",
+    "en": "Italian Air Cargo / Freight",
+    "zh": "意大利货运航空"
+  },
+  {
+    "code": "JG",
+    "en": "Jiangsu Jinggang Airlines",
+    "zh": "京东航空"
+  },
+  {
+    "code": "O3",
+    "en": "SF Airlines",
+    "zh": "顺丰航空"
+  },
+  {
+    "code": "K4",
+    "en": "Zhongyuan Longhao Airlines (Central Air)",
+    "zh": "中原龙浩航空"
+  },
+  {
+    "code": "2C",
+    "en": "HOP! (Air France Hop)",
+    "zh": "法国霍普航空"
+  }
+]

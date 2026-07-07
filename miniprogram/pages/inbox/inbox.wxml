@@ -1,0 +1,68 @@
+
+<view class="inbox-page">
+  <view class="tab-bar">
+    <view class="tab-item {{tab === 'inbox' ? 'active' : ''}}" data-tab="inbox" bindtap="switchTab">收件箱<text wx:if="{{unread > 0}}"> ({{unread}})</text></view>
+    <view class="tab-item {{tab === 'inquiries' ? 'active' : ''}}" data-tab="inquiries" bindtap="switchTab">我的询价</view>
+    <view class="tab-item {{tab === 'sent' ? 'active' : ''}}" data-tab="sent" bindtap="switchTab">已发送</view>
+  </view>
+
+  <view wx:if="{{tab === 'inbox'}}">
+    <view wx:if="{{loading}}" class="loading-center"><text>加载中...</text></view>
+    <view wx:elif="{{messages.length === 0}}" class="empty-state"><text>暂无消息</text></view>
+    <view wx:else class="message-list">
+      <view wx:for="{{messages}}" wx:for-item="msg" wx:key="id" class="message-item card {{msg.is_read ? '' : 'unread'}}">
+        <view class="msg-header">
+          <text class="sender">{{msg.sender_company || msg.sender_name}}</text>
+          <text class="time">{{msg.created_at?.substring(5, 16)}}</text>
+        </view>
+        <text class="msg-content">{{msg.content}}</text>
+        <view class="msg-actions">
+          <button class="btn-small btn-primary" data-id="{{msg.id}}" data-name="{{msg.sender_name}}" data-id2="{{msg.sender_id}}" bindtap="showReply">回复</button>
+          <button wx:if="{{!msg.is_read}}" class="btn-small btn-outline" data-id="{{msg.id}}" bindtap="markRead">标为已读</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:elif="{{tab === 'inquiries'}}">
+    <view wx:if="{{loading}}" class="loading-center"><text>加载中...</text></view>
+    <view wx:elif="{{inquiries.length === 0}}" class="empty-state"><text>暂无询价记录</text></view>
+    <view wx:else class="message-list">
+      <view wx:for="{{inquiries}}" wx:key="index" class="message-item card {{item.has_reply ? 'replied' : 'waiting'}}">
+        <view class="msg-header">
+          <text>{{item.has_reply ? '💬 已有报价回复' : '⏳ 等待回复'}}</text>
+          <text class="time">{{item.created_at?.substring(5, 16)}}</text>
+        </view>
+        <text class="msg-content">{{item.inquiry_keyword}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:elif="{{tab === 'sent'}}">
+    <view wx:if="{{loading}}" class="loading-center"><text>加载中...</text></view>
+    <view wx:elif="{{sentMessages.length === 0}}" class="empty-state"><text>暂无已发送消息</text></view>
+    <view wx:else class="message-list">
+      <view wx:for="{{sentMessages}}" wx:key="id" class="message-item card">
+        <view class="msg-header">
+          <text wx:if="{{item.is_read}}">✅ 对方已读</text>
+          <text wx:else>⏳ 未读</text>
+          <text class="time">{{item.created_at?.substring(5, 16)}}</text>
+        </view>
+        <text class="msg-content">{{item.content?.substring(0, 120)}}</text>
+        <text wx:if="{{item.receiver_company}}" class="receiver">→ {{item.receiver_company}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 回复弹窗 -->
+  <view wx:if="{{replyTarget}}" class="reply-overlay" bindtap="closeReply">
+    <view class="reply-dialog" catchtap="">
+      <view class="reply-header">
+        <text class="reply-title">回复 {{replyTarget.name}}</text>
+        <text class="close-btn" bindtap="closeReply">✕</text>
+      </view>
+      <textarea class="reply-input" placeholder="输入回复内容..." value="{{replyText}}" bindinput="onReplyInput" />
+      <button class="btn-primary" bindtap="sendReply" disabled="{{!replyText.trim()}}">发送回复</button>
+    </view>
+  </view>
+</view>

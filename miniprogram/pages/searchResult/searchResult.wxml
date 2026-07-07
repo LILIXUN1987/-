@@ -1,0 +1,20 @@
+<view style="padding:20rpx 24rpx;">
+  <view wx:if="{{loading}}" class="loading-center"><text>搜索中...</text></view>
+  <view wx:elif="{{!results || !results.data || results.data.length === 0}}" class="empty-state"><text>未找到结果</text></view>
+  <view wx:else>
+    <text style="font-size:24rpx;color:#6b7280;display:block;margin-bottom:16rpx;">找到 {{results.total}} 条结果</text>
+    <view wx:for="{{results.data}}" wx:key="id" class="card" style="margin-bottom:12rpx;padding:20rpx;">
+      <view style="display:flex;align-items:center;gap:8rpx;margin-bottom:8rpx;flex-wrap:wrap;">
+        <text style="font-size:28rpx;font-weight:600;color:#1a56db;">{{item.origin_port || item.region}}</text>
+        <text style="color:#d1d5db;">→</text>
+        <text style="font-size:28rpx;font-weight:600;color:#1f2937;">{{item.dest_port || '?'}}</text>
+        <text wx:if="{{item.airline_code}}" class="tag tag-primary">{{item.airline_code}}</text>
+      </view>
+      <text wx:if="{{item.notes}}" style="font-size:24rpx;color:#6b7280;display:block;margin-bottom:8rpx;">{{item.notes}}</text>
+      <view style="display:flex;justify-content:space-between;align-items:center;">
+        <text style="font-size:22rpx;color:#1a56db;">{{item.contact_info || ''}}</text>
+        <text style="font-size:22rpx;color:#9ca3af;">{{item.valid_from}}</text>
+      </view>
+    </view>
+  </view>
+</view>

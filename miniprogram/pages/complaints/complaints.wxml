@@ -1,0 +1,24 @@
+<view style="padding:20rpx 24rpx;">
+  <text style="font-size:32rpx;font-weight:700;display:block;margin-bottom:20rpx;">📢 吐槽专区</text>
+
+  <view class="card" style="margin-bottom:24rpx;">
+    <text style="font-size:26rpx;font-weight:600;display:block;margin-bottom:16rpx;">我要吐槽</text>
+    <input class="input-field" placeholder="被投诉公司名称" value="{{form.target_company}}" data-field="target_company" bindinput="update" style="margin-bottom:12rpx;" />
+    <input class="input-field" placeholder="被投诉人姓名" value="{{form.target_person}}" data-field="target_person" bindinput="update" style="margin-bottom:12rpx;" />
+    <input class="input-field" placeholder="投诉原因" value="{{form.reason}}" data-field="reason" bindinput="update" style="margin-bottom:16rpx;" />
+    <button class="btn-primary" bindtap="submit" disabled="{{submitting}}">{{submitting ? '提交中...' : '提交吐槽'}}</button>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-center"><text>加载中...</text></view>
+  <view wx:elif="{{complaints.length === 0}}" class="empty-state"><text>暂无吐槽记录</text></view>
+  <view wx:else>
+    <view wx:for="{{complaints}}" wx:key="id" class="card" style="margin-bottom:12rpx;padding:20rpx;">
+      <view style="display:flex;justify-content:space-between;margin-bottom:8rpx;">
+        <text style="font-weight:600;font-size:26rpx;">{{item.target_company}}</text>
+        <text style="font-size:22rpx;color:#9ca3af;">{{item.created_at?.substring(5,16)}}</text>
+      </view>
+      <text style="font-size:24rpx;color:#6b7280;display:block;margin-bottom:8rpx;">{{item.reason}}</text>
+      <text style="font-size:22rpx;color:#9ca3af;">投诉人：{{item.uploader_company}} {{item.uploader_name}}</text>
+    </view>
+  </view>
+</view>

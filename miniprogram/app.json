@@ -1,0 +1,57 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/register/register",
+    "pages/search/search",
+    "pages/searchResult/searchResult",
+    "pages/inbox/inbox",
+    "pages/favorites/favorites",
+    "pages/complaints/complaints",
+    "pages/riskWarning/riskWarning",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#1a56db",
+    "navigationBarTitleText": "123共享外贸物流社区",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f9fafb",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#9ca3af",
+    "selectedColor": "#1a56db",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/search/search",
+        "text": "查询",
+        "iconPath": "images/search.png",
+        "selectedIconPath": "images/search-active.png"
+      },
+      {
+        "pagePath": "pages/inbox/inbox",
+        "text": "收件箱",
+        "iconPath": "images/inbox.png",
+        "selectedIconPath": "images/inbox-active.png"
+      },
+      {
+        "pagePath": "pages/favorites/favorites",
+        "text": "收藏",
+        "iconPath": "images/star.png",
+        "selectedIconPath": "images/star-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/profile.png",
+        "selectedIconPath": "images/profile-active.png"
+      }
+    ]
+  },
+  "usingComponents": {},
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

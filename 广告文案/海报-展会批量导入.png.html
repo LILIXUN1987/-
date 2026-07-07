@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海报 - 展会批量导入</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#f0f2f5;display:flex;justify-content:center;padding:40px;font-family:'PingFang SC','Microsoft YaHei',sans-serif;}
+.poster{width:600px;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.12);}
+.header{background:linear-gradient(135deg,#1e3a5f,#0369a1);padding:36px 32px;color:#fff;position:relative;}
+.header::after{content:'📇';position:absolute;right:30px;top:30px;font-size:48px;opacity:0.15;}
+.tag{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:11px;margin-bottom:12px;}
+.header h1{font-size:30px;font-weight:700;letter-spacing:2px;line-height:1.3;}
+.header .sub{font-size:14px;opacity:0.8;margin-top:8px;line-height:1.5;}
+.body{padding:32px;}
+.left-right{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+.lr-box{border-radius:14px;padding:20px;}
+.lr-box.old{background:#fef2f2;border:1px solid #fecaca;}
+.lr-box.new{background:#f0fdf4;border:1px solid #bbf7d0;}
+.lr-box .lr-title{font-size:14px;font-weight:700;margin-bottom:10px;}
+.lr-box.old .lr-title{color:#dc2626;}
+.lr-box.new .lr-title{color:#16a34a;}
+.lr-box ul{list-style:none;font-size:12px;line-height:2.2;color:#374151;}
+.lr-box.old ul li::before{content:'✗ ';color:#dc2626;}
+.lr-box.new ul li::before{content:'✓ ';color:#16a34a;}
+.steps{background:#f0f9ff;border:2px solid #bae6fd;border-radius:14px;padding:20px;margin-bottom:24px;}
+.steps h3{font-size:14px;color:#0369a1;margin-bottom:14px;}
+.step-item{display:flex;gap:12px;margin-bottom:10px;}
+.step-num{width:24px;height:24px;background:#0369a1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.step-text{font-size:13px;color:#475569;line-height:1.5;}
+.timeline{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px 20px;margin-bottom:24px;}
+.timeline h3{font-size:14px;color:#1e3a5f;margin-bottom:12px;}
+.tl-row{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:12px;color:#475569;}
+.tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.tl-dot.green{background:#16a34a;}
+.tl-dot.blue{background:#2563eb;}
+.tl-dot.amber{background:#d97706;}
+.tl-dot.gray{background:#9ca3af;}
+.cta{background:linear-gradient(135deg,#0369a1,#1e3a5f);color:#fff;text-align:center;padding:18px;border-radius:14px;font-size:17px;font-weight:700;letter-spacing:1px;}
+.cta span{font-size:12px;font-weight:400;opacity:0.8;display:block;margin-top:4px;}
+.footer{text-align:center;padding:16px;font-size:11px;color:#9ca3af;}
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="header">
+    <div class="tag">📇 展会神器</div>
+    <h1>收了一百张名片？<br>一键批量导入</h1>
+    <div class="sub">系统自动创建账号 + 发送邮件通知 + 自动跟进提醒</div>
+  </div>
+  <div class="body">
+    <div class="left-right">
+      <div class="lr-box old">
+        <div class="lr-title">❌ 以前</div>
+        <ul>
+          <li>一张一张手动注册</li>
+          <li>每张要填邮箱验证码</li>
+          <li>注册完还要微信通知</li>
+          <li>没登录的忘记了就忘了</li>
+        </ul>
+      </div>
+      <div class="lr-box new">
+        <div class="lr-title">✅ 现在</div>
+        <ul>
+          <li>Excel 批量导入</li>
+          <li>一键创建所有账号</li>
+          <li>自动发邮件通知</li>
+          <li>未登录自动提醒跟进</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="steps">
+      <h3>📋 操作步骤</h3>
+      <div class="step-item"><div class="step-num">1</div><div class="step-text">整理名片信息到 Excel：姓名 | 公司名 | 手机号 | 邮箱</div></div>
+      <div class="step-item"><div class="step-num">2</div><div class="step-text">上传 Excel 到平台 → 系统自动处理</div></div>
+      <div class="step-item"><div class="step-num">3</div><div class="step-text">每个邮箱自动收到开通通知（含用户名+密码）</div></div>
+      <div class="step-item"><div class="step-num">4</div><div class="step-text">系统自动跟进未登录用户</div></div>
+    </div>
+
+    <div class="timeline">
+      <h3>⏰ 自动跟进时间线</h3>
+      <div class="tl-row"><div class="tl-dot green"></div><strong>开通当天</strong> — 邮件通知：账号已开通，用户名+密码</div>
+      <div class="tl-row"><div class="tl-dot blue"></div><strong>3天后未登录</strong> — 再次邮件提醒「您的账号已开通，快来体验」</div>
+      <div class="tl-row"><div class="tl-dot amber"></div><strong>之后每7天</strong> — 持续提醒一次，直到用户登录</div>
+    </div>
+
+    <div class="cta">
+      📤 展会名片批量导入
+      <span>123共享外贸物流社区 · 管理员后台一键操作</span>
+    </div>
+  </div>
+  <div class="footer">🛡️ 他不再被坑 · 您不再缺货</div>
+</div>
+</body>
+</html>

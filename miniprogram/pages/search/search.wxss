@@ -1,0 +1,42 @@
+.search-page { padding: 20rpx 24rpx; }
+.category-tabs { margin-bottom: 20rpx; white-space: nowrap; }
+.tab-list { display: flex; gap: 12rpx; }
+.tab-item {
+  display: inline-flex; padding: 12rpx 28rpx; border-radius: 24rpx;
+  background: #f3f4f6; color: #6b7280; font-size: 26rpx; font-weight: 500;
+}
+.tab-item.active { background: #1a56db; color: #fff; }
+.search-bar { display: flex; gap: 16rpx; margin-bottom: 20rpx; }
+.search-input {
+  flex: 1; padding: 20rpx 24rpx; border: 2rpx solid #d1d5db;
+  border-radius: 16rpx; font-size: 26rpx; background: #fff;
+}
+.btn-search { width: auto; padding: 20rpx 32rpx; font-size: 26rpx; white-space: nowrap; }
+.search-history { margin-bottom: 20rpx; }
+.history-header { display: flex; justify-content: space-between; margin-bottom: 16rpx; }
+.history-title { font-size: 26rpx; color: #6b7280; font-weight: 500; }
+.clear-btn { font-size: 24rpx; color: #dc2626; }
+.history-list { display: flex; flex-wrap: wrap; gap: 12rpx; }
+.history-item {
+  padding: 8rpx 20rpx; background: #f3f4f6; border-radius: 20rpx;
+  font-size: 24rpx; color: #374151;
+}
+.push-banner {
+  background: #dcfce7; border: 2rpx solid #86efac; border-radius: 16rpx;
+  padding: 20rpx; font-size: 26rpx; color: #166534; line-height: 1.6;
+  margin-bottom: 20rpx;
+}
+.result-card { cursor: pointer; }
+.route-row { display: flex; align-items: center; gap: 8rpx; margin-bottom: 8rpx; }
+.origin { font-size: 30rpx; font-weight: 600; color: #1a56db; }
+.arrow { color: #d1d5db; }
+.dest { font-size: 30rpx; font-weight: 600; color: #1f2937; }
+.airline-tag { margin-left: 8rpx; }
+.notes {
+  font-size: 24rpx; color: #6b7280; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  margin-bottom: 8rpx;
+}
+.meta { display: flex; justify-content: space-between; align-items: center; }
+.contact { font-size: 22rpx; color: #1a56db; }
+.date { font-size: 22rpx; color: #9ca3af; }

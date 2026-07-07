@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海报 - 快速录入</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#f0f2f5;display:flex;justify-content:center;padding:40px;font-family:'PingFang SC','Microsoft YaHei',sans-serif;}
+.poster{width:600px;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.12);}
+.header{background:linear-gradient(135deg,#1a365d,#2563eb);padding:40px 36px;color:#fff;position:relative;}
+.header::after{content:'⛵';position:absolute;right:30px;top:30px;font-size:48px;opacity:0.2;}
+.tag{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:11px;margin-bottom:12px;backdrop-filter:blur(4px);}
+.header h1{font-size:32px;font-weight:700;letter-spacing:2px;line-height:1.3;}
+.header .sub{font-size:15px;opacity:0.8;margin-top:8px;line-height:1.6;}
+.body{padding:36px;}
+.before-after{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+.ba-box{border-radius:14px;padding:20px;}
+.ba-box.before{background:#fef2f2;border:1px solid #fecaca;}
+.ba-box.after{background:#f0fdf4;border:1px solid #bbf7d0;}
+.ba-box .ba-title{font-size:13px;font-weight:700;margin-bottom:10px;}
+.ba-box.before .ba-title{color:#dc2626;}
+.ba-box.after .ba-title{color:#16a34a;}
+.ba-box ul{list-style:none;font-size:12px;line-height:2;color:#374151;}
+.ba-box ul li::before{content:'✗ ';color:#dc2626;margin-right:4px;}
+.ba-box.after ul li::before{content:'✓ ';color:#16a34a;}
+.steps{background:#f8fafc;border-radius:14px;padding:24px;margin-bottom:24px;}
+.steps h3{font-size:14px;color:#1a365d;margin-bottom:14px;}
+.step-row{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start;}
+.step-num{width:26px;height:26px;background:#2563eb;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.step-text{font-size:13px;color:#374151;line-height:1.6;}
+.code-block{background:#1e293b;color:#e2e8f0;border-radius:10px;padding:14px 18px;font-family:monospace;font-size:13px;line-height:1.7;margin:12px 0;}
+.cta{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;text-align:center;padding:18px;border-radius:14px;font-size:18px;font-weight:700;letter-spacing:2px;margin-top:8px;}
+.cta span{font-size:13px;font-weight:400;opacity:0.8;display:block;margin-top:4px;}
+.footer{text-align:center;padding:20px;font-size:11px;color:#9ca3af;}
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="header">
+    <div class="tag">📢 货代推广新方式</div>
+    <h1>录一次，管一天<br>客户搜港口自己找上门</h1>
+    <div class="sub">不用再在微信群里刷屏了</div>
+  </div>
+  <div class="body">
+    <div class="before-after">
+      <div class="ba-box before">
+        <div class="ba-title">❌ 以前</div>
+        <ul>
+          <li>每天在10个群发同样内容</li>
+          <li>发完30秒被刷上去</li>
+          <li>客户搜不到你的信息</li>
+          <li>发了多少效果不知道</li>
+        </ul>
+      </div>
+      <div class="ba-box after">
+        <div class="ba-title">✅ 现在</div>
+        <ul>
+          <li>系统录一次全天展示</li>
+          <li>客户搜港口找到你</li>
+          <li>AI自动解析入库</li>
+          <li>每晚自动清空更新</li>
+        </ul>
+      </div>
+    </div>
+    <div class="steps">
+      <h3>📋 三步搞定</h3>
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-text">输入你的舱位信息，例如：<br><strong>「广州-LAX 下周大仓位 2000KG 12CBM 5元/KG」</strong></div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-text">AI 自动解析为结构化数据，入库展示</div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-text">客户搜「广州-洛杉矶」或「CAN-LAX」，你的推广就在那里</div>
+      </div>
+    </div>
+    <div class="code-block">
+      📝 输入示例：<br>
+      深圳NH-LAX 固定包板(BSA) D1/3/6 全程时效3-4天<br>
+      可接带锂电 ▶收夏威夷 HNL / 洛杉矶 LAX 的货
+    </div>
+    <div class="cta">
+      免费入驻 · 立即发布
+      <span>123共享外贸物流社区 · 货代获客新渠道</span>
+    </div>
+  </div>
+  <div class="footer">🛡️ 他不再被坑 · 您不再缺货</div>
+</div>
+</body>
+</html>

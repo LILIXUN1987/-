@@ -1,0 +1,28 @@
+<view class="login-page">
+  <view class="login-header">
+    <view class="logo">🚢</view>
+    <text class="title">123共享外贸物流社区</text>
+    <text class="subtitle">登录后开始使用</text>
+  </view>
+
+  <view class="login-form">
+    <view class="form-item">
+      <input class="input-field" placeholder="用户名" value="{{username}}" bindinput="onUsernameInput" />
+    </view>
+    <view class="form-item">
+      <input class="input-field" placeholder="密码" type="password" value="{{password}}" bindinput="onPasswordInput" />
+    </view>
+
+    <view wx:if="{{error}}" class="error-msg">{{error}}</view>
+
+    <button class="btn-primary" bindtap="login" disabled="{{loading}}">
+      <text wx:if="{{loading}}">登录中...</text>
+      <text wx:else>登录</text>
+    </button>
+
+    <view class="register-link">
+      <text>还没有账号？</text>
+      <text class="link" bindtap="goRegister">去注册</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,54 @@
+
+          const category = req.query.category as string;
+
+            const codes = kw.match(/[A-Z0-9]{3}/g) || [];
+            const chinesePorts = kw.match(PORT_REGEX) || [];
+            const portKws = [...new Set([...codes, ...chinesePorts])];
+
+            // 扩展每个 IATA 代码的所有中文别名（如 ICN → 首尔/汉城/仁川），用于匹配 raw_messages 中的中文文本
+            const expandedPortKws: string[] = [...portKws];
+            for (const p of portKws) {
+              if (/^[A-Z0-9]{3}$/.test(p) && !/^\d{3}$/.test(p)) {
+                const cities = getAllCityNamesByCode(p);
+                for (const c of cities) {
+                  if (!expandedPortKws.includes(c)) expandedPortKws.push(c);
+                }
+              }
+            }
+
+            if (portKws.length >= 2) {
+              const publishers = await db('raw_messages')
+                .leftJoin('users', 'raw_messages.uploaded_by', 'users.id')
+                .where(function () {
+                  for (const p of expandedPortKws.slice(0, 5)) {
+                    this.orWhere('raw_messages.content', 'like', `%${p}%`);
+                  }
+                })
+                .whereNotNull('users.id')
+                .select('users.id')
+                .distinct()
+                .limit(20);
+
+              const seen = new Set<string>();
+              for (const p of publishers) {
+                if (p.id === senderId || seen.has(p.id)) continue;
+                seen.add(p.id);
+                const { v4 } = await import('uuid');
+                await db('messages').insert({
+                  id: v4(), sender_id: senderId, receiver_id: p.id,
+                  content: `📢 有群友发布货物求购「${kw.substring(0, 30)}...」您的推广已获得精准匹配，请及时回复。`,
+                  is_read: false,
+                });
+                // 发邮件通知发布者
+                try {
+                  const pubRow = await db('users').where({ id: p.id }).select('email','email_verified','display_name','company_name').first() as any;
+                  if (pubRow && pubRow.email && pubRow.email_verified) {
+                    await sendInquiryNotification(pubRow.email, pubRow.display_name || pubRow.company_name, senderDisplayName, kw);
+                  }
+                } catch {}
+              }
+              if (seen.size > 0) logger.info(`需求推送: "${kw.substring(0, 30)}..." → ${seen.size} 位发布者`);
+            }
+          }
+
+          

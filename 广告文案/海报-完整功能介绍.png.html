@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海报 - 完整功能介绍</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#f0f2f5;display:flex;justify-content:center;padding:40px;font-family:'PingFang SC','Microsoft YaHei',sans-serif;}
+.poster{width:600px;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.12);}
+.header{background:linear-gradient(135deg,#1a365d,#2563eb,#1d4ed8);padding:36px 32px;color:#fff;position:relative;text-align:center;}
+.header .logo{font-size:36px;margin-bottom:8px;}
+.header h1{font-size:28px;font-weight:700;letter-spacing:3px;}
+.header .sub{font-size:14px;opacity:0.8;margin-top:6px;letter-spacing:1px;}
+.body{padding:28px 32px;}
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.feat-card{border-radius:14px;padding:18px;border:1.5px solid #e5e7eb;transition:all 0.2s;}
+.feat-card:hover{border-color:#93c5fd;box-shadow:0 4px 12px rgba(37,99,235,0.08);}
+.feat-card .feat-icon{font-size:24px;margin-bottom:6px;}
+.feat-card .feat-title{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:4px;}
+.feat-card .feat-desc{font-size:11px;color:#6b7280;line-height:1.6;}
+.tag-blue{border-left:4px solid #2563eb;}
+.tag-green{border-left:4px solid #16a34a;}
+.tag-purple{border-left:4px solid #7e22ce;}
+.tag-amber{border-left:4px solid #d97706;}
+.tag-red{border-left:4px solid #dc2626;}
+.tag-teal{border-left:4px solid #0d9488;}
+.cta-section{background:linear-gradient(135deg,#1e40af,#1d4ed8);border-radius:16px;padding:24px;text-align:center;color:#fff;}
+.cta-section h2{font-size:20px;font-weight:700;margin-bottom:6px;}
+.cta-section p{font-size:13px;opacity:0.85;margin-bottom:16px;line-height:1.6;}
+.cta-btn{display:inline-block;background:#fff;color:#1d4ed8;padding:12px 36px;border-radius:30px;font-weight:700;font-size:16px;letter-spacing:1px;box-shadow:0 4px 12px rgba(0,0,0,0.15);}
+.cta-btn span{font-size:12px;font-weight:400;display:block;color:#6b7280;margin-top:2px;}
+.footer{text-align:center;padding:16px;font-size:11px;color:#9ca3af;}
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="header">
+    <div class="logo">⛵</div>
+    <h1>123 共享外贸物流社区</h1>
+    <div class="sub">货代获客 · 外贸查舱 · 行业口碑</div>
+  </div>
+  <div class="body">
+    <div class="feature-grid">
+      <div class="feat-card tag-blue">
+        <div class="feat-icon">📢</div>
+        <div class="feat-title">快速录入推广</div>
+        <div class="feat-desc">自然语言输入，AI自动解析入库。每晚自动清空，每天都是最新价。</div>
+      </div>
+      <div class="feat-card tag-green">
+        <div class="feat-icon">🎯</div>
+        <div class="feat-title">客户主动询价</div>
+        <div class="feat-desc">客户搜港口→匹配你的推广→自动推送站内信+邮件通知。</div>
+      </div>
+      <div class="feat-card tag-purple">
+        <div class="feat-icon">📊</div>
+        <div class="feat-title">推广效果统计</div>
+        <div class="feat-desc">每条航线浏览数、询价数、转化率一目了然，数据驱动。</div>
+      </div>
+      <div class="feat-card tag-amber">
+        <div class="feat-icon">🏢</div>
+        <div class="feat-title">企业认证</div>
+        <div class="feat-desc">上传营业执照审核认证，客户更信任，询价率翻倍。</div>
+      </div>
+      <div class="feat-card tag-red">
+        <div class="feat-icon">🛡️</div>
+        <div class="feat-title">吐槽专区·风控</div>
+        <div class="feat-desc">行业黑名单共享，不诚信公司全员避雷警告。</div>
+      </div>
+      <div class="feat-card tag-teal">
+        <div class="feat-icon">💬</div>
+        <div class="feat-title">站内信沟通</div>
+        <div class="feat-desc">客户询价直达收件箱，不用加微信直接沟通报价。</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
+        <div><span style="font-size:28px;font-weight:800;color:#2563eb;">10+</span><br><span style="font-size:11px;color:#6b7280;">推广品类</span></div>
+        <div><span style="font-size:28px;font-weight:800;color:#16a34a;">1000+</span><br><span style="font-size:11px;color:#6b7280;">港口/城市覆盖</span></div>
+        <div><span style="font-size:28px;font-weight:800;color:#7e22ce;">📨</span><br><span style="font-size:11px;color:#6b7280;">站内信+邮件推送</span></div>
+        <div><span style="font-size:28px;font-weight:800;color:#d97706;">🔄</span><br><span style="font-size:11px;color:#6b7280;">每日自动更新</span></div>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h2>🎯 货代获客新渠道</h2>
+      <p>免费入驻 · 精准匹配 · 自动推送<br>不用再在微信群里刷屏了</p>
+      <div class="cta-btn">
+        📲 立即注册
+        <span>123共享外贸物流社区</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer">🛡️ 他不再被坑 · 您不再缺货 · 共建诚信物流社区</div>
+</div>
+</body>
+</html>

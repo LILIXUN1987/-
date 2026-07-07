@@ -1,0 +1,25 @@
+{
+  "description": "123共享外贸物流社区",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "preloadBackgroundData": false,
+    "minified": true,
+    "newFeature": false,
+    "coverView": true,
+    "nodeModules": false,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataCheck": false
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.7.8",
+  "projectname": "123共享外贸物流社区",
+  "appid": "wx0000000000000000",
+  "condition": {}
+}
