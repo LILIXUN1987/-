@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
+import { FEATURES } from '../../config/features';
 import { getRoleChecks } from '../../types';
 import { Handshake } from 'lucide-react';
 import PartnersTab from '../../components/admin/overseas-partners/PartnersTab';
@@ -14,6 +15,11 @@ export default function OverseasPartnersPage() {
   const [tab, setTab] = useState<TabKey>('partners');
 
   const rc = getRoleChecks(user?.role);
+  // 网安审核模式：非管理员隐藏
+  if (FEATURES.AUDIT_MODE && !rc.isAdmin) {
+    return <div className="text-center py-16 text-gray-400">功能维护中</div>;
+  }
+
   const isAgent = rc.isOverseasAgent;
 
   if (!rc.isForwarder && !rc.isOverseasAgent && !rc.isAdmin) {

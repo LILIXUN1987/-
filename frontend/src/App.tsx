@@ -40,6 +40,11 @@ const DDPPage = lazy(() => import('./pages/admin/DDPPage'));
 const OverseasPartnersPage = lazy(() => import('./pages/admin/OverseasPartnersPage'));
 const RecommendPage = lazy(() => import('./pages/admin/RecommendPage'));
 const PortServicesPage = lazy(() => import('./pages/admin/PortServicesPage'));
+const CouponPage = lazy(() => import('./pages/admin/CouponPage'));
+const MyCouponWalletPage = lazy(() => import('./pages/admin/MyCouponWalletPage'));
+const OverseasAgentCenter = lazy(() => import('./pages/admin/OverseasAgentCenter'));
+const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
+const BrokerManagementPage = lazy(() => import('./pages/admin/BrokerManagementPage'));
 
 function PageLoading() {
   return <div className="flex items-center justify-center py-20"><div className="w-6 h-6 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" /></div>;
@@ -101,7 +106,8 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            <Route path="/admin" element={<Navigate to="/admin/files" replace />} />
+            <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="/admin/dashboard" element={<DashboardPage />} />
             <Route path="/admin/files" element={<FileUploadPage />} />
             <Route path="/admin/files/:id" element={<FileUploadPage />} />
             <Route path="/admin/raw-records" element={<RawRecordsPage />} />
@@ -120,9 +126,12 @@ export default function App() {
             <Route path="/admin/renew" element={<ProtectedRoute><AdminRenewPage /></ProtectedRoute>} />
             <Route path="/admin/tools" element={<ProtectedRoute><ToolsPage /></ProtectedRoute>} />
             <Route path="/admin/port-services" element={<ProtectedRoute><PortServicesPage /></ProtectedRoute>} />
+            <Route path="/admin/coupons" element={<ProtectedRoute><CouponPage /></ProtectedRoute>} />
+            <Route path="/admin/coupon-wallet" element={<ProtectedRoute><MyCouponWalletPage /></ProtectedRoute>} />
             <Route path="/admin/quote" element={<ProtectedRoute><QuotePage /></ProtectedRoute>} />
             <Route path="/admin/ddp" element={<ProtectedRoute><DDPPage /></ProtectedRoute>} />
             <Route path="/admin/overseas-partners" element={<ProtectedRoute><OverseasPartnersPage /></ProtectedRoute>} />
+            <Route path="/admin/overseas-center" element={<ProtectedRoute><OverseasAgentCenter /></ProtectedRoute>} />
             <Route path="/admin/recommend" element={<ProtectedRoute><RecommendPage /></ProtectedRoute>} />
             <Route path="/admin/card-directory" element={<ProtectedRoute><CardDirectoryPage /></ProtectedRoute>} />
             <Route path="/admin/expo-quick" element={<ProtectedRoute requiredRole="admin"><ExpoQuickEntry /></ProtectedRoute>} />
@@ -130,6 +139,7 @@ export default function App() {
             <Route path="/admin/company-verification" element={<ProtectedRoute requiredRole="admin"><CompanyVerificationPage /></ProtectedRoute>} />
             <Route path="/admin/batch-import" element={<ProtectedRoute requiredRole="admin"><AdminImportPage /></ProtectedRoute>} />
             <Route path="/admin/audit-logs" element={<ProtectedRoute requiredRole="admin"><AuditLogPage /></ProtectedRoute>} />
+            <Route path="/admin/broker-management" element={<ProtectedRoute requiredRole="admin"><BrokerManagementPage /></ProtectedRoute>} />
           </Route>
 
           {/* 404 */}

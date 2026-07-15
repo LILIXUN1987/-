@@ -134,6 +134,41 @@ app.listen(env.port, async () => {
   const msUntil8am = (new Date().getHours() >= 8 ? 24 : 8 - new Date().getHours()) * 60 * 60 * 1000 - new Date().getMinutes() * 60 * 1000 - new Date().getSeconds() * 1000;
   setTimeout(() => { remindExpiringUsers(); setInterval(remindExpiringUsers, 24 * 60 * 60 * 1000); }, msUntil8am);
   startRecurringWarningCheck();
+
+  // ── 报关券定时任务 ──
+  // 每日凌晨1:00检查过期券
+  const msUntil1am = (new Date().getHours() >= 1 ? 24 : 1 - new Date().getHours()) * 60 * 60 * 1000 - new Date().getMinutes() * 60 * 1000 - new Date().getSeconds() * 1000;
+  const checkExpiry = async () => {
+    try { await db('customs_coupons')
+      .whereIn('status', ['issued', 'sent'])
+      .where('month', '<', new Date(Date.now() - 62 * 86400000).toISOString().slice(0, 7))
+      .update({ status: 'expired' });
+    } catch {}
+  };
+  setTimeout(checkExpiry, msUntil1am);
+  setInterval(checkExpiry, 24 * 60 * 60 * 1000);
+
+  // 每日凌晨2:00发放企业订阅用户当月券
+  const msUntil2am = (new Date().getHours() >= 2 ? 24 : 2 - new Date().getHours()) * 60 * 60 * 1000 - new Date().getMinutes() * 60 * 1000 - new Date().getSeconds() * 1000;
+  const issueMonthly = async () => {
+    try {
+      const thisMonth = new Date().toISOString().slice(0, 7);
+      const subs = await db('monthly_subscriptions').where({ status: 'active' }).where('current_month', '<>', thisMonth).select('*');
+      for (const sub of subs) {
+        const { v4: uuid } = await import('uuid');
+        const exists = await db('customs_coupons').where({ subscription_id: sub.id, month: thisMonth }).first();
+        if (exists) continue;
+        await db('customs_coupons').insert({
+          id: uuid(), subscription_id: sub.id, forwarder_id: sub.user_id,
+          face_value: 50.00, month: thisMonth, status: 'issued',
+        });
+        await db('monthly_subscriptions').where({ id: sub.id }).update({ current_month: thisMonth, last_paid_at: new Date().toISOString() });
+      }
+    } catch {}
+  };
+  setTimeout(issueMonthly, msUntil2am);
+  setInterval(issueMonthly, 24 * 60 * 60 * 1000);
+
   logger.info(`Server running on http://localhost:${env.port}`);
   logger.info(`Environment: ${env.nodeEnv}`);
 });

@@ -84,7 +84,7 @@ export const RegT = {
   privacy: { zh: '🔒 我们将严格保护您的隐私，尊重您更新手机号码的权利', en: '🔒 Your privacy is protected' },
   forwarderSuccess: { zh: '您已获得15天免费体验期（15个自然日），请登录后开始使用', en: 'You have a 15-day free trial, please log in to start' },
   lawyerSuccess: { zh: '您已成功注册为社区律师，永久有效，请登录后开始使用', en: 'Registered as Community Lawyer, permanent access' },
-  agentSuccess: { zh: '您已成功注册为海外代理，永久有效，请登录后完善资料', en: 'Registered as Overseas Agent, permanent access. Please log in to complete your profile.' },
+  agentSuccess: { zh: '您已成功注册为海外代理，30天试用期，请登录后完善资料', en: 'Registered as Overseas Agent, 30-day trial access. Please log in to complete your profile.' },
   restrictedSuccess: { zh: '您已获得15天免费体验期（15个自然日），请登录后开始使用', en: 'You have a 15-day free trial, please log in to start' },
   loginDefault: { zh: '请登录后开始使用', en: 'Please log in to start' },
 };
@@ -131,6 +131,28 @@ export const AdminT = {
   roleLabelInspector: { zh: '检测认证', en: 'Inspector' },
   roleLabelInsurer: { zh: '运输保险', en: 'Insurer' },
   roleLabelOverseasAgent: { zh: '海外代理', en: 'Overseas Agent' },
+};
+
+// ════════════════════════════════════════════
+// 报关券双语
+// ════════════════════════════════════════════
+export const CouponT = {
+  title: { zh: '🎫 报关券', en: '🎫 Customs Coupon' },
+  walletTitle: { zh: '🎫 我的券包', en: '🎫 My Coupon Wallet' },
+  brokerTitle: { zh: '报关行管理', en: 'Broker Management' },
+  subscribe: { zh: '订阅（19.9元/月）', en: 'Subscribe (¥19.9/mo)' },
+  subscribed: { zh: '✅ 已订阅', en: '✅ Subscribed' },
+  notSubscribed: { zh: '未订阅', en: 'Not subscribed' },
+  send: { zh: '赠送券', en: 'Send Coupon' },
+  history: { zh: '赠送记录', en: 'History' },
+  settings: { zh: '订阅设置', en: 'Settings' },
+  sendTo: { zh: '赠送给', en: 'Send to' },
+  faceValue: { zh: '券面值', en: 'Face Value' },
+  status: { zh: '状态', en: 'Status' },
+  available: { zh: '可用', en: 'Available' },
+  used: { zh: '已使用', en: 'Used' },
+  expired: { zh: '已过期', en: 'Expired' },
+  noCoupons: { zh: '暂无券', en: 'No coupons yet' },
 };
 
 // ════════════════════════════════════════════

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, createContext, useContext } from 'react';
 import client from '../../api/client';
 import { useAuthStore } from '../../store/authStore';
+import { FEATURES } from '../../config/features';
 import type { DDPAgent, DDPStatsResponse } from '../../api/ddp.api';
 import { getRoleChecks } from '../../types';
 import {
@@ -160,12 +161,18 @@ type TabKey = 'inquiry' | 'agents' | 'stats' | 'inquiries';
 
 export default function DDPPage() {
   const user = useAuthStore((s) => s.user);
+  const authLang = useAuthStore((s) => s.lang);
   const [tab, setTab] = useState<TabKey>('inquiry');
-  const [lang, setLang] = useState<Lang>('zh');
+  const [lang, setLang] = useState<Lang>(authLang);
   const [agentRegistered, setAgentRegistered] = useState<boolean | null>(null);
 
   // 海外代理检查入驻状态
   const rc = getRoleChecks(user?.role);
+  // 网安审核模式：非管理员隐藏
+  if (FEATURES.AUDIT_MODE && !rc.isAdmin) {
+    return <div className="text-center py-16 text-gray-400">功能维护中</div>;
+  }
+
   const isAgent = rc.isOverseasAgent;
   useEffect(() => {
     if (isAgent) {

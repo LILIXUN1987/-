@@ -4,6 +4,7 @@ import { registerApi, CompanyMate } from '../../api/register.api';
 import { authApi } from '../../api/auth.api';
 import { Ship, Camera, X, CheckCircle, Mail, Loader2, Users, AlertCircle } from 'lucide-react';
 import { t, RegT, type Lang } from '../../i18n';
+import { FEATURES } from '../../config/features';
 
 /** 后端错误消息 → 字段名映射 */
 const BACKEND_ERROR_MAP: Record<string, string> = {
@@ -32,6 +33,8 @@ function ErrorTip({ field, errors }: { field: string; errors: Record<string, str
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  // 注册功能关闭时重定向到首页
+  useEffect(() => { if (!FEATURES.REGISTRATION) navigate('/', { replace: true }); }, [navigate]);
   const refCode = searchParams.get('ref') || '';
   const [form, setForm] = useState({
     username: '', password: '', display_name: '',
@@ -125,7 +128,7 @@ export default function RegisterPage() {
     const newErrors: Record<string, string> = {};
     if (!form.display_name.trim()) newErrors.display_name = '请填写姓名';
     if (!form.company_name.trim()) newErrors.company_name = '请填写公司全称';
-    if (form.role !== 'trader' && !form.phone.trim()) newErrors.phone = '请填写手机号';
+    if (form.role !== 'trader' && form.role !== 'overseas_agent' && !form.phone.trim()) newErrors.phone = '请填写手机号';
     if (!form.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) newErrors.email = '请填写有效的邮箱地址';
     if (!form.emailCode) newErrors.emailCode = '请先获取并填写邮箱验证码';
     if (!form.username.trim()) newErrors.username = '请设置用户名';
@@ -264,8 +267,8 @@ export default function RegisterPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t(RegT.gender, lang)}</label>
               <select className="input-field" value={form.gender} onChange={e => update('gender', e.target.value)}>
                 <option value="">{t(RegT.genderSelect, lang)}</option>
-                <option value="男">{t(RegT.male, lang)}</option>
-                <option value="女">{t(RegT.female, lang)}</option>
+                <option value="male">{t(RegT.male, lang)}</option>
+                <option value="female">{t(RegT.female, lang)}</option>
               </select>
             </div>
           </div>
@@ -279,7 +282,7 @@ export default function RegisterPage() {
             {/* 同公司同事提示 */}
             {matesLoading && form.company_name.trim().length >= 2 && (
               <div className="flex items-center gap-1.5 text-xs text-gray-400 mt-2">
-                <Loader2 className="w-3 h-3 animate-spin" /> 查询中...
+                <Loader2 className="w-3 h-3 animate-spin" /> {lang === 'en' ? 'Searching...' : '查询中...'}
               </div>
             )}
             {!matesLoading && companyMates.length > 0 && (
@@ -383,7 +386,7 @@ export default function RegisterPage() {
               <label className="block text-sm font-medium text-gray-700 mb-2">{t(RegT.cardLabel, lang)}</label>
               {cardPreview ? (
                 <div className="relative inline-block">
-                  <img src={cardPreview} alt="名片" className="max-h-40 rounded-lg border" />
+                  <img src={cardPreview} alt={lang === 'en' ? 'Business card' : '名片'} className="max-h-40 rounded-lg border" />
                   <button type="button" className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5" onClick={() => { setCardImage(null); setCardPreview(null); setFieldErrors(prev => { const n = {...prev}; delete n.card; return n; }); }}>
                     <X className="w-4 h-4" />
                   </button>

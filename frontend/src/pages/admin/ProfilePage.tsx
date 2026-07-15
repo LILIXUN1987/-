@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { authApi } from '../../api/auth.api';
+import { FEATURES } from '../../config/features';
+import { getRoleChecks } from '../../types';
 import {
   User, Camera, Save, Loader2, CheckCircle, AlertCircle,
   Building2, Phone, UserCircle, Image, Bell, FileText, Shield, Scale, Rocket,
@@ -19,7 +21,20 @@ function extractError(err: unknown, fallback = '操作失败'): string {
 
 export default function ProfilePage() {
   const { user, checkAuth, lang } = useAuthStore();
+  const rc = getRoleChecks(user?.role);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 网安审核模式：非管理员隐藏个人信息
+  if (FEATURES.AUDIT_MODE && !rc.isAdmin) {
+    return (
+      <div className="max-w-2xl mx-auto text-center py-16">
+        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <User className="w-8 h-8 text-gray-400" />
+        </div>
+        <p className="text-gray-500 text-sm">个人信息功能维护中</p>
+      </div>
+    );
+  }
 
   const [displayName, setDisplayName] = useState(user?.display_name || '');
   const [phone, setPhone] = useState(user?.phone || '');

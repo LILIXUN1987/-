@@ -1,7 +1,7 @@
 import { useState, lazy, Suspense } from 'react';
 import {
   BarChart3, ClipboardList, Shield, AlertTriangle, CreditCard,
-  Building2, FileUp, Camera, Loader2,
+  Building2, FileUp, Camera, Loader2, Gift,
 } from 'lucide-react';
 
 // 懒加载各组页面
@@ -13,6 +13,7 @@ const DgReviewPage = lazy(() => import('./DgReviewPage'));
 const RiskCenterPage = lazy(() => import('./RiskCenterPage'));
 const AdminImportPage = lazy(() => import('./AdminImportPage'));
 const ExpoQuickEntry = lazy(() => import('./ExpoQuickEntry'));
+const BrokerManagementPage = lazy(() => import('./BrokerManagementPage'));
 
 function Loader() {
   return <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 animate-spin text-gray-400" /></div>;
@@ -50,6 +51,13 @@ const GROUPS = [
     items: [
       { key: 'import', label: '导入名片', icon: FileUp, comp: <AdminImportPage /> },
       { key: 'expo', label: '展会现场录入', icon: Camera, comp: <ExpoQuickEntry /> },
+    ],
+  },
+  {
+    key: 'business',
+    label: '🎫 报关券',
+    items: [
+      { key: 'brokers', label: '报关行管理', icon: Gift, comp: <BrokerManagementPage /> },
     ],
   },
 ];

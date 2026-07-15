@@ -25,6 +25,7 @@ import { rawMessagesApi, RawMessage } from '../../api/rawMessages.api';
 import { formatTime } from '../../utils/time';
 import { FileT, t } from '../../i18n';
 import { Languages } from 'lucide-react';
+import { FEATURES } from '../../config/features';
 
 type TabKey = 'overview' | 'entry' | 'query' | 'quote';
 
@@ -69,9 +70,9 @@ export default function FileUploadPage() {
 
   const tabs = [
     { key: 'overview' as const, label: '① 📊 ' + t(FileT.tabOverview, lang), desc: t(FileT.tabDescOverview, lang) },
-    ...(!isTrader ? [{ key: 'entry' as const, label: '② ✏️ ' + t(FileT.tabEntry, lang), desc: t(FileT.tabDescEntry, lang) }] : []),
+    ...(!isTrader && !(FEATURES.AUDIT_MODE && !rc.isAdmin) ? [{ key: 'entry' as const, label: '② ✏️ ' + t(FileT.tabEntry, lang), desc: t(FileT.tabDescEntry, lang) }] : []),
     { key: 'query' as const, label: '③ 🔍 ' + t(FileT.tabQuery, lang), desc: t(FileT.tabDescQuery, lang) },
-    { key: 'quote' as const, label: '④ 💬 ' + t(FileT.tabQuote, lang), desc: t(FileT.tabDescQuote, lang) },
+    ...(!(FEATURES.AUDIT_MODE && !rc.isAdmin) ? [{ key: 'quote' as const, label: '④ 💬 ' + t(FileT.tabQuote, lang), desc: t(FileT.tabDescQuote, lang) }] : []),
   ];
 
   return (

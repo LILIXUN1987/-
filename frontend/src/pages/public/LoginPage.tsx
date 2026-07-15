@@ -31,6 +31,9 @@ export default function LoginPage() {
   // ── 登录成功时提示同公司同事 ──
   const [loginMates, setLoginMates] = useState<{ mates: { display_name: string; role: string }[]; count: number } | null>(null);
 
+  // ── 海外代理欢迎提示 ──
+  const [overseasWelcome, setOverseasWelcome] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -64,7 +67,10 @@ export default function LoginPage() {
   function goToDashboard(role: string) {
     const rc = getRoleChecks(role);
     if (rc.isOverseasAgent) {
-      navigate('/admin/inbox', { replace: true });
+      setOverseasWelcome(true);
+      setTimeout(() => {
+        navigate('/admin/ddp', { replace: true });
+      }, 2000);
     } else if (rc.isAdmin || rc.isForwarder || rc.isLawyer || rc.isInspector || rc.isInsurer) {
       navigate('/admin/files', { replace: true });
     } else {
@@ -177,6 +183,20 @@ export default function LoginPage() {
               >
                 {t(LoginT.companyMatesBtn, lang)}
               </button>
+            </div>
+          )}
+          {overseasWelcome && (
+            <div className="bg-purple-50 border border-purple-200 rounded-xl px-5 py-6 text-center">
+              <div className="text-3xl mb-2">🌍</div>
+              <p className="text-sm font-bold text-purple-800 mb-1">
+                {lang === 'en' ? 'Welcome, Overseas Agent!' : '欢迎您，海外代理！'}
+              </p>
+              <p className="text-xs text-purple-600">
+                {lang === 'en'
+                  ? 'You have 30-day trial access. Complete your agent profile to receive inquiries from Chinese forwarders.'
+                  : '您已获得30天试用期，完善代理资料后即可接收中国货代询价。'}
+              </p>
+              <p className="text-xs text-purple-400 mt-2">{lang === 'en' ? 'Redirecting...' : '正在跳转...'}</p>
             </div>
           )}
           {!loginMates && (<>

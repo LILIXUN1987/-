@@ -41,8 +41,8 @@ export const registerController = {
         return res.status(400).json({ error: '邮箱验证码错误或已过期', code: 'INVALID_CODE' });
       }
 
-      // 外贸行业不强制要求手机号（保护隐私）
-      if (role !== 'trader' && !phone) {
+      // 外贸行业/海外代理不强制要求手机号（保护隐私）
+      if (role !== 'trader' && role !== 'overseas_agent' && !phone) {
         return res.status(400).json({
           error: '请填写手机号',
           code: 'MISSING_PHONE',
@@ -102,6 +102,8 @@ export const registerController = {
       let trialEnd: string;
       if (role === 'lawyer') {
         trialEnd = '2099-12-31'; // 永久有效
+      } else if (role === 'overseas_agent') {
+        trialEnd = new Date(Date.now() + (30 + bonusDays) * 86400000).toISOString().split('T')[0];
       } else {
         trialEnd = new Date(Date.now() + (30 + bonusDays) * 86400000).toISOString().split('T')[0];
       }
@@ -281,7 +283,7 @@ export const registerController = {
       }
 
       res.status(201).json({
-        message: '注册成功，立即开始使用吧！',
+        message: 'Registered successfully! Welcome to the community.',
         user: { id, username, display_name, company_name, phone, email, status: 'approved' },
       });
     } catch (err) {

@@ -7,6 +7,7 @@ import fs from 'fs';
 import compression from 'compression';
 import { env } from './config/env';
 import { errorHandler } from './middleware/error.middleware';
+import db from './config/database';
 import authRoutes from './routes/auth.routes';
 import filesRoutes from './routes/files.routes';
 import cargoRoutes from './routes/cargo.routes';
@@ -36,6 +37,9 @@ import disputeRoutes from './routes/dispute.routes';
 import inviteRoutes from './routes/invite.routes';
 import navRoutes from './routes/nav.routes';
 import portServicesRoutes from './routes/portServices.routes';
+import customsCouponRoutes from './routes/customsCoupon.routes';
+import overseasRoutes from './routes/overseas.routes';
+import dashboardRoutes from './routes/dashboard.routes';
 
 const app = express();
 
@@ -68,9 +72,14 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(compression());
 
 
-// ── Health Check ──
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+// ── Health Check（先测数据库，再返回） ──
+app.get('/api/health', async (_req, res) => {
+  try {
+    await db.raw('SELECT 1');
+    res.json({ status: 'ok', db: 'connected', timestamp: new Date().toISOString() });
+  } catch {
+    res.status(503).json({ status: 'error', db: 'disconnected', timestamp: new Date().toISOString() });
+  }
 });
 
 // ── 公开路由（二维码、动态流等） ──
@@ -126,6 +135,9 @@ app.use('/api/disputes', disputeRoutes);
 app.use('/api/invite-agent', inviteRoutes);
 app.use('/api/nav', navRoutes);
 app.use('/api/port-services', portServicesRoutes);
+app.use('/api/customs-coupons', customsCouponRoutes);
+app.use('/api/overseas', overseasRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // ── 生产环境：服务前端静态文件 ──
 const frontendDist = path.resolve(__dirname, '../../frontend/dist');

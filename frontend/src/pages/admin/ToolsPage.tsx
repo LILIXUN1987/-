@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import client from '../../api/client';
 import { useAuthStore } from '../../store/authStore';
+import { getRoleChecks } from '../../types';
 import { ToolsT, t } from '../../i18n';
+import { FEATURES } from '../../config/features';
 import {
   Calculator, Search, MapPin, Loader2, Copy, CheckCircle, ExternalLink,
 } from 'lucide-react';
@@ -17,6 +19,14 @@ function calcVw(l: number, w: number, h: number, u: 'cm' | 'm', mode: 'air' | 'e
 
 export default function ToolsPage() {
   const lang = useAuthStore((s) => s.lang);
+  const user = useAuthStore((s) => s.user);
+  const rc = getRoleChecks(user?.role);
+
+  // 网安审核模式：非管理员隐藏
+  if (FEATURES.AUDIT_MODE && !rc.isAdmin) {
+    return <div className="text-center py-16 text-gray-400">功能维护中</div>;
+  }
+
   const [tab, setTab] = useState<TabKey>('links');
 
   const tabs = [

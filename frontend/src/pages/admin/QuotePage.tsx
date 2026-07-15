@@ -3,6 +3,7 @@ import client from '../../api/client';
 import { useAuthStore } from '../../store/authStore';
 import { formatTime } from '../../utils/time';
 import { getRoleChecks } from '../../types';
+import { FEATURES } from '../../config/features';
 import {
   Send, Loader2, CheckCircle, AlertTriangle, X, DollarSign,
   Clock, MapPin, Package, Plane, Ship, Truck, MessageSquare,
@@ -16,6 +17,12 @@ export default function QuotePage() {
   const role = user?.role || '';
   const rc = getRoleChecks(role);
   const isForwarder = rc.isForwarder || rc.isAdmin;
+
+  // 网安审核模式：非管理员隐藏
+  if (FEATURES.AUDIT_MODE && !rc.isAdmin) {
+    return <div className="text-center py-16 text-gray-400">功能维护中</div>;
+  }
+
   const [tab, setTab] = useState<TabKey>('new');
 
   const tabs = [

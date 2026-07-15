@@ -73,8 +73,15 @@ export const authController = {
   async lookupByPhone(req: Request, res: Response, next: NextFunction) {
     try {
       const phone = req.query.phone as string;
-      if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
-        return res.status(400).json({ error: '无效的手机号' });
+      const role = req.query.role as string;
+      if (role === 'overseas_agent') {
+        if (!phone) {
+          return res.status(400).json({ error: 'Please provide a phone number' });
+        }
+      } else {
+        if (!phone || !/^1[3-9]\d{9}$/.test(phone)) {
+          return res.status(400).json({ error: '无效的手机号' });
+        }
       }
       const user = await db('users').where({ phone }).first();
       if (!user) {

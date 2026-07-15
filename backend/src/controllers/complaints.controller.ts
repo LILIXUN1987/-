@@ -96,7 +96,67 @@ export const complaintsController = {
     }
   },
 
-  async delete(req: Request, res: Response, next: NextFunction) {
+  async companyStats(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { q } = req.query;
+      const keyword = (q as string || '').trim();
+
+      // ── 按公司聚合：被投诉次数最多的公司 ──
+      const topComplained = await db('complaints')
+        .select('target_company')
+        .select(db.raw('COUNT(*) as total'))
+        .select(db.raw('COUNT(DISTINCT complaint_company) as distinct_complainers'))
+        .groupBy('target_company')
+        .orderByRaw('COUNT(*) DESC')
+        .limit(20) as any[];
+
+      // ── 如果有搜索关键字，查该公司详情 ──
+      let companyDetail = null;
+      if (keyword) {
+        const complaints = await db('complaints')
+          .leftJoin('users', 'complaints.created_by', 'users.id')
+          .select(
+            'complaints.*',
+            'users.display_name as uploader_name',
+            'users.company_name as uploader_company'
+          )
+          .where('complaints.target_company', 'like', `%${keyword.replace(/[%_]/g, '\\$&')}%`)
+          .orderBy('complaints.created_at', 'desc')
+          .limit(50) as any[];
+
+        if (complaints.length > 0) {
+          const reasonBreakdown = complaints.reduce((acc: Record<string, number>, c: any) => {
+            acc[c.reason] = (acc[c.reason] || 0) + 1;
+            return acc;
+          }, {});
+          const topReasons = Object.entries(reasonBreakdown)
+            .sort(([, a]: any, [, b]: any) => b - a)
+            .slice(0, 5)
+            .map(([reason, count]) => ({ reason, count }));
+
+          companyDetail = {
+            target_company: complaints[0].target_company,
+            total: complaints.length,
+            distinct_complainers: new Set(complaints.map((c: any) => c.complaint_company)).size,
+            topReasons,
+            complaints: complaints.slice(0, 20),
+          };
+        }
+      }
+
+      res.json({
+        topComplained: topComplained.map((c: any) => ({
+          company: c.target_company,
+          total: Number(c.total || 0),
+          distinct_complainers: Number(c.distinct_complainers || 0),
+        })),
+        companyDetail,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+
     try {
       const complaint = await db('complaints').where({ id: req.params.id }).first() as any;
       if (!complaint) return res.status(404).json({ error: '吐槽不存在' });

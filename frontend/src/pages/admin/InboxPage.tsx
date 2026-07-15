@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { useUnreadStore } from '../../store/unreadStore';
 import { messagesApi, Conversation, Message, InquiryItem } from '../../api/messages.api';
-import {
-  Mail, Loader2, Trash2, AlertTriangle,
-} from 'lucide-react';
+import { FEATURES } from '../../config/features';
+import { Mail, Loader2, Trash2, AlertTriangle } from 'lucide-react';
 import ReviewDialog from '../../components/common/ReviewDialog';
 import { isBusinessRole } from '../../types';
 import { InboxT, t, Lang } from '../../i18n';
@@ -22,11 +22,14 @@ function useIsExpiredForwarder(): boolean {
 type ActiveTab = 'inbox' | 'inquiries';
 
 export default function InboxPage() {
+  const navigate = useNavigate();
   // ── 认证相关 ──
   const user = useAuthStore((s) => s.user);
   const lang: Lang = useAuthStore((s) => s.lang);
   const setGlobalUnread = useUnreadStore((s) => s.setCount);
   const isExpired = useIsExpiredForwarder();
+  // 站内信关闭时重定向
+  useEffect(() => { if (!FEATURES.INBOX) navigate('/admin/files', { replace: true }); }, [navigate]);
 
   // ── 选项卡 ──
   const [activeTab, setActiveTab] = useState<ActiveTab>('inbox');

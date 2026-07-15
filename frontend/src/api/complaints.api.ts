@@ -35,4 +35,7 @@ export const complaintsApi = {
 
   delete: (id: string) =>
     client.delete(`/complaints/${id}`).then((r) => r.data),
+
+  companyStats: (q?: string) =>
+    client.get<any>('/complaints/company-stats', { params: { q } }).then((r) => r.data),
 };

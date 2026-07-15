@@ -9,6 +9,7 @@ import { t, AdminT } from '../../i18n';
 import { getRoleLabel } from '../../utils/roles';
 import { getRoleChecks } from '../../types';
 import { ToastContainer } from '../../components/common/Toast';
+import { FEATURES } from '../../config/features';
 import {
   Shield,
   FileUp,
@@ -39,6 +40,7 @@ import {
   Users,
   Camera,
   ChevronDown,
+  Gift,
   FileSpreadsheet,
   Globe,
   Truck,
@@ -52,21 +54,26 @@ function useNavItems() {
   const rc = getRoleChecks(role);
   const isRestricted = rc.isRestricted;
   const isOverseasAgent = rc.isOverseasAgent;
-  const label = lang === 'en' ? 'Post Cargo Space' : '货代发布舱位与特价';
+  const label = isOverseasAgent
+    ? (lang === 'en' ? 'Publish Services' : '发布服务')
+    : (lang === 'en' ? 'Post Cargo Space' : '货代发布舱位与特价');
 
   const mainItems = isRestricted ? [
-    { to: '/admin/inbox', label: t(AdminT.inbox, lang), icon: Mail },
+    ...(FEATURES.INBOX ? [{ to: '/admin/inbox', label: t(AdminT.inbox, lang), icon: Mail }] : []),
     { to: '/admin/profile', label: t(AdminT.profile, lang), icon: User },
   ] : isOverseasAgent ? [
+    { to: '/admin/dashboard', label: lang === 'en' ? '🏠 Dashboard' : '🏠 首页', icon: BarChart3 },
     { to: '/admin/files', label, icon: FileUp },
+    { to: '/admin/overseas-center', label: lang === 'en' ? '📊 My Dashboard' : '📊 我的工作台', icon: BarChart3 },
     { to: '/admin/price-tables', label: lang === 'en' ? 'Price Tables' : '货代价格表', icon: FileText },
     { to: '/admin/port-services', label: lang === 'en' ? '🚛 Port Services' : '🚛 口岸服务', icon: Truck },
-    { to: '/admin/inbox', label: t(AdminT.inbox, lang), icon: Mail },
+    ...(FEATURES.INBOX ? [{ to: '/admin/inbox', label: t(AdminT.inbox, lang), icon: Mail }] : []),
     { to: '/admin/ddp', label: t(AdminT.ddp, lang), icon: Globe },
     { to: '/admin/overseas-partners', label: lang === 'en' ? 'My Partners' : '我的合作商', icon: Handshake },
     { to: '/admin/profile', label: t(AdminT.profile, lang), icon: User },
   ] : [
-    { to: '/admin/files', label, icon: FileUp },
+    { to: '/admin/dashboard', label: lang === 'en' ? '🏠 Dashboard' : '🏠 首页', icon: BarChart3 },
+    ...(rc.isForwarder || rc.isAdmin ? [{ to: '/admin/coupons', label: lang === 'en' ? '🎫 Coupons' : '🎫 报关券', icon: Gift }] : []),
     { to: '/admin/price-tables', label: lang === 'en' ? 'Price Tables' : '货代价格表', icon: FileText },
     { to: '/admin/tools', label: lang === 'en' ? '★ My Navigation' : '★ 我的导航库（提交有奖）', icon: Bookmark },
     { to: '/admin/port-services', label: lang === 'en' ? '🚛 Port Services' : '🚛 口岸服务', icon: Truck },
@@ -75,22 +82,36 @@ function useNavItems() {
     { to: '/admin/recommend', label: lang === 'en' ? 'Invite Colleagues' : '推荐国内同行', icon: Users },
     { to: '/admin/ddp', label: t(AdminT.ddp, lang), icon: Globe },
     { to: '/admin/card-directory', label: lang === 'en' ? 'Directory' : '展会通讯录', icon: Users },
-    { to: '/admin/inbox', label: t(AdminT.inbox, lang), icon: Mail },
+    ...(FEATURES.INBOX ? [{ to: '/admin/inbox', label: t(AdminT.inbox, lang), icon: Mail }] : []),
     { to: '/admin/profile', label: t(AdminT.profile, lang), icon: User },
 ];
 
-  const forwarderItems: any[] = [];
+  const forwarderItems: any[] = rc.isTrader ? [
+    { to: '/admin/coupon-wallet', label: lang === 'en' ? '🎫 My Coupons' : '🎫 我的券包', icon: Gift },
+  ] : [];
 
-  const communityItems = [
-    { to: '/admin/complaints', label: lang === 'en' ? 'Complaints' : '吐槽不良货代', icon: MessageSquare, yellow: true },
+  const communityItems = FEATURES.AUDIT_MODE ? [] : [
+    { to: '/admin/complaints', label: lang === 'en' ? '🛡️ Blacklist' : '🛡️ 货代避雷针', icon: MessageSquare, yellow: true },
     { to: '/admin/suggestions', label: lang === 'en' ? 'Suggestions' : '群友建议与问题解答', icon: PenSquare },
   ];
 
   const adminItems = rc.isAdmin ? [
     { to: '/admin/admin-center', label: '🏢 ' + (lang === 'en' ? 'Admin Center' : '管理中心'), icon: BarChart3 },
+    { to: '/admin/broker-management', label: lang === 'en' ? 'Broker Mgmt' : '报关行管理', icon: Gift },
     { to: '/admin/raw-records', label: lang === 'en' ? 'Raw Records' : '数据录入原始记录', icon: FileText },
     { to: '/admin/batch-import', label: lang === 'en' ? 'Import Directory' : '通讯录导入', icon: FileSpreadsheet },
   ] : [];
+
+  // 网安审核模式：非管理员精简菜单（只保留查看类功能）
+  if (FEATURES.AUDIT_MODE && !rc.isAdmin) {
+    const keepPaths = ['/admin/dashboard', '/admin/files', '/admin/price-tables', '/admin/card-directory', '/admin/recommend', '/admin/coupons', '/admin/coupon-wallet', '/admin/port-services'];
+    return {
+      mainItems: mainItems.filter((item: any) => keepPaths.includes(item.to)),
+      forwarderItems: forwarderItems.filter((item: any) => keepPaths.includes(item.to)),
+      communityItems: [],
+      adminItems: [],
+    };
+  }
 
   return { mainItems, forwarderItems, communityItems, adminItems };
 }
@@ -474,7 +495,7 @@ export default function AdminLayout() {
           })}
         </nav>
       </div>
-      <GlobalNotification />
+      {FEATURES.INBOX && <GlobalNotification />}
       <OnboardingGuide />
       <ToastContainer />
     </div>

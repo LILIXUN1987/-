@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { Ship, LogIn, UserPlus, TrendingUp, Plane, MapPin, Loader2, Search, AlertTriangle, Eye, Clock, Users, ArrowRight, Rocket, Zap, Shield, Sparkles } from 'lucide-react';
 import client from '../../api/client';
+import { FEATURES } from '../../config/features';
 
 export default function ChatPage() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -49,8 +50,8 @@ export default function ChatPage() {
             </div>
             <p className="text-sm text-white/90 leading-relaxed">
               刚入行货代？没有人脉、没有客户、不知道哪里找舱位？<br />
-              在这里免费发布你的第一条推广，全平台货代和外贸都能看到。<br />
-              <span className="text-yellow-200 font-medium">AI 帮你写推广，3秒搞定！</span>
+              在这里免费发布你的第一条货源信息，全平台都能看到。<br />
+              <span className="text-yellow-200 font-medium">AI 帮你写信息，3秒搞定！</span>
             </p>
           </div>
 
@@ -58,7 +59,7 @@ export default function ChatPage() {
           <div className="grid grid-cols-3 gap-3 max-w-xs mx-auto mb-8">
             <div className="bg-white/10 backdrop-blur rounded-xl p-3">
               <div className="text-2xl font-bold">{latestItems.length}+</div>
-              <div className="text-[10px] text-white/70">实时推广</div>
+              <div className="text-[10px] text-white/70">货源动态</div>
             </div>
             <div className="bg-white/10 backdrop-blur rounded-xl p-3">
               <div className="text-2xl font-bold">{hotSearches.length}</div>
@@ -72,21 +73,29 @@ export default function ChatPage() {
 
           {/* CTA按钮 */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button
-              onClick={() => navigate('/register')}
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-primary-700 rounded-xl font-bold text-base hover:bg-blue-50 transition-colors shadow-lg shadow-black/10"
-            >
-              <UserPlus className="w-5 h-5" />
-              免费注册，马上开始推广
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/10 text-white border border-white/30 rounded-xl font-medium text-base hover:bg-white/20 transition-colors"
-            >
-              <LogIn className="w-4 h-4" />
-              已有账号？去登录
-            </button>
+            {FEATURES.REGISTRATION ? (
+              <>
+                <button
+                  onClick={() => navigate('/register')}
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white text-primary-700 rounded-xl font-bold text-base hover:bg-blue-50 transition-colors shadow-lg shadow-black/10"
+                >
+                  <UserPlus className="w-5 h-5" />
+                  免费注册，马上开始推广
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/10 text-white border border-white/30 rounded-xl font-medium text-base hover:bg-white/20 transition-colors"
+                >
+                  <LogIn className="w-4 h-4" />
+                  已有账号？去登录
+                </button>
+              </>
+            ) : (
+              <p className="text-white/60 text-sm mt-2">
+                系统维护中，敬请期待
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -95,7 +104,7 @@ export default function ChatPage() {
       <div className="max-w-4xl mx-auto px-4 -mt-6 mb-8">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
-            { icon: '🚀', title: '告别微信群发', desc: '推广信息一键录入，AI自动解析，全平台共享' },
+            { icon: '🚀', title: '告别微信群发', desc: '货源信息一键录入，AI自动解析，全平台共享' },
             { icon: '🔍', title: '即时查询舱位', desc: '输入港口代码，秒查全球最新舱位与价格信息' },
             { icon: '🤝', title: '真实同行社区', desc: '货代·外贸·报关·律师·检测·保险，一站式对接' },
           ].map((item, i) => (
@@ -117,7 +126,7 @@ export default function ChatPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
-              { icon: '🎯', title: '没有客户资源？', desc: '你的推广信息直接展示给全国外贸公司和同行货代，每天都有搜索和询价。' },
+              { icon: '🎯', title: '没有客户资源？', desc: '你的货源信息直接展示给全国外贸公司和同行货代，每天都有搜索和询价。' },
               { icon: '📝', title: '不会写推广文案？', desc: 'AI智能解析——你用大白话说"深圳到洛杉矶有仓位"，系统自动整理成标准格式。' },
               { icon: '⏰', title: '没时间天天发朋友圈？', desc: '录入一次，7天内持续展示。不用再复制粘贴几百遍发给微信好友。' },
               { icon: '🔒', title: '怕同行抢客户？', desc: '联系方式仅对询价用户开放，保护你的客户资源不被骚扰。' },
@@ -163,15 +172,10 @@ export default function ChatPage() {
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-blue-500" />
-            <h2 className="text-sm font-bold text-gray-800">📦 最新推广信息</h2>
+            <h2 className="text-sm font-bold text-gray-800">📦 最新货源动态</h2>
             <span className="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{latestItems.length}条</span>
           </div>
-          <button
-            onClick={() => navigate('/register')}
-            className="text-xs text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
-          >
-            注册后查看全部 <ArrowRight className="w-3 h-3" />
-          </button>
+          <span className="text-[10px] text-gray-400">预览</span>
         </div>
 
         {loading ? (
@@ -179,7 +183,7 @@ export default function ChatPage() {
         ) : latestItems.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
             <Eye className="w-8 h-8 text-gray-200 mx-auto mb-2" />
-            <p className="text-sm text-gray-400">暂无推广信息</p>
+            <p className="text-sm text-gray-400">暂无信息</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -226,13 +230,10 @@ export default function ChatPage() {
                       </span>
                     </div>
                   </div>
-                  {/* 查看联系方式按钮 */}
-                  <button
-                    onClick={() => navigate('/register')}
-                    className="flex-shrink-0 px-3 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white text-xs font-medium rounded-lg hover:from-primary-600 hover:to-primary-700 transition-colors shadow-sm"
-                  >
-                    查看联系方式
-                  </button>
+                  {/* 查看联系方式按钮 - 网安模式禁用 */}
+                  <span className="flex-shrink-0 px-3 py-2 bg-gray-100 text-gray-400 text-xs font-medium rounded-lg">
+                    仅限注册用户查看
+                  </span>
                 </div>
               </div>
             ))}
@@ -245,30 +246,13 @@ export default function ChatPage() {
         </div>
       </div>
 
-      {/* ── 底部注册引导 ── */}
-      <div className="bg-gradient-to-r from-primary-600 to-indigo-600 text-white">
-        <div className="max-w-4xl mx-auto px-4 py-10 text-center">
-          <h2 className="text-xl font-bold mb-2">货代新手？从这里开始！</h2>
-          <p className="text-white/70 text-sm mb-5">
-            不用写文案 · 不用拉客户 · 不用发朋友圈
-完全免费 · 15天体验期 · AI自动帮你写推广 · 不满意随时退出
+      {/* ── 底部备案信息 ── */}
+      <div className="bg-gray-50 border-t border-gray-200">
+        <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+          <p className="text-xs text-gray-400">
+            © 2026 济南佑田信息科技有限公司 版权所有<br />
+            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-600">鲁ICP备2026037717号</a>
           </p>
-          <button
-            onClick={() => navigate('/register')}
-            className="inline-flex items-center gap-2 px-8 py-3 bg-white text-primary-700 rounded-xl font-bold text-base hover:bg-blue-50 transition-colors shadow-lg"
-          >
-            <UserPlus className="w-5 h-5" />
-            免费注册，马上开始推广
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* ── 页脚 ── */}
-      <div className="bg-gray-900 text-gray-400">
-        <div className="max-w-4xl mx-auto px-4 py-6 text-center text-xs">
-          <p className="mb-1">123共享外贸物流社区 — 国际物流行业免费共享平台</p>
-          <p>© 2026 123 Logistics Community. All rights reserved.</p>
         </div>
       </div>
     </div>
