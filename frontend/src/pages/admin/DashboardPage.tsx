@@ -230,6 +230,24 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
+
+          {/* 社区推广 */}
+          <div className="space-y-3">
+            <SectionTitle icon={<Users className="w-4 h-4 text-green-500" />} title={lang === 'en' ? 'Community Growth' : '社区推广'} />
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+              <ReferralBanner />
+            </div>
+            {!(user?.role === 'trader') && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                  <InviteAgentCard />
+                </div>
+                <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                  <RecommendPeerCard />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* ─── 右列 ─── */}
@@ -318,18 +336,6 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-      </div>
-
-      {/* ═══ 社区推广 ═══ */}
-      <div className="space-y-4 mb-6">
-        <SectionTitle icon={<Users className="w-4 h-4 text-green-500" />} title={lang === 'en' ? 'Community Growth' : '社区推广'} />
-        <ReferralBanner />
-        {!(user?.role === 'trader') && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <InviteAgentCard />
-            <RecommendPeerCard />
-          </div>
-        )}
       </div>
     </div>
   );
