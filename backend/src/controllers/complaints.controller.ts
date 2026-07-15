@@ -157,6 +157,7 @@ export const complaintsController = {
     }
   },
 
+  async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const complaint = await db('complaints').where({ id: req.params.id }).first() as any;
       if (!complaint) return res.status(404).json({ error: '吐槽不存在' });

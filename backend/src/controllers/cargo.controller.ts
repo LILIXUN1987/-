@@ -866,4 +866,128 @@ export const cargoController = {
       res.send(buf);
     } catch (err) { next(err); }
   },
+
+  /** 批量导入运价（支持 API Key 或 JWT 认证） */
+  async batchImport(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) return res.status(401).json({ error: '未认证' });
+
+      const { items, mode } = req.body;
+
+      if (!Array.isArray(items) || items.length === 0) {
+        return res.status(400).json({ error: '请提供 items 数组' });
+      }
+
+      if (items.length > 5000) {
+        return res.status(400).json({ error: '单次最多导入5000条' });
+      }
+
+      const requiredFields = ['origin_port', 'dest_port', 'valid_from', 'valid_to'];
+      const errors: { row: number; field: string; reason: string }[] = [];
+      const validItems: any[] = [];
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const rowNum = i + 1;
+        let rowOk = true;
+
+        for (const field of requiredFields) {
+          if (!item[field] || String(item[field]).trim() === '') {
+            errors.push({ row: rowNum, field, reason: `${field} 不能为空` });
+            rowOk = false;
+          }
+        }
+
+        if (item.price_per_kg !== undefined && item.price_per_kg !== null && Number(item.price_per_kg) < 0) {
+          errors.push({ row: rowNum, field: 'price_per_kg', reason: '价格不能为负数' });
+          rowOk = false;
+        }
+        if (item.price_per_cbm !== undefined && item.price_per_cbm !== null && Number(item.price_per_cbm) < 0) {
+          errors.push({ row: rowNum, field: 'price_per_cbm', reason: '价格不能为负数' });
+          rowOk = false;
+        }
+
+        if (item.valid_from && item.valid_to && item.valid_from > item.valid_to) {
+          errors.push({ row: rowNum, field: 'valid_to', reason: '有效期结束不能早于开始' });
+          rowOk = false;
+        }
+
+        if (rowOk) {
+          let notes = item.notes || '';
+          if (item.cargo_type) {
+            const catMap: Record<string, string> = {
+              '空运': '【空运出口】', '海运': '【海运出口】',
+              '快递': '【快递出口】', '陆运': '【陆运出口】',
+            };
+            const matched = Object.entries(catMap).find(([k]) => item.cargo_type.includes(k));
+            if (matched && !notes.includes(matched[1])) {
+              notes = notes ? `${matched[1]} ${notes}` : matched[1];
+            }
+          }
+
+          validItems.push({
+            id: uuidv4(),
+            region: item.dest_port || item.region || '',
+            warehouse_name: item.warehouse_name || '',
+            origin_port: item.origin_port || '',
+            dest_port: item.dest_port || '',
+            airline_code: item.airline_code || '',
+            available_cbm: Number(item.available_cbm || 0),
+            available_kg: Number(item.available_kg || 0),
+            price_per_cbm: item.price_per_cbm !== undefined ? Number(item.price_per_cbm) : null,
+            price_per_kg: item.price_per_kg !== undefined ? Number(item.price_per_kg) : null,
+            currency: item.currency || 'CNY',
+            valid_from: item.valid_from,
+            valid_to: item.valid_to,
+            cargo_type: item.cargo_type || '',
+            cargo_restrictions: item.cargo_restrictions || null,
+            contact_info: item.contact_info || null,
+            notes,
+            status: 'available',
+            uploaded_file_id: null,
+            view_count: 0,
+            inquiry_count: 0,
+            created_at: db.fn.now(),
+            updated_at: db.fn.now(),
+          });
+        }
+      }
+
+      if (validItems.length === 0) {
+        return res.status(400).json({ imported: 0, errors, message: '所有数据校验失败' });
+      }
+
+      // 全量替换模式
+      if (mode === 'replace') {
+        const userCargoIds = await db('cargo_spaces')
+          .leftJoin('uploaded_files', 'cargo_spaces.uploaded_file_id', 'uploaded_files.id')
+          .leftJoin('raw_messages', 'cargo_spaces.uploaded_file_id', 'raw_messages.id')
+          .where(function (this: any) {
+            this.where('uploaded_files.uploaded_by', userId)
+              .orWhere('raw_messages.uploaded_by', userId);
+          })
+          .select('cargo_spaces.id') as any[];
+
+        for (const c of userCargoIds) {
+          await db('cargo_spaces').where({ id: c.id }).delete();
+        }
+      }
+
+      // 批量插入
+      const batchSize = 100;
+      for (let i = 0; i < validItems.length; i += batchSize) {
+        const batch = validItems.slice(i, i + batchSize);
+        await db('cargo_spaces').insert(batch);
+      }
+
+      res.json({
+        message: `成功导入 ${validItems.length} 条运价记录`,
+        imported: validItems.length,
+        total: items.length,
+        errors: errors.length > 0 ? errors : undefined,
+        mode: mode || 'append',
+      });
+    } catch (err) { next(err); }
+  },
 };

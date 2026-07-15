@@ -40,6 +40,7 @@ import portServicesRoutes from './routes/portServices.routes';
 import customsCouponRoutes from './routes/customsCoupon.routes';
 import overseasRoutes from './routes/overseas.routes';
 import dashboardRoutes from './routes/dashboard.routes';
+import apiKeyRoutes from './routes/apiKey.routes';
 
 const app = express();
 
@@ -138,6 +139,7 @@ app.use('/api/port-services', portServicesRoutes);
 app.use('/api/customs-coupons', customsCouponRoutes);
 app.use('/api/overseas', overseasRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/api-keys', apiKeyRoutes);
 
 // ── 生产环境：服务前端静态文件 ──
 const frontendDist = path.resolve(__dirname, '../../frontend/dist');

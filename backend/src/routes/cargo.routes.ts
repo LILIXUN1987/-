@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authRequired, authOptional } from '../middleware/auth.middleware';
+import { apiKeyAuth } from '../middleware/apiKeyAuth.middleware';
 import { requireActiveTrial } from '../middleware/trialCheck.middleware';
 import { cargoController } from '../controllers/cargo.controller';
 import { searchLimiter, parseLimiter } from '../middleware/rateLimit.middleware';
@@ -16,6 +17,9 @@ router.get('/my-air-items', authOptional, cargoController.myAirItems);
 
 // 数据录入类路由 — 拦截过期货代
 router.post('/parse-text', parseLimiter, authRequired, requireActiveTrial, cargoController.parseText);
+
+// ── 批量导入运价（支持 API Key 或 JWT） ──
+router.post('/batch-import', apiKeyAuth, cargoController.batchImport);
 
 // 单条记录操作
 router.get('/:id', authOptional, cargoController.getById);

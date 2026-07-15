@@ -45,6 +45,7 @@ const MyCouponWalletPage = lazy(() => import('./pages/admin/MyCouponWalletPage')
 const OverseasAgentCenter = lazy(() => import('./pages/admin/OverseasAgentCenter'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 const BrokerManagementPage = lazy(() => import('./pages/admin/BrokerManagementPage'));
+const ApiKeysPage = lazy(() => import('./pages/admin/ApiKeysPage'));
 
 function PageLoading() {
   return <div className="flex items-center justify-center py-20"><div className="w-6 h-6 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" /></div>;
@@ -140,6 +141,7 @@ export default function App() {
             <Route path="/admin/batch-import" element={<ProtectedRoute requiredRole="admin"><AdminImportPage /></ProtectedRoute>} />
             <Route path="/admin/audit-logs" element={<ProtectedRoute requiredRole="admin"><AuditLogPage /></ProtectedRoute>} />
             <Route path="/admin/broker-management" element={<ProtectedRoute requiredRole="admin"><BrokerManagementPage /></ProtectedRoute>} />
+            <Route path="/admin/api-keys" element={<ProtectedRoute><ApiKeysPage /></ProtectedRoute>} />
           </Route>
 
           {/* 404 */}
