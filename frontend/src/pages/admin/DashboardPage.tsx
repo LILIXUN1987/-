@@ -8,6 +8,7 @@ import {
   FileUp, Plane, Ship, Truck, Package, Eye, Activity,
   Sparkles, ArrowRight, Clock, MapPin, Loader2, FileText,
   Handshake, AlertTriangle, Bookmark, Globe,
+  Shield, Mail, Key,
 } from 'lucide-react';
 import TrialBanner from '../../components/admin/TrialBanner';
 import ReferralBanner from '../../components/admin/ReferralBanner';
@@ -99,6 +100,7 @@ export default function DashboardPage() {
   }
 
   const isForwarder = rc.isForwarder || rc.isAdmin;
+  const isAdmin = rc.isAdmin;
   const isTrader = user?.role === 'trader';
   const isOverseasAgent = rc.isOverseasAgent;
   const roleLabel = isForwarder ? (lang === 'en' ? 'Forwarder' : '货代') : isTrader ? (lang === 'en' ? 'Trader' : '外贸') : isOverseasAgent ? (lang === 'en' ? 'Overseas Agent' : '海外代理') : rc.isLawyer ? (lang === 'en' ? 'Lawyer' : '律师') : user?.role || '';
@@ -107,10 +109,17 @@ export default function DashboardPage() {
   const quickActions = [
     ...(isForwarder ? [{ to: '/admin/files?tab=entry', label: lang === 'en' ? 'Post Cargo' : '发布舱位', icon: <FileUp className="w-4 h-4 text-white" />, color: 'from-blue-500 to-blue-600' }, { to: '/admin/coupons', label: lang === 'en' ? 'Coupons' : '报关券', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
     ...(isTrader ? [{ to: '/admin/files?tab=query', label: lang === 'en' ? 'Search Cargo' : '查舱位', icon: <Search className="w-4 h-4 text-white" />, color: 'from-blue-500 to-blue-600' }, { to: '/admin/coupon-wallet', label: lang === 'en' ? 'My Coupons' : '我的券包', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
+    { to: '/admin/ai-ask', label: lang === 'en' ? 'AI Ask' : 'AI 问答', icon: <Sparkles className="w-4 h-4 text-white" />, color: 'from-amber-500 to-orange-500' },
     { to: '/admin/price-tables', label: lang === 'en' ? 'Price Tables' : '价格表', icon: <FileText className="w-4 h-4 text-white" />, color: 'from-purple-500 to-purple-600' },
+    { to: '/admin/tools', label: lang === 'en' ? 'Navigation' : '导航库', icon: <Bookmark className="w-4 h-4 text-white" />, color: 'from-teal-500 to-teal-600' },
     { to: '/admin/port-services', label: lang === 'en' ? 'Port Services' : '口岸服务', icon: <Truck className="w-4 h-4 text-white" />, color: 'from-amber-500 to-amber-600' },
     ...(!isTrader ? [{ to: '/admin/dangerous-goods', label: lang === 'en' ? 'DG Agent' : '危险品代理', icon: <AlertTriangle className="w-4 h-4 text-white" />, color: 'from-red-500 to-red-600' }, { to: '/admin/overseas-partners', label: lang === 'en' ? 'Partners' : '海外合作商', icon: <Handshake className="w-4 h-4 text-white" />, color: 'from-green-500 to-green-600' }] : []),
-    { to: '/admin/inbox', label: lang === 'en' ? 'Inbox' : '站内信', icon: <Package className="w-4 h-4 text-white" />, color: 'from-cyan-500 to-cyan-600' },
+    { to: '/admin/ddp', label: lang === 'en' ? 'DDP' : '海外DDP', icon: <Globe className="w-4 h-4 text-white" />, color: 'from-indigo-500 to-indigo-600' },
+    ...(isForwarder || isAdmin ? [{ to: '/admin/api-keys', label: lang === 'en' ? 'API Keys' : 'API 密钥', icon: <Key className="w-4 h-4 text-white" />, color: 'from-slate-500 to-slate-600' }] : []),
+    { to: '/admin/recommend', label: lang === 'en' ? 'Invite' : '推荐同行', icon: <Users className="w-4 h-4 text-white" />, color: 'from-emerald-500 to-emerald-600' },
+    { to: '/admin/card-directory', label: lang === 'en' ? 'Directory' : '通讯录', icon: <Bookmark className="w-4 h-4 text-white" />, color: 'from-violet-500 to-violet-600' },
+    ...(isTrader ? [] : [{ to: '/admin/complaints', label: lang === 'en' ? 'Blacklist' : '避雷针', icon: <Shield className="w-4 h-4 text-white" />, color: 'from-orange-500 to-orange-600' }]),
+    { to: '/admin/inbox', label: lang === 'en' ? 'Inbox' : '站内信', icon: <Mail className="w-4 h-4 text-white" />, color: 'from-cyan-500 to-cyan-600' },
   ];
 
   return (
