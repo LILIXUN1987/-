@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import TextCargoInput from '../../components/admin/TextCargoInput';
 import { cargoApi } from '../../api/cargo.api';
@@ -40,6 +40,16 @@ export default function FileUploadPage() {
 
   const [activeTab, setActiveTab] = useState<TabKey>('overview');
   const [showTabHint, setShowTabHint] = useState(true);
+
+  // 读取 URL 参数中的 tab，支持 ?tab=entry / ?tab=query / ?tab=quote 直接跳转
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab') as TabKey | null;
+    if (tabParam && ['overview', 'entry', 'query', 'quote'].includes(tabParam)) {
+      setActiveTab(tabParam);
+      setShowTabHint(false);
+    }
+  }, []);
 
   const handleTabChange = (tab: TabKey) => {
     setActiveTab(tab);
