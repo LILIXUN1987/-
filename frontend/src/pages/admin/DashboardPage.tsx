@@ -282,22 +282,38 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* 实时动态 */}
+          {/* 实时动态 - 左右滚动 */}
           {data?.recentActivities && data.recentActivities.length > 0 && (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-              <SectionTitle icon={<Activity className="w-4 h-4 text-primary-500" />} title={lang === 'en' ? 'Recent' : '实时动态'} />
-              <div className="space-y-2.5">
-                {data.recentActivities.slice(0, 5).map((act, i) => (
-                  <div key={i} className="flex items-start gap-2 text-sm">
-                    <Search className="w-3.5 h-3.5 text-gray-300 mt-0.5 flex-shrink-0" />
-                    <div className="min-w-0">
-                      <span className="text-gray-700">{act.company}</span>
-                      <span className="text-gray-400"> {lang === 'en' ? 'searched ' : '查询了'}</span>
-                      <span className="text-primary-600 font-medium">「{act.keyword?.substring(0, 20)}」</span>
-                      <div className="text-[10px] text-gray-300 mt-0.5">{timeAgo(act.time)}</div>
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 overflow-hidden relative">
+              <div className="flex items-center justify-between mb-3">
+                <SectionTitle icon={<Activity className="w-4 h-4 text-primary-500" />} title={lang === 'en' ? 'Recent' : '实时动态'} />
+                <span className="text-[10px] text-gray-300">{data.recentActivities.length}{lang === 'en' ? ' items' : '条'}</span>
+              </div>
+              <div className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(to right, transparent, black 20px, black calc(100% - 20px), transparent)' }}>
+                <style>{`
+                  @keyframes scrollLeft {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                  }
+                  .scroll-loop {
+                    display: flex;
+                    gap: 12px;
+                    width: max-content;
+                    animation: scrollLeft 40s linear infinite;
+                  }
+                  .scroll-loop:hover { animation-play-state: paused; }
+                `}</style>
+                <div className="scroll-loop">
+                  {[...data.recentActivities, ...data.recentActivities].map((act, i) => (
+                    <div key={i} className="flex items-center gap-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl px-4 py-2.5 text-sm whitespace-nowrap flex-shrink-0 hover:shadow-sm transition-shadow">
+                      <span className="text-xs font-medium text-blue-500 bg-white rounded-full px-2 py-0.5 shadow-sm border border-blue-100">⚡</span>
+                      <span className="text-gray-700 font-medium">{act.company}</span>
+                      <span className="text-gray-400">{lang === 'en' ? 'searched' : '查'}</span>
+                      <span className="text-primary-600 font-semibold">「{act.keyword?.substring(0, 14)}」</span>
+                      <span className="text-[10px] text-gray-300 ml-1">{timeAgo(act.time)}</span>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           )}
