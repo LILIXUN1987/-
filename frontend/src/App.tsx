@@ -47,6 +47,7 @@ const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 const BrokerManagementPage = lazy(() => import('./pages/admin/BrokerManagementPage'));
 const ApiKeysPage = lazy(() => import('./pages/admin/ApiKeysPage'));
 const AiAskPage = lazy(() => import('./pages/admin/AiAskPage'));
+const SubscribePage = lazy(() => import('./pages/admin/SubscribePage'));
 
 function PageLoading() {
   return <div className="flex items-center justify-center py-20"><div className="w-6 h-6 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" /></div>;
@@ -143,6 +144,7 @@ export default function App() {
             <Route path="/admin/audit-logs" element={<ProtectedRoute requiredRole="admin"><AuditLogPage /></ProtectedRoute>} />
             <Route path="/admin/broker-management" element={<ProtectedRoute requiredRole="admin"><BrokerManagementPage /></ProtectedRoute>} />
             <Route path="/admin/api-keys" element={<ProtectedRoute><ApiKeysPage /></ProtectedRoute>} />
+            <Route path="/admin/subscribe" element={<ProtectedRoute><SubscribePage /></ProtectedRoute>} />
             <Route path="/admin/ai-ask" element={<ProtectedRoute><AiAskPage /></ProtectedRoute>} />
           </Route>
 

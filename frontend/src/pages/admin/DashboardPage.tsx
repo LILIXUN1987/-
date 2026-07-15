@@ -114,9 +114,10 @@ export default function DashboardPage() {
     ] : []),
     { to: '/admin/files?tab=query', label: lang === 'en' ? '③ Search Cargo' : '③ 查舱位', icon: <Search className="w-4 h-4 text-white" />, color: 'from-emerald-500 to-emerald-600' },
     ...(!(FEATURES.AUDIT_MODE && !rc.isAdmin) ? [
-      { to: '/admin/files?tab=quote', label: lang === 'en' ? '④ Inquire' : '④ 物流询价', icon: <MessageSquare className="w-4 h-4 text-white" />, color: 'from-orange-500 to-orange-600' },
+      { to: '/admin/quote', label: lang === 'en' ? '④ Inquire' : '④ 物流询价', icon: <MessageSquare className="w-4 h-4 text-white" />, color: 'from-orange-500 to-orange-600' },
     ] : []),
     // 报关券/券包
+    ...(isForwarder || isAdmin ? [{ to: '/admin/subscribe', label: lang === 'en' ? 'Subscribe' : '开通月费', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-emerald-500 to-emerald-600' }] : []),
     ...(isForwarder || isAdmin ? [{ to: '/admin/coupons', label: lang === 'en' ? 'Coupons' : '报关券', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
     ...(isTrader ? [{ to: '/admin/coupon-wallet', label: lang === 'en' ? 'My Coupons' : '我的券包', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
     // 其余功能
