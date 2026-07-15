@@ -9,6 +9,7 @@ import {
   Sparkles, ArrowRight, Clock, MapPin, Loader2, FileText,
   Handshake, AlertTriangle, Bookmark, Globe, FileSpreadsheet,
 } from 'lucide-react';
+import TrialBanner from '../../components/admin/TrialBanner';
 
 interface DashboardData {
   user: {
@@ -205,6 +206,10 @@ export default function DashboardPage() {
         </div>
       </div>
 
+			{/* ── 试用提示条（仅对货代/检测/保险） ── */}
+			<div className="mb-3">
+				<TrialBanner />
+			</div>
       {/* ═══ 主内容: 两列布局 ═══ */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 

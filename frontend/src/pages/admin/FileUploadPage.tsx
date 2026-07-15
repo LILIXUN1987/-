@@ -157,10 +157,6 @@ export default function FileUploadPage() {
         })}
       </div>
 
-      {/* ── 试用提示条（仅对货代/检测/保险） ── */}
-      <div className="mb-6">
-        <TrialBanner />
-      </div>
 
       {/* ════════════════════════════════════════ */}
       {/* 📊 总览 */}
