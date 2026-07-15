@@ -117,9 +117,9 @@ export default function DashboardPage() {
       { to: '/admin/quote', label: lang === 'en' ? '④ Inquire' : '④ 物流询价', icon: <MessageSquare className="w-4 h-4 text-white" />, color: 'from-orange-500 to-orange-600' },
     ] : []),
     // 报关券/券包
+    ...(isTrader ? [{ to: '/admin/coupon-wallet', label: lang === 'en' ? 'My Coupons' : '我的券包', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
     ...(isForwarder || isAdmin ? [{ to: '/admin/subscribe', label: lang === 'en' ? 'Subscribe' : '开通月费', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-emerald-500 to-emerald-600' }] : []),
     ...(isForwarder || isAdmin ? [{ to: '/admin/coupons', label: lang === 'en' ? 'Coupons' : '报关券', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
-    ...(isTrader ? [{ to: '/admin/coupon-wallet', label: lang === 'en' ? 'My Coupons' : '我的券包', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
     // 其余功能
     { to: '/admin/ai-ask', label: lang === 'en' ? 'AI Ask' : 'AI 问答', icon: <Sparkles className="w-4 h-4 text-white" />, color: 'from-amber-500 to-orange-500' },
     { to: '/admin/price-tables', label: lang === 'en' ? 'Price Tables' : '价格表', icon: <FileText className="w-4 h-4 text-white" />, color: 'from-purple-500 to-purple-600' },
