@@ -259,11 +259,12 @@ export default function AdminLayout() {
           </div>
           <div className="flex items-center gap-1">
             <button
-              className="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full border transition-all shadow-sm
+                border-primary-300 bg-primary-50 text-primary-700 hover:bg-primary-100 hover:border-primary-400 hover:shadow-md"
               onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
-              title={lang === 'zh' ? 'English' : '中文'}
             >
-              <Languages className="w-4 h-4" />
+              <Languages className="w-3.5 h-3.5" />
+              <span className="font-semibold">{lang === 'zh' ? 'EN' : '中文'}</span>
             </button>
             <button className="lg:hidden p-1 text-gray-500 hover:text-gray-700" onClick={() => setSidebarOpen(false)}>
             <X className="w-5 h-5" />
@@ -430,7 +431,13 @@ export default function AdminLayout() {
             <Menu className="w-6 h-6" />
           </button>
           <span className="ml-3 font-semibold text-gray-900">{t(AdminT.mobileTitle, lang)}</span>
-          <span className="ml-auto text-xs text-gray-400">{user?.display_name || ''}</span>
+          <button
+            className="ml-auto flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full border border-primary-200 bg-primary-50 text-primary-700"
+            onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
+          >
+            <Languages className="w-3 h-3" />
+            <span>{lang === 'zh' ? 'EN' : '中文'}</span>
+          </button>
         </header>
         <main className="flex-1 p-4 md:p-6 overflow-auto pb-20 lg:pb-6">
           <Outlet />
