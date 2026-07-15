@@ -260,7 +260,7 @@ export default function AdminLayout() {
           <div className="flex items-center gap-1">
             <button
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full border transition-all shadow-sm
-                border-primary-300 bg-primary-50 text-primary-700 hover:bg-primary-100 hover:border-primary-400 hover:shadow-md"
+                border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 hover:border-amber-400 hover:shadow-md"
               onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
             >
               <Languages className="w-3.5 h-3.5" />
@@ -432,13 +432,21 @@ export default function AdminLayout() {
           </button>
           <span className="ml-3 font-semibold text-gray-900">{t(AdminT.mobileTitle, lang)}</span>
           <button
-            className="ml-auto flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full border border-primary-200 bg-primary-50 text-primary-700"
+            className="ml-auto flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full border border-amber-300 bg-amber-50 text-amber-700"
             onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
           >
             <Languages className="w-3 h-3" />
             <span>{lang === 'zh' ? 'EN' : '中文'}</span>
           </button>
         </header>
+        {/* 右上角语言切换（桌面端） */}
+        <button
+          className="fixed top-3 right-4 z-30 hidden lg:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full border border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 hover:shadow-md transition-all shadow-sm"
+          onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
+        >
+          <Languages className="w-3.5 h-3.5" />
+          <span className="font-semibold">{lang === 'zh' ? 'EN' : '中文'}</span>
+        </button>
         <main className="flex-1 p-4 md:p-6 overflow-auto pb-20 lg:pb-6">
           <Outlet />
         </main>
