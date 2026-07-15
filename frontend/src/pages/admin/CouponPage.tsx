@@ -198,7 +198,7 @@ export default function CouponPage() {
                 {subscribeLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Gift className="w-5 h-5" />}
                 {subscribeLoading ? (lang === 'en' ? 'Opening...' : '开通中...') : (lang === 'en' ? 'Subscribe 19.9/month' : '🎯 开通月费 19.9元/月')}
               </button>
-              <p className="text-xs text-gray-400 mt-2">{lang === 'en' ? 'First month free, cancel anytime' : '首月免费试用，随时取消'}</p>
+              <p className="text-xs text-gray-400 mt-2">{lang === 'en' ? '¥19.9/month, cancel anytime' : '19.9元/月，随时取消'}</p>
             </div>
           ) : (
             <div>
@@ -363,7 +363,7 @@ export default function CouponPage() {
             </button>
           )}
           <p className="text-xs text-gray-400 mt-3">
-            {lang === 'en' ? 'First month free. Cancel anytime and future coupons will stop.' : '首月免费试用，取消后不再发放新券。'}
+            {lang === 'en' ? '¥19.9/month. Cancel anytime and future coupons will stop.' : '19.9元/月，取消后不再发放新券。'}
           </p>
         </div>
       )}

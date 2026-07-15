@@ -75,7 +75,7 @@ export default function SubscribePage() {
   ];
 
   const steps = [
-    { num: '①', title: lang === 'en' ? 'Subscribe' : '开通月费', desc: lang === 'en' ? '¥19.9/month, first month free' : '19.9元/月，首月免费' },
+    { num: '①', title: lang === 'en' ? 'Subscribe' : '开通月费', desc: lang === 'en' ? '¥19.9/month' : '19.9元/月' },
     { num: '②', title: lang === 'en' ? 'Get Coupon' : '每月获券', desc: lang === 'en' ? '1 coupon worth ¥50 issued monthly' : '每月1张面值50元报关券到账' },
     { num: '③', title: lang === 'en' ? 'Send to Client' : '赠送给客户', desc: lang === 'en' ? 'Gift it to your trader clients' : '送给您的外贸客户用于报关' },
     { num: '④', title: lang === 'en' ? 'Win-Win' : '共赢', desc: lang === 'en' ? 'Client saves, you gain loyalty' : '客户省报关费，您维护关系' },
@@ -96,7 +96,7 @@ export default function SubscribePage() {
           {lang === 'en' ? 'Monthly Customs Coupon' : '🎫 月费报关券'}
         </h1>
         <p className="text-white/80 text-lg mb-6">
-          {lang === 'en' ? '¥19.9/month · First month free' : '19.9元/月 · 首月免费试用'}
+          {lang === 'en' ? '¥19.9/month' : '19.9元/月'}
         </p>
         {subInfo?.subscribed ? (
           <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur rounded-full px-6 py-3">
@@ -112,11 +112,14 @@ export default function SubscribePage() {
             {subscribing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
             {subscribing
               ? (lang === 'en' ? 'Opening...' : '开通中...')
-              : (lang === 'en' ? '🔥 Subscribe Free Now' : '🔥 立即免费开通')}
+              : (lang === 'en' ? '🔥 Subscribe Now' : '🔥 立即开通')}
           </button>
         )}
         <p className="text-white/60 text-sm mt-3">
           {lang === 'en' ? 'Cancel anytime · Coupons expire in 2 months' : '随时取消 · 券有效期2个月'}
+        </p>
+        <p className="text-amber-200 text-xs mt-2">
+          {lang === 'en' ? '💡 Already enjoying a 30-day free trial from registration' : '💡 注册时已有30天试用期，开通月费立即生效'}
         </p>
       </div>
 
@@ -181,10 +184,6 @@ export default function SubscribePage() {
             <span className="text-lg font-bold text-amber-700">¥19.9</span>
           </div>
           <div className="flex items-center justify-between bg-white rounded-lg px-4 py-3 border border-amber-100">
-            <span className="text-sm text-gray-600">{lang === 'en' ? 'First month' : '首月'}</span>
-            <span className="text-lg font-bold text-green-600">{lang === 'en' ? 'FREE' : '免费'}</span>
-          </div>
-          <div className="flex items-center justify-between bg-white rounded-lg px-4 py-3 border border-amber-100">
             <span className="text-sm text-gray-600">{lang === 'en' ? 'Coupon face value' : '券面值'}</span>
             <span className="text-lg font-bold text-gray-800">¥50</span>
           </div>
@@ -203,8 +202,8 @@ export default function SubscribePage() {
           </h2>
           <p className="text-sm text-gray-500 mb-5 max-w-md mx-auto">
             {lang === 'en'
-              ? 'Each coupon you send brings your clients back. Subscribe now, first month free!'
-              : '每送出一张券，都是在告诉客户「我在乎你」。首月免费，立即开通！'}
+              ? 'Each coupon you send brings your clients back. Subscribe now!'
+              : '每送出一张券，都是在告诉客户「我在乎你」。立即开通！'}
           </p>
           <button
             className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-full px-8 py-3.5 font-bold text-lg hover:shadow-lg hover:scale-105 transition-all"
@@ -214,7 +213,7 @@ export default function SubscribePage() {
             {subscribing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
             {subscribing
               ? (lang === 'en' ? 'Opening...' : '开通中...')
-              : (lang === 'en' ? '🔥 Subscribe Free Now' : '🔥 立即免费开通')}
+              : (lang === 'en' ? '🔥 Subscribe Now' : '🔥 立即开通')}
           </button>
         </div>
       )}

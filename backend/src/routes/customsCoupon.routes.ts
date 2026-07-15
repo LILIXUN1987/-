@@ -46,7 +46,6 @@ router.post('/subscribe', async (req, res) => {
 
     const month = getCurrentMonth();
     const subId = uuidv4();
-    // 首月免费，立即发放当月券
     await db('monthly_subscriptions').insert({
       id: subId,
       user_id: req.user!.id,
