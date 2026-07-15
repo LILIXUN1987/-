@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
-import { Ship, LogIn, UserPlus, TrendingUp, Plane, MapPin, Loader2, Search, AlertTriangle, Eye, Clock, Users, ArrowRight, Rocket, Zap, Shield, Sparkles } from 'lucide-react';
+import { Ship, LogIn, UserPlus, TrendingUp, Plane, MapPin, Loader2, Search, AlertTriangle, Eye, Clock, Users, ArrowRight, Rocket, Zap, Shield, Sparkles, Bot } from 'lucide-react';
 import client from '../../api/client';
 import { FEATURES } from '../../config/features';
+import AiAskPanel from '../../components/ai/AiAskPanel';
 
 export default function ChatPage() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -166,6 +167,19 @@ export default function ChatPage() {
           </div>
         </div>
       )}
+
+      {/* ── AI 物流助手 ── */}
+      <div className="max-w-4xl mx-auto px-4 mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <Bot className="w-4 h-4 text-amber-500" />
+          <h2 className="text-sm font-bold text-gray-800">🤖 物流AI助手</h2>
+          <span className="text-[10px] text-gray-400 bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded-full font-medium">社区数据实时问答</span>
+        </div>
+        <AiAskPanel />
+        <p className="text-[10px] text-gray-400 text-center mt-2">
+          💡 回答基于社区实时数据 + AI生成，仅供参考。注册后可查看更多详情。
+        </p>
+      </div>
 
       {/* ── 最新推广信息 ── */}
       <div className="max-w-4xl mx-auto px-4 mb-6">

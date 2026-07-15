@@ -46,6 +46,7 @@ import {
   Truck,
   Languages,
   Key,
+  Bot,
 } from 'lucide-react';
 
 function useNavItems() {
@@ -64,6 +65,7 @@ function useNavItems() {
     { to: '/admin/profile', label: t(AdminT.profile, lang), icon: User },
   ] : isOverseasAgent ? [
     { to: '/admin/dashboard', label: lang === 'en' ? '🏠 Dashboard' : '🏠 首页', icon: BarChart3 },
+    { to: '/admin/ai-ask', label: lang === 'en' ? '🤖 AI Ask' : '🤖 AI 问答', icon: Bot },
     { to: '/admin/files', label, icon: FileUp },
     { to: '/admin/overseas-center', label: lang === 'en' ? '📊 My Dashboard' : '📊 我的工作台', icon: BarChart3 },
     { to: '/admin/price-tables', label: lang === 'en' ? 'Price Tables' : '货代价格表', icon: FileText },
@@ -106,7 +108,7 @@ function useNavItems() {
 
   // 网安审核模式：非管理员精简菜单（只保留查看类功能）
   if (FEATURES.AUDIT_MODE && !rc.isAdmin) {
-    const keepPaths = ['/admin/dashboard', '/admin/files', '/admin/api-keys', '/admin/price-tables', '/admin/card-directory', '/admin/recommend', '/admin/coupons', '/admin/coupon-wallet', '/admin/port-services'];
+    const keepPaths = ['/admin/dashboard', '/admin/ai-ask', '/admin/files', '/admin/api-keys', '/admin/price-tables', '/admin/card-directory', '/admin/recommend', '/admin/coupons', '/admin/coupon-wallet', '/admin/port-services'];
     return {
       mainItems: mainItems.filter((item: any) => keepPaths.includes(item.to)),
       forwarderItems: forwarderItems.filter((item: any) => keepPaths.includes(item.to)),
