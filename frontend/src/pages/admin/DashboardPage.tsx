@@ -458,7 +458,9 @@ export default function DashboardPage() {
                       <span className="text-gray-400"> {lang === 'en' ? 'searched' : '查询了'}</span>
                       <span className="text-primary-600 font-medium">「{act.keyword?.substring(0, 20)}」</span>
                       <div className="text-[10px] text-gray-300 mt-0.5">{timeAgo(act.time)}</div>
-                </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
