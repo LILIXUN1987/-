@@ -17,9 +17,6 @@ import ExpressInquiryPanel from '../../components/admin/ExpressInquiryPanel';
 import ActivityFeed from '../../components/admin/ActivityFeed';
 import NewbieBanner from '../../components/admin/NewbieBanner';
 import { useAuthStore } from '../../store/authStore';
-import ReferralBanner from '../../components/admin/ReferralBanner';
-import InviteAgentCard from '../../components/admin/InviteAgentCard';
-import RecommendPeerCard from '../../components/admin/RecommendPeerCard';
 import QuotePage from './QuotePage';
 import { rawMessagesApi, RawMessage } from '../../api/rawMessages.api';
 import { formatTime } from '../../utils/time';
@@ -180,17 +177,6 @@ export default function FileUploadPage() {
 
           {/* 实时动态（放在显眼位置） */}
           <ActivityFeed />
-
-          {/* 推荐好友 */}
-          <ReferralBanner />
-
-          {/* 邀请海外代理（仅货代/海外代理可见） */}
-          {!isTrader && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <InviteAgentCard />
-              <RecommendPeerCard />
-            </div>
-          )}
 
           {/* 外贸热门搜索 */}
           {isTrader && <TraderTrending />}

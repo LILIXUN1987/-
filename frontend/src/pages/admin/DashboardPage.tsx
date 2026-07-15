@@ -10,6 +10,9 @@ import {
   Handshake, AlertTriangle, Bookmark, Globe, FileSpreadsheet,
 } from 'lucide-react';
 import TrialBanner from '../../components/admin/TrialBanner';
+import ReferralBanner from '../../components/admin/ReferralBanner';
+import InviteAgentCard from '../../components/admin/InviteAgentCard';
+import RecommendPeerCard from '../../components/admin/RecommendPeerCard';
 
 interface DashboardData {
   user: {
@@ -462,7 +465,18 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-      </div>
+      
+	      {/* ── 推荐好友进社区 ── */}
+	      <ReferralBanner />
+
+	      {/* ── 邀请海外代理 + 推荐国内同行 ── */}
+	      {!(user?.role === 'trader') && (
+	        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+	          <InviteAgentCard />
+	          <RecommendPeerCard />
+	        </div>
+	      )}
+</div>
     </div>
   );
 }
