@@ -8,12 +8,13 @@ import {
   FileUp, Plane, Ship, Truck, Package, Eye, Activity,
   Sparkles, ArrowRight, Clock, MapPin, Loader2, FileText,
   Handshake, AlertTriangle, Bookmark, Globe,
-  Shield, Mail, Key,
+  Shield, Mail, Key, MessageSquare,
 } from 'lucide-react';
 import TrialBanner from '../../components/admin/TrialBanner';
 import ReferralBanner from '../../components/admin/ReferralBanner';
 import InviteAgentCard from '../../components/admin/InviteAgentCard';
 import RecommendPeerCard from '../../components/admin/RecommendPeerCard';
+import { FEATURES } from '../../config/features';
 
 interface DashboardData {
   user: { display_name: string; company_name: string; role: string; avatar: string | null; trial_end: string | null; email: string | null; phone: string | null; is_newbie: boolean };
@@ -107,8 +108,18 @@ export default function DashboardPage() {
   const greeting = greet(lang);
 
   const quickActions = [
-    ...(isForwarder ? [{ to: '/admin/files?tab=entry', label: lang === 'en' ? 'Post Cargo' : '发布舱位', icon: <FileUp className="w-4 h-4 text-white" />, color: 'from-blue-500 to-blue-600' }, { to: '/admin/coupons', label: lang === 'en' ? 'Coupons' : '报关券', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
-    ...(isTrader ? [{ to: '/admin/files?tab=query', label: lang === 'en' ? 'Search Cargo' : '查舱位', icon: <Search className="w-4 h-4 text-white" />, color: 'from-blue-500 to-blue-600' }, { to: '/admin/coupon-wallet', label: lang === 'en' ? 'My Coupons' : '我的券包', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
+    // ①②③④ 核心功能：货代发布舱位与特价
+    ...(isForwarder ? [
+      { to: '/admin/files?tab=entry', label: lang === 'en' ? '② Post Cargo' : '② 发布舱位', icon: <FileUp className="w-4 h-4 text-white" />, color: 'from-blue-500 to-blue-600' },
+    ] : []),
+    { to: '/admin/files?tab=query', label: lang === 'en' ? '③ Search Cargo' : '③ 查舱位', icon: <Search className="w-4 h-4 text-white" />, color: 'from-emerald-500 to-emerald-600' },
+    ...(!(FEATURES.AUDIT_MODE && !rc.isAdmin) ? [
+      { to: '/admin/files?tab=quote', label: lang === 'en' ? '④ Inquire' : '④ 物流询价', icon: <MessageSquare className="w-4 h-4 text-white" />, color: 'from-orange-500 to-orange-600' },
+    ] : []),
+    // 报关券/券包
+    ...(isForwarder || isAdmin ? [{ to: '/admin/coupons', label: lang === 'en' ? 'Coupons' : '报关券', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
+    ...(isTrader ? [{ to: '/admin/coupon-wallet', label: lang === 'en' ? 'My Coupons' : '我的券包', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
+    // 其余功能
     { to: '/admin/ai-ask', label: lang === 'en' ? 'AI Ask' : 'AI 问答', icon: <Sparkles className="w-4 h-4 text-white" />, color: 'from-amber-500 to-orange-500' },
     { to: '/admin/price-tables', label: lang === 'en' ? 'Price Tables' : '价格表', icon: <FileText className="w-4 h-4 text-white" />, color: 'from-purple-500 to-purple-600' },
     { to: '/admin/tools', label: lang === 'en' ? 'Navigation' : '导航库', icon: <Bookmark className="w-4 h-4 text-white" />, color: 'from-teal-500 to-teal-600' },
@@ -357,14 +368,5 @@ function StatRow({ icon, label, value }: { icon: React.ReactNode; label: string;
       <span className="text-gray-500 flex items-center gap-1.5">{icon} {label}</span>
       <span className="font-semibold text-gray-800">{value}</span>
     </div>
-  );
-}
-
-/** 站内信图标修复 - 用于统计卡片 */
-function MessageSquare(props: any) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    </svg>
   );
 }
