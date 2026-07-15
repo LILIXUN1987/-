@@ -20,7 +20,7 @@ export default function ChatPage() {
 
   if (isAuthenticated) {
     // 已登录跳转首页
-    window.location.href = '/admin/files';
+    window.location.href = '/admin/dashboard';
     return null;
   }
 

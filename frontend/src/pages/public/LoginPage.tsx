@@ -72,7 +72,7 @@ export default function LoginPage() {
         navigate('/admin/ddp', { replace: true });
       }, 2000);
     } else if (rc.isAdmin || rc.isForwarder || rc.isLawyer || rc.isInspector || rc.isInsurer) {
-      navigate('/admin/files', { replace: true });
+      navigate('/admin/dashboard', { replace: true });
     } else {
       navigate('/chat', { replace: true });
     }
