@@ -458,25 +458,28 @@ export default function DashboardPage() {
                       <span className="text-gray-400"> {lang === 'en' ? 'searched' : '查询了'}</span>
                       <span className="text-primary-600 font-medium">「{act.keyword?.substring(0, 20)}」</span>
                       <div className="text-[10px] text-gray-300 mt-0.5">{timeAgo(act.time)}</div>
-                    </div>
-                  </div>
-                ))}
+                </div>
               </div>
             </div>
           )}
         </div>
-      
-	      {/* ── 推荐好友进社区 ── */}
-	      <ReferralBanner />
+      </div>
 
-	      {/* ── 邀请海外代理 + 推荐国内同行 ── */}
-	      {!(user?.role === 'trader') && (
-	        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-	          <InviteAgentCard />
-	          <RecommendPeerCard />
-	        </div>
-	      )}
-</div>
+      {/* ═══ 社区推广 ═══ */}
+      <div className="space-y-4">
+        <h2 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+          <Users className="w-4 h-4 text-green-500" />
+          {lang === "en" ? "🌱 Community Growth" : "🌱 社区推广"}
+        </h2>
+        <ReferralBanner />
+
+        {!(user?.role === "trader") && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <InviteAgentCard />
+            <RecommendPeerCard />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
