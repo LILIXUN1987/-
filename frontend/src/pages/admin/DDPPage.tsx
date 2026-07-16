@@ -299,7 +299,7 @@ function InquiryTab({ isAgent }: { isAgent?: boolean }) {
   const [countrySearch, setCountrySearch] = useState('');
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [countryList, setCountryList] = useState<string[]>([]);
-  const [portList, setPortList] = useState<{ code: string; name: string }[]>([]);
+  // portList removed, using manual input
   const countryRef = useRef<HTMLDivElement>(null);
   const [goodsDesc, setGoodsDesc] = useState('');
   const [hsCode, setHsCode] = useState('');
@@ -376,20 +376,7 @@ function InquiryTab({ isAgent }: { isAgent?: boolean }) {
     client.get('/ddp/destinations').then(r => setCountryList(r.data.countries || [])).catch(() => {});
   }, []);
 
-  // 加载港口列表（用ref缓存上一次结果，避免闪烁）
-  const portListRef = useRef<{ code: string; name: string }[]>([]);
-  useEffect(() => {
-    if (country.trim()) {
-      client.get('/ddp/destinations', { params: { country } }).then(r => {
-        const list = r.data.ports || [];
-        portListRef.current = list;
-        setPortList(list);
-      }).catch(() => {});
-    } else {
-      portListRef.current = [];
-      setPortList([]);
-    }
-  }, [country]);
+
 
   // 点击外部关闭下拉
   useEffect(() => {
@@ -507,14 +494,7 @@ function InquiryTab({ isAgent }: { isAgent?: boolean }) {
           </div>
           <div>
             <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.destPort, lang)}</label>
-            <div className="relative">
-              <select className="input-field w-full text-sm" value={port} onChange={e => setPort(e.target.value)}>
-                <option value="">{lang === 'en' ? 'Auto-detect from country' : '由系统根据目的国推荐'}</option>
-                {portList.length > 0 && portList.slice(0, 50).map(p => (
-                  <option key={p.code} value={p.name}>{p.name} ({p.code})</option>
-                ))}
-              </select>
-            </div>
+            <input className="input-field w-full text-sm" placeholder={t(T.portPlaceholder, lang)} value={port} onChange={e => setPort(e.target.value)} />
           </div>
           <div className="md:col-span-2">
             <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.goodsDesc, lang)}</label>
