@@ -226,7 +226,7 @@ export default function DDPPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
           {[
             { key: 'inquiry' as TabKey, label: T.tabInquiry, activeBg: 'from-primary-500 to-indigo-600', icon: '📮' },
-            { key: 'agents' as TabKey, label: T.tabAgents, activeBg: 'from-emerald-500 to-teal-600', icon: '🤝' },
+            { key: 'agents' as TabKey, label: isAgent ? { zh: '🤝 中国代理', en: '🤝 Chinese Forwarders' } : T.tabAgents, activeBg: 'from-emerald-500 to-teal-600', icon: '🤝' },
             { key: 'stats' as TabKey, label: T.tabStats, activeBg: 'from-amber-500 to-orange-600', icon: '📊' },
             { key: 'inquiries' as TabKey, label: { zh: '📬 我的询价', en: '📬 My Inquiries' }, activeBg: 'from-violet-500 to-purple-600', icon: '📬' },
           ].map((tItem) => (
@@ -249,7 +249,7 @@ export default function DDPPage() {
 
         {/* Tab 内容 */}
                 {tab === 'inquiry' && <InquiryTab isAgent={isAgent} />}
-        {tab === 'agents' && <AgentsTab />}
+        {tab === 'agents' && <AgentsTab isAgent={isAgent} />}
         {tab === 'stats' && <StatsTab />}
         {tab === 'inquiries' && <MyInquiriesTab />}
 
@@ -267,7 +267,7 @@ export default function DDPPage() {
                 <p className="text-xs text-gray-600 leading-relaxed">{t(T.infoDesc1, lang)}</p>
                 <p className="text-xs text-gray-600 mt-2 flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0" />
-                  {t(T.infoDesc2, lang)}
+                  {isAgent ? (lang === 'en' ? 'All Chinese forwarders here are community-verified. ' : '本社区的中国货代均为群友验证或推荐的靠谱合作方。') : t(T.infoDesc2, lang)}
                   <a href="/admin/inbox" className="inline-flex items-center gap-0.5 font-semibold text-indigo-600 hover:text-indigo-800 hover:underline transition-colors">
                     {t(T.infoDesc2Link, lang)}
                     <span className="text-xs">→</span>
@@ -569,7 +569,7 @@ function InquiryTab({ isAgent }: { isAgent?: boolean }) {
 // ════════════════════════════════════════════
 // Tab 2: 海外代理列表
 // ════════════════════════════════════════════
-function AgentsTab() {
+function AgentsTab({ isAgent }: { isAgent?: boolean }) {
   const lang = useLang();
   const [agents, setAgents] = useState<DDPAgent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -584,10 +584,24 @@ function AgentsTab() {
   const fetchAgents = async () => {
     setLoading(true);
     try {
-      const params: any = {};
-      if (selectedCountry) params.country = selectedCountry;
-      const res = await client.get<{ data: DDPAgent[] }>('/ddp/agents', { params });
-      setAgents(res.data.data || []);
+      if (isAgent) {
+        const params: any = {};
+        if (search.trim()) params.q = search.trim();
+        const res = await client.get('/overseas/forwarders', { params });
+        setAgents(res.data.data?.map((f: any) => ({
+          id: f.id,
+          company_name: f.company_name,
+          contact_person: f.display_name,
+          country: '',
+          created_by: f.id,
+          credit_score: f.credit_score
+        })) || []);
+      } else {
+        const params: any = {};
+        if (selectedCountry) params.country = selectedCountry;
+        const res = await client.get<{ data: DDPAgent[] }>('/ddp/agents', { params });
+        setAgents(res.data.data || []);
+      }
     } catch {}
     setLoading(false);
   };
@@ -646,7 +660,7 @@ function AgentsTab() {
           <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             className="w-full pl-8 pr-8 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-400 placeholder-gray-400"
-            placeholder={t(T.searchPlaceholder, lang)}
+            placeholder={isAgent ? (lang === 'en' ? 'Search Chinese forwarder...' : '搜索中国货代...') : t(T.searchPlaceholder, lang)}
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
