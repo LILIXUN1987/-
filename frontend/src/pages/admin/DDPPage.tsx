@@ -180,9 +180,14 @@ export default function DDPPage() {
   }
 
   const isAgent = rc.isOverseasAgent;
+  const [agentProfile, setAgentProfile] = useState<any>(null);
+
   useEffect(() => {
     if (isAgent) {
       client.get('/ddp/agents/my-status').then(r => setAgentRegistered(r.data.registered)).catch(() => setAgentRegistered(false));
+      client.get('/overseas/my-profile').then(r => {
+        if (r.data?.profile) setAgentProfile(r.data.profile);
+      }).catch(() => {});
     }
   }, [isAgent]);
 
@@ -213,6 +218,9 @@ export default function DDPPage() {
 
         {/* 海外代理入驻引导（未入驻时显示） */}
         {isAgent && agentRegistered === false && <AgentOnboarding />}
+
+        {/* 已入驻代理显示档案 */}
+        {isAgent && agentRegistered && agentProfile && <AgentProfileCard profile={agentProfile} lang={lang} />}
 
         {/* Tab 栏 */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
@@ -952,6 +960,48 @@ function AgentOnboarding() {
 }
 
 // ── 信用分徽章 ──
+
+// ── 海外代理档案卡片（入驻后显示） ──
+function AgentProfileCard({ profile, lang }: { profile: any; lang: Lang }) {
+  const ports = (profile.service_ports || '').split(',').map((p: string) => p.trim()).filter(Boolean);
+  return (
+    <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-5 mb-6">
+      <div className="flex items-start gap-3 mb-3">
+        <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
+          <span className="text-lg">🏢</span>
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="font-bold text-gray-900 text-base">{profile.company_name}</h3>
+            <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">{lang === 'en' ? 'Registered' : '已入驻'}</span>
+          </div>
+          <p className="text-xs text-gray-500 mt-0.5">{profile.country}{profile.city ? ' - ' + profile.city : ''}</p>
+        </div>
+      </div>
+      {ports.length > 0 && (
+        <div>
+          <p className="text-xs font-medium text-gray-600 mb-2">
+            {lang === 'en' ? 'Operable Ports (Priority Order):' : '可操作港口（按优先级排序）：'}
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {ports.map((port: string, i: number) => (
+              <span key={i}
+                className={'inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border ' + (i < 3 ? 'bg-emerald-100 border-emerald-300 text-emerald-800 font-medium' : 'bg-white border-gray-200 text-gray-600')}>
+                <span className={'w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ' + (i < 3 ? 'bg-emerald-500 text-white' : 'bg-gray-200 text-gray-500')}>{i + 1}</span>
+                {port}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      {profile.reference_price && (
+        <div className="mt-2 text-xs text-gray-500">💰 {profile.reference_price}</div>
+      )}
+    </div>
+  );
+}
+
+
 function CreditScoreBadge({ userId }: { userId: string }) {
   const [score, setScore] = useState<{ score: number; level: string } | null>(null);
   const [loading, setLoading] = useState(false);
