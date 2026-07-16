@@ -4,7 +4,7 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { authController } from '../controllers/auth.controller';
 import { authRequired } from '../middleware/auth.middleware';
-import { loginLimiter, forgotLimiter } from '../middleware/rateLimit.middleware';
+import { loginLimiter, forgotLimiter, uploadLimiter } from '../middleware/rateLimit.middleware';
 
 const router = Router();
 
@@ -74,9 +74,9 @@ router.post('/check-code', authController.checkCode);
 router.get('/company-mates', authController.companyMates);
 router.get('/me', authRequired, authController.me);
 router.get('/lookup', authRequired, authController.lookupByPhone);
-router.put('/profile', authRequired, uploadCard.single('card_image'), authController.updateProfile);
-router.post('/upload-license', authRequired, uploadLicense.single('license'), authController.uploadLicense);
-router.post('/upload-avatar', authRequired, uploadAvatar.single('avatar'), authController.uploadAvatar);
+router.put('/profile', authRequired, uploadLimiter, uploadCard.single('card_image'), authController.updateProfile);
+router.post('/upload-license', authRequired, uploadLimiter, uploadLicense.single('license'), authController.uploadLicense);
+router.post('/upload-avatar', authRequired, uploadLimiter, uploadAvatar.single('avatar'), authController.uploadAvatar);
 router.post('/change-password', authRequired, authController.changePassword);
 router.post('/forgot-password', forgotLimiter, authController.forgotPassword);
 router.post('/reset-password', forgotLimiter, authController.resetPassword);

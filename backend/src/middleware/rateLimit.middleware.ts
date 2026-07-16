@@ -83,3 +83,15 @@ export const forgotLimiter = rateLimit({
     code: 'FORGOT_RATE_LIMITED',
   },
 });
+
+// 文件上传限流 — 每 IP 每10分钟最多50次（防止批量填满硬盘，但也给大货代集中注册留空间）
+export const uploadLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 50,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: '上传过于频繁，请稍后再试',
+    code: 'UPLOAD_RATE_LIMITED',
+  },
+});
