@@ -234,10 +234,9 @@ export const ddpController = {
           .where('country', 'like', `%${countryQ}%`)
           .select('id', 'created_by', 'email', 'company_name', 'service_ports')
           .orderByRaw(portQ
-            ? `CASE WHEN service_ports LIKE '%${portQ.replace(/'/g, "''")}%' THEN 0 ELSE 1 END, completed_orders DESC`
+            ? `CASE WHEN INSTR(service_ports, '${portQ.replace(/'/g, "''")}') > 0 THEN INSTR(service_ports, '${portQ.replace(/'/g, "''")}') ELSE 999 END, completed_orders DESC`
             : 'completed_orders DESC'
-          )
-          .limit(50) as any[];
+          ) as any[];
       }
 
       if (agents.length === 0) {

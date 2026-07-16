@@ -835,7 +835,7 @@ function AgentOnboarding() {
   const [direction, setDirection] = useState<'export' | 'import'>('export');
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
-  const [ports, setPorts] = useState('');
+  const [ports, setPorts] = useState<string[]>(['', '', '', '', '', '', '', '', '', '']);
   const [services, setServices] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -844,8 +844,8 @@ function AgentOnboarding() {
   const [error, setError] = useState('');
 
   const handleSubmit = async () => {
-    if (!companyName.trim() || !country.trim() || !ports.trim()) {
-      setError(lang === 'en' ? 'Please fill in company name, country and ports' : '请填写公司名称、国家和可操作港口');
+    if (!companyName.trim() || !country.trim() || !ports.some(p => p.trim())) {
+      setError(lang === 'en' ? 'Please fill in company name, country and at least one port' : '请填写公司名称、国家和至少一个可操作港口');
       return;
     }
     setSubmitting(true);
@@ -856,7 +856,7 @@ function AgentOnboarding() {
         contact_person: contactPerson.trim() || undefined,
         country: country.trim(),
         city: city.trim() || undefined,
-        service_ports: ports.trim(),
+        service_ports: ports.filter(p => p.trim()).join(','),
         service_types: services.trim() || undefined,
         description: description.trim() || undefined,
         reference_price: price.trim() || undefined,
@@ -908,8 +908,26 @@ function AgentOnboarding() {
           <input className="input-field w-full text-sm" placeholder="Los Angeles" value={city} onChange={e => setCity(e.target.value)} />
         </div>
         <div className="md:col-span-2">
-          <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.onboardPorts, lang)}</label>
-          <input className="input-field w-full text-sm" placeholder={t(T.onboardPortsPlace, lang)} value={ports} onChange={e => { setPorts(e.target.value); setError(''); }} />
+          <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.onboardPorts, lang)} <span className="text-red-500">*</span></label>
+          <p className="text-[10px] text-amber-600 mb-2">{lang === 'en' ? 'Fill in priority order (1 = highest). DDP inquiries will be matched in this order.' : '按优先级填写（1为最高）。DDP询价将按此顺序匹配推送。'}</p>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            {ports.map((p, i) => (
+              <div key={i} className="flex items-center gap-1.5">
+                <span className="text-[10px] font-bold text-gray-400 w-4 flex-shrink-0">{i + 1}</span>
+                <input
+                  className="input-field text-xs py-1.5 w-full"
+                  placeholder={lang === 'en' ? 'Port ' + (i + 1) : '港口' + (i + 1)}
+                  value={p}
+                  onChange={e => {
+                    const newPorts = [...ports];
+                    newPorts[i] = e.target.value.toUpperCase();
+                    setPorts(newPorts);
+                    setError('');
+                  }}
+                />
+              </div>
+            ))}
+          </div>
         </div>
         <div>
           <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.onboardServices, lang)}</label>
