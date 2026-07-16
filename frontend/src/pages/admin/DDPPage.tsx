@@ -310,8 +310,8 @@ function InquiryTab({ isAgent }: { isAgent?: boolean }) {
   const [result, setResult] = useState<{ message: string; notified: number } | null>(null);
 
   const hotCountries = lang === 'zh'
-    ? ['美国', '德国', '英国', '法国', '荷兰', '日本', '韩国', '越南', '泰国', '印度', '阿联酋', '沙特', '巴西', '尼日利亚', '肯尼亚', '澳大利亚']
-    : ['USA', 'Germany', 'UK', 'France', 'Netherlands', 'Japan', 'Korea', 'Vietnam', 'Thailand', 'India', 'UAE', 'Saudi', 'Brazil', 'Nigeria', 'Kenya', 'Australia'];
+    ? ['中国', '美国', '德国', '英国', '法国', '荷兰', '日本', '韩国', '越南', '泰国', '印度', '阿联酋', '沙特', '巴西', '尼日利亚', '肯尼亚', '澳大利亚']
+    : ['China', 'USA', 'Germany', 'UK', 'France', 'Netherlands', 'Japan', 'Korea', 'Vietnam', 'Thailand', 'India', 'UAE', 'Saudi', 'Brazil', 'Nigeria', 'Kenya', 'Australia'];
 
   const handleUploadFile = async (file: File) => {
     const idx = files.findIndex(f => f.file === file);

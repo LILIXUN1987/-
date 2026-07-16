@@ -80,6 +80,8 @@ router.get('/destinations', async (req, res) => {
       const entry = info as { en: string; zh: string; country: string };
       if (entry.country) countrySet.add(entry.country);
     }
+    countrySet.add('China');
+    countrySet.add('中国');
     const allCountries = Array.from(countrySet).sort();
 
     // 如果没有指定国家，只返回国家列表
@@ -99,6 +101,16 @@ router.get('/destinations', async (req, res) => {
     }
 
     // 去重排序
+        // 搜索中国时加入国内主要机场
+    if (q.includes('china')) {
+      const { AIRPORT_CITY_MAP } = require('../data/airport-codes');
+      for (const [city, code] of Object.entries(AIRPORT_CITY_MAP) as [string, string][]) {
+        if (city !== code && !/^[A-Z]{3}$/.test(city)) {
+          ports.push({ code, name: city });
+        }
+      }
+    }
+
     const seen = new Set<string>();
     const uniquePorts = ports.filter(p => {
       const key = p.name + p.code;
