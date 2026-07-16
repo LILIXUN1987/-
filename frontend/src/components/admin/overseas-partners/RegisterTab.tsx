@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import client from '../../../api/client';
 import { useAuthStore } from '../../../store/authStore';
 import type { DDPAgent } from '../../../api/ddp.api';
-import { Loader2, Search, CheckCircle, Plus, Handshake } from 'lucide-react';
+import { Loader2, Search, CheckCircle, Plus } from 'lucide-react';
 
 export default function RegisterTab({ isAgent }: { isAgent: boolean }) {
   const lang = useAuthStore((s) => s.lang);
@@ -34,14 +34,18 @@ export default function RegisterTab({ isAgent }: { isAgent: boolean }) {
   }, [agents, isAgent, agentSearch]);
 
   const handleSubmit = async () => {
-    if (!selectedAgent) { alert(lang === 'en' ? 'Please select an agent' : '请选择代理'); return; }
+    if (!selectedAgent) { alert(lang === 'en' ? 'Please select an agent or forwarder' : '请选择代理或货代'); return; }
     setSubmitting(true);
     try {
-      await client.post('/cooperations', {
-        agent_user_id: selectedAgent,
-        service_type: serviceType || undefined,
-        description: description || undefined,
-      });
+      const payload: any = { service_type: serviceType || undefined, description: description || undefined };
+      // isAgent = 海外代理 → 登记与forwarder合作, 传 forwarder_user_id
+      // !isAgent = 中国货代 → 登记与overseas agent合作, 传 agent_user_id
+      if (isAgent) {
+        payload.forwarder_user_id = selectedAgent;
+      } else {
+        payload.agent_user_id = selectedAgent;
+      }
+      await client.post('/cooperations', payload);
       setDone(true);
       setTimeout(() => { setDone(false); setSelectedAgent(''); setServiceType(''); setDescription(''); }, 2000);
     } catch (err: any) {
@@ -50,7 +54,7 @@ export default function RegisterTab({ isAgent }: { isAgent: boolean }) {
     setSubmitting(false);
   };
 
-  // 货代看海外代理列表
+  // 中国货代视角：选择海外代理登记合作
   if (!isAgent) {
     return (
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
@@ -126,21 +130,124 @@ export default function RegisterTab({ isAgent }: { isAgent: boolean }) {
     );
   }
 
-  // 代理视角：引导去联系货代
+  // 海外代理视角：搜索中国货代并登记合作
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-      <div className="text-center py-8">
-        <Handshake className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-        <h3 className="text-sm font-medium text-gray-700 mb-2">
-          {lang === 'en' ? 'Have you worked with a Chinese forwarder?' : '和中国货代合作过？'}
-        </h3>
-        <p className="text-xs text-gray-400 mb-4">
-          {lang === 'en'
-            ? 'Ask them to register a cooperation on the community. Once they do, you can confirm it here.'
-            : '请对方在社区登记合作，您收到通知后在这里确认即可。'}
-        </p>
-        <p className="text-xs text-gray-400">{lang === 'en' ? 'Go to "My Partners" tab to see pending confirmations.' : '前往「我的合作商」Tab 查看待确认的记录。'}</p>
+      <h3 className="text-sm font-medium text-gray-700 mb-1">
+        {lang === 'en' ? 'Register cooperation with a Chinese forwarder' : '登记与中国货代的合作'}
+      </h3>
+      <p className="text-xs text-gray-400 mb-4">
+        {lang === 'en' ? 'Search for a Chinese forwarder you worked with and register' : '搜索您合作过的中国货代，建立合作记录'}
+      </p>
+
+      {done ? (
+        <div className="bg-green-50 border border-green-200 rounded-xl p-5 text-center">
+          <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
+          <p className="text-green-800 font-medium text-sm">{lang === 'en' ? '✅ Cooperation registered! Awaiting confirmation.' : '✅ 合作已登记，等待货代方确认'}</p>
+        </div>
+      ) : (
+        <div className="space-y-4 max-w-lg">
+          <ForwarderSearchSelect
+            lang={lang}
+            onSelect={(id, label) => { setSelectedAgent(id); setAgentSearch(label); }}
+            selectedId={selectedAgent}
+            searchLabel={agentSearch}
+          />
+
+          <div>
+            <label className="text-xs font-medium text-gray-500 mb-1 block">{lang === 'en' ? 'Service Type' : '合作类型'}</label>
+            <select className="input-field w-full text-sm" value={serviceType} onChange={e => setServiceType(e.target.value)}>
+              <option value="">{lang === 'en' ? '-- Select --' : '-- 请选择 --'}</option>
+              <option value="DDP">DDP</option>
+              <option value="DDU">DDU</option>
+              <option value="清关">{lang === 'en' ? 'Customs Clearance' : '清关'}</option>
+              <option value="派送">{lang === 'en' ? 'Delivery' : '派送'}</option>
+              <option value="仓储">{lang === 'en' ? 'Warehousing' : '仓储'}</option>
+              <option value="其他">{lang === 'en' ? 'Other' : '其他'}</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-gray-500 mb-1 block">{lang === 'en' ? 'Description (optional)' : '合作描述（选填）'}</label>
+            <textarea className="input-field w-full text-sm min-h-[80px]" placeholder={lang === 'en' ? 'e.g. Handled shipments together, smooth cooperation' : '例如：合作顺畅，操作专业'} value={description} onChange={e => setDescription(e.target.value)} />
+          </div>
+
+          <button className="btn-primary inline-flex items-center gap-2 text-sm py-2.5 px-6" onClick={handleSubmit} disabled={submitting || !selectedAgent}>
+            {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+            {submitting ? (lang === 'en' ? 'Submitting...' : '提交中...') : (lang === 'en' ? 'Register Cooperation' : '登记合作')}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** 搜索中国货代子组件 */
+function ForwarderSearchSelect({ lang, onSelect, selectedId, searchLabel }: {
+  lang: string; onSelect: (id: string, label: string) => void;
+  selectedId: string; searchLabel: string;
+}) {
+  const [query, setQuery] = useState(searchLabel || '');
+  const [results, setResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setShowDropdown(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const handleSearch = async (q: string) => {
+    setQuery(q);
+    if (q.trim().length < 2) { setResults([]); return; }
+    setLoading(true);
+    try {
+      const res = await client.get('/overseas/forwarders', { params: { q: q.trim(), limit: 10 } });
+      setResults(res.data.data || []);
+      setShowDropdown(true);
+    } catch { setResults([]); }
+    setLoading(false);
+  };
+
+  return (
+    <div className="relative" ref={ref}>
+      <label className="text-xs font-medium text-gray-500 mb-1 block">
+        {lang === 'en' ? 'Search Chinese Forwarder *' : '搜索中国货代 *'}
+      </label>
+      <div className="relative">
+        <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <input className="input-field w-full text-sm pl-8"
+          placeholder={lang === 'en' ? 'Search by company name...' : '输入中国货代公司名...'}
+          value={query}
+          onChange={e => { handleSearch(e.target.value); onSelect('', ''); }}
+          onFocus={() => results.length > 0 && setShowDropdown(true)} />
+        {loading && <Loader2 className="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 animate-spin" />}
       </div>
+      {showDropdown && results.length > 0 && (
+        <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+          {results.map((fw: any) => (
+            <button key={fw.id}
+              className={`w-full text-left px-3 py-2 text-sm hover:bg-primary-50 transition-colors flex items-center gap-2 ${selectedId === fw.id ? 'bg-primary-50 text-primary-700' : 'text-gray-700'}`}
+              onClick={() => { onSelect(fw.id, fw.company_name || fw.display_name); setQuery(fw.company_name || fw.display_name); setShowDropdown(false); }}>
+              <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold flex-shrink-0">🏢</span>
+              <div className="min-w-0">
+                <p className="font-medium truncate">{fw.company_name || fw.display_name}</p>
+                <p className="text-xs text-gray-400">{fw.display_name} · 🤝 {fw.cooperation_count || 0}次合作 · 🏆 {fw.credit_score || 50}分</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+      {results.length === 0 && query.trim().length >= 2 && !loading && (
+        <p className="text-xs text-gray-400 mt-1">{lang === 'en' ? 'No forwarders found. Try a different name.' : '未找到货代，请尝试其他公司名'}</p>
+      )}
+      {selectedId && query && (
+        <p className="text-[10px] text-green-600 mt-1">✅ {lang === 'en' ? 'Forwarder selected' : '已选择货代'}</p>
+      )}
     </div>
   );
 }

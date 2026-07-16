@@ -5,44 +5,54 @@ import logger from '../utils/logger';
 import { logAudit } from '../services/audit.service';
 
 export const cooperationController = {
-  // ── 登记合作 ──
+  // ── 登记合作（双向：货代→海外代理 / 海外代理→货代） ──
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const { agent_user_id, agent_company, service_type, description } = req.body;
-      if (!agent_user_id) return res.status(400).json({ error: '请选择海外代理' });
+      const { agent_user_id, forwarder_user_id: fwId, agent_company, service_type, description } = req.body;
+      const userId = req.user!.id;
+      const user = await db('users').where({ id: userId }).first() as any;
+      const isAgent = user?.role === 'overseas_agent';
 
-      const forwarderUserId = req.user!.id;
-      const forwarder = await db('users').where({ id: forwarderUserId }).first() as any;
-      const agent = await db('users').where({ id: agent_user_id }).first() as any;
-      if (!agent) return res.status(404).json({ error: '代理用户不存在' });
+      const targetAgentUserId = isAgent ? userId : agent_user_id;
+      const targetFwUserId = isAgent ? fwId : userId;
 
-      // 查是否已登记过
+      if (!targetAgentUserId && !targetFwUserId) {
+        return res.status(400).json({ error: isAgent ? '请选择中国货代' : '请选择海外代理' });
+      }
+
+      const otherUserId = isAgent ? fwId : agent_user_id;
+      const otherUser = await db('users').where({ id: otherUserId }).first() as any;
+      if (!otherUser) return res.status(404).json({ error: '对方用户不存在' });
+
+      const finalAgentUserId = targetAgentUserId;
+      const finalFwUserId = targetFwUserId;
+
       const existing = await db('cooperations')
-        .where({ agent_user_id, forwarder_user_id: forwarderUserId })
+        .where({ agent_user_id: finalAgentUserId, forwarder_user_id: finalFwUserId })
         .whereNot('status', 'disputed')
         .first();
       if (existing) {
-        return res.json({ message: '您与该代理已有合作记录', cooperation: existing });
+        return res.json({ message: '您与该用户已有合作记录', cooperation: existing });
       }
 
       const id = uuidv4();
       await db('cooperations').insert({
         id,
-        agent_user_id,
-        forwarder_user_id: forwarderUserId,
-        agent_company: agent_company || agent.company_name || null,
-        forwarder_company: forwarder?.company_name || null,
+        agent_user_id: finalAgentUserId,
+        forwarder_user_id: finalFwUserId,
+        agent_company: agent_company || (isAgent ? user?.company_name : otherUser?.company_name) || null,
+        forwarder_company: isAgent ? otherUser?.company_name : user?.company_name || null,
         service_type: service_type || null,
         description: description || null,
         status: 'pending',
       });
 
-      // 给代理发站内信通知
+      // 给对方发站内信通知
       await db('messages').insert({
         id: uuidv4(),
-        sender_id: forwarderUserId,
-        receiver_id: agent_user_id,
-        content: `🤝 合作确认通知\n\n${forwarder?.company_name || ''} ${forwarder?.display_name || ''} 已与贵司登记合作。请登录社区「我的合作商」页面确认此项合作。\n\n说明：${description || '无'}`,
+        sender_id: userId,
+        receiver_id: otherUserId,
+        content: `🤝 合作确认通知\n\n${user?.company_name || ''} ${user?.display_name || ''} 已与贵司登记合作。请登录社区「我的合作商」页面确认此项合作。\n\n说明：${description || '无'}`,
         is_read: false,
         created_at: new Date().toISOString(),
       });
