@@ -60,14 +60,12 @@ function useNavItems() {
     { to: '/admin/profile', label: t(AdminT.profile, lang), icon: User },
   ] : isOverseasAgent ? [
     { to: '/admin/dashboard', label: lang === 'en' ? '🏠 Dashboard' : '🏠 首页', icon: BarChart3 },
-    { to: '/admin/ai-ask', label: lang === 'en' ? '🤖 AI Ask' : '🤖 AI 问答', icon: Bot },
-    { to: '/admin/files', label, icon: FileUp },
     { to: '/admin/overseas-center', label: lang === 'en' ? '📊 My Dashboard' : '📊 我的工作台', icon: BarChart3 },
-    { to: '/admin/price-tables', label: lang === 'en' ? 'Price Tables' : '货代价格表', icon: FileText },
-    { to: '/admin/port-services', label: lang === 'en' ? '🚛 Port Services' : '🚛 口岸服务', icon: Truck },
-    ...(FEATURES.INBOX ? [{ to: '/admin/inbox', label: t(AdminT.inbox, lang), icon: Mail }] : []),
+    { to: '/admin/ai-ask', label: lang === 'en' ? '🤖 AI Ask' : '🤖 AI 问答', icon: Bot },
     { to: '/admin/ddp', label: t(AdminT.ddp, lang), icon: Globe },
     { to: '/admin/overseas-partners', label: lang === 'en' ? 'My Partners' : '我的合作商', icon: Handshake },
+    { to: '/admin/tools', label: lang === 'en' ? '🔧 Toolbox' : '🔧 工具箱', icon: Bookmark },
+    ...(FEATURES.INBOX ? [{ to: '/admin/inbox', label: t(AdminT.inbox, lang), icon: Mail }] : []),
     { to: '/admin/profile', label: t(AdminT.profile, lang), icon: User },
   ] : [
     { to: '/admin/dashboard', label: lang === 'en' ? '🏠 Dashboard' : '🏠 首页', icon: BarChart3 },
