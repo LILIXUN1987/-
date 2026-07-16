@@ -30,13 +30,13 @@ function isEnabled(): boolean {
   return !!env.smtp.pass;
 }
 
-// ── 社区优势对比模块（按角色不同版本） ──
+// ══════════════════════════════════════════════════════════════
+// 社区介绍模块 — 中文版
+// ══════════════════════════════════════════════════════════════
 
-/** 外贸行业版：查口碑、避坑、找渠道 */
 const COMMUNITY_INTRO_TRADER = `
 <div style="margin-top: 28px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
   <h3 style="color: #1a56db; font-size: 16px; margin-bottom: 12px;">🛡️ 外贸行业护航者 — 合作前先查口碑，让您不再被不诚信货代坑骗！</h3>
-
   <table style="width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.8; margin-bottom: 16px;">
     <tr style="background: #f0fdf4;">
       <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center; width: 33%;">
@@ -56,53 +56,17 @@ const COMMUNITY_INTRO_TRADER = `
       </td>
     </tr>
   </table>
-
-  <table style="width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.8;">
-    <tr style="background: #f9fafb;">
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; font-weight: bold; width: 30%;">场景</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; background: #fef2f2; color: #dc2626; font-weight: bold; width: 35%;">❌ 以前您只能</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; background: #f0fdf4; color: #16a34a; font-weight: bold; width: 35%;">✅ 现在您可以</td>
-    </tr>
-    <tr>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; font-weight: bold;">遇到新货代</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;">问同行、翻朋友圈、凭感觉</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;"><strong>搜公司名，看有没有被吐槽过</strong></td>
-    </tr>
-    <tr style="background: #f9fafb;">
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; font-weight: bold;">被坑了</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;">群里骂两句，下个人继续被骗</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;"><strong>发吐槽→积累5家→管理员审核→全员提醒通知</strong></td>
-    </tr>
-    <tr>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; font-weight: bold;">找特价舱位</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;">群发几百条微信好友等回复</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;"><strong>输入广州-LAX，所有推广信息全出来，一键联系</strong></td>
-    </tr>
-    <tr style="background: #f9fafb;">
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; font-weight: bold;">比价格</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;">挨个打电话问，慢了就没了</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;"><strong>系统自动匹配推送，有合适仓位马上通知您</strong></td>
-    </tr>
-    <tr>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; font-weight: bold;">担心被骗保证金</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;">只能听对方说"我们做了很多年"</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;"><strong>公司实名注册+名片认证，身份真实可追溯</strong></td>
-    </tr>
-  </table>
-
   <p style="color: #6b7280; font-size: 12px; margin-top: 16px; text-align: center;">
     让您<strong style="color: #1a56db;">不再被坑</strong>，让他<strong style="color: #1a56db;">不再缺货</strong> — 共建诚信物流社区！
   </p>
   <p style="color: #6b7280; font-size: 11px; margin-top: 8px; text-align: center;">
-    💬 有任何建议？欢迎在社区「群友建议」中留言，功能根据您的反馈不断完善中！
+    💬 有任何建议？欢迎在社区「群友建议」中留言！
   </p>
 </div>`;
 
-/** 货运代理版：免费推广、精准获客、直接对接 */
 const COMMUNITY_INTRO_FORWARDER = `
 <div style="margin-top: 28px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
   <h3 style="color: #1a56db; font-size: 16px; margin-bottom: 12px;">📦 货代获客新渠道 — 免费发布，精准匹配，直接对接客户！</h3>
-
   <table style="width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.8; margin-bottom: 16px;">
     <tr style="background: #eff6ff;">
       <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center; width: 33%;">
@@ -113,7 +77,7 @@ const COMMUNITY_INTRO_FORWARDER = `
       <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center; width: 33%;">
         <div style="font-size: 24px; margin-bottom: 4px;">🎯</div>
         <div style="font-weight: bold; color: #16a34a;">精准匹配</div>
-        <div style="color: #6b7280; font-size: 12px; margin-top: 4px;">客户搜港口→自动匹配<br/>您的推广信息<br/>需求直接推送到站内信</div>
+        <div style="color: #6b7280; font-size: 12px; margin-top: 4px;">客户搜港口→自动匹配<br/>需求直接推送到站内信</div>
       </td>
       <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center; width: 33%;">
         <div style="font-size: 24px; margin-bottom: 4px;">💬</div>
@@ -122,51 +86,87 @@ const COMMUNITY_INTRO_FORWARDER = `
       </td>
     </tr>
   </table>
-
-  <table style="width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.8;">
-    <tr style="background: #f9fafb;">
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; font-weight: bold; width: 30%;">场景</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; background: #fef2f2; color: #dc2626; font-weight: bold; width: 35%;">❌ 以前您只能</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; background: #f0fdf4; color: #16a34a; font-weight: bold; width: 35%;">✅ 现在您可以</td>
-    </tr>
-    <tr>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; font-weight: bold;">推广特价</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;">微信群刷屏、朋友圈发广告<br/>客户看不到就白发了</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;"><strong>录入一次→全天展示→有需求的客户主动找您</strong></td>
-    </tr>
-    <tr style="background: #f9fafb;">
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; font-weight: bold;">找客户</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;">加群加好友、求推荐、等询价</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;"><strong>客户搜您的航线→自动匹配→需求推送到站内信</strong></td>
-    </tr>
-    <tr>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; font-weight: bold;">沟通报价</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;">打电话、加微信、反复报价</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;"><strong>站内信即时沟通，满意后再交换手机号</strong></td>
-    </tr>
-    <tr style="background: #f9fafb;">
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb; font-weight: bold;">建立信任</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;">客户怕被骗、怕货代不靠谱</td>
-      <td style="padding: 8px 12px; border: 1px solid #e5e7eb;"><strong>企业认证🏢+实名名片，客户更敢找您下单</strong></td>
-    </tr>
-  </table>
-
   <p style="color: #6b7280; font-size: 12px; margin-top: 16px; text-align: center;">
     他<strong style="color: #1a56db;">不再被坑</strong>，您<strong style="color: #1a56db;">不再缺货</strong> — 共建诚信物流社区！
   </p>
   <p style="color: #6b7280; font-size: 11px; margin-top: 8px; text-align: center;">
-    💬 有任何建议？欢迎在社区「群友建议」中留言，功能根据您的反馈不断完善中！
+    💬 有任何建议？欢迎在社区「群友建议」中留言！
+  </p>
+</div>`;
+
+// ══════════════════════════════════════════════════════════════
+// 社区介绍模块 — 英文版
+// ══════════════════════════════════════════════════════════════
+
+const COMMUNITY_INTRO_TRADER_EN = `
+<div style="margin-top: 28px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
+  <h3 style="color: #1a56db; font-size: 16px; margin-bottom: 12px;">🛡️ Your Industry Shield — Check reputation before working with any forwarder!</h3>
+  <table style="width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.8; margin-bottom: 16px;">
+    <tr style="background: #f0fdf4;">
+      <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center; width: 33%;">
+        <div style="font-size: 24px; margin-bottom: 4px;">🔍</div>
+        <div style="font-weight: bold; color: #16a34a;">Check Reputation</div>
+        <div style="color: #6b7280; font-size: 12px; margin-top: 4px;">Search company name<br/>See complaints history<br/>Decide before cooperating</div>
+      </td>
+      <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center; width: 33%;">
+        <div style="font-size: 24px; margin-bottom: 4px;">📢</div>
+        <div style="font-weight: bold; color: #dc2626;">Report Bad Actors</div>
+        <div style="color: #6b7280; font-size: 12px; margin-top: 4px;">One-click complaint<br/>5 reports trigger<br/><strong style="color: #dc2626;">community-wide alert</strong></div>
+      </td>
+      <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center; width: 33%;">
+        <div style="font-size: 24px; margin-bottom: 4px;">🤝</div>
+        <div style="font-weight: bold; color: #1a56db;">Find Partners</div>
+        <div style="color: #6b7280; font-size: 12px; margin-top: 4px;">Enter port code<br/>See listings instantly<br/>Contact forwarders directly</div>
+      </td>
+    </tr>
+  </table>
+  <p style="color: #6b7280; font-size: 12px; margin-top: 16px; text-align: center;">
+    Building a trusted logistics community together!
+  </p>
+</div>`;
+
+const COMMUNITY_INTRO_FORWARDER_EN = `
+<div style="margin-top: 28px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
+  <h3 style="color: #1a56db; font-size: 16px; margin-bottom: 12px;">📦 New Client Acquisition — Post free, get matched, connect directly!</h3>
+  <table style="width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.8; margin-bottom: 16px;">
+    <tr style="background: #eff6ff;">
+      <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center; width: 33%;">
+        <div style="font-size: 24px; margin-bottom: 4px;">📢</div>
+        <div style="font-weight: bold; color: #2563eb;">Free Listings</div>
+        <div style="color: #6b7280; font-size: 12px; margin-top: 4px;">Post cargo space once<br/>Visible to all traders<br/>No more WeChat spam</div>
+      </td>
+      <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center; width: 33%;">
+        <div style="font-size: 24px; margin-bottom: 4px;">🎯</div>
+        <div style="font-weight: bold; color: #16a34a;">Smart Matching</div>
+        <div style="color: #6b7280; font-size: 12px; margin-top: 4px;">Clients search ports<br/>Your listing appears<br/>Leads sent to your inbox</div>
+      </td>
+      <td style="padding: 12px; border: 1px solid #e5e7eb; text-align: center; width: 33%;">
+        <div style="font-size: 24px; margin-bottom: 4px;">💬</div>
+        <div style="font-weight: bold; color: #9333ea;">Direct Contact</div>
+        <div style="color: #6b7280; font-size: 12px; margin-top: 4px;">Clients contact you<br/>In-app messaging<br/>Share phone when ready</div>
+      </td>
+    </tr>
+  </table>
+  <p style="color: #6b7280; font-size: 12px; margin-top: 16px; text-align: center;">
+    Building a trusted logistics community together!
   </p>
 </div>`;
 
 import { randomInt } from 'crypto';
 
-// ── 生成验证码（加密安全随机） ──
 function generateCode(): string {
   return String(randomInt(100000, 999999));
 }
 
-// ── 发送验证码邮件 ──
+/** 根据语言和角色选择社区介绍模块 */
+function communityIntro(isBiz: boolean, lang: string): string {
+  if (lang === 'en') return isBiz ? COMMUNITY_INTRO_FORWARDER_EN : COMMUNITY_INTRO_TRADER_EN;
+  return isBiz ? COMMUNITY_INTRO_FORWARDER : COMMUNITY_INTRO_TRADER;
+}
+
+// ══════════════════════════════════════════════════════════════
+// 发送验证码邮件
+// ══════════════════════════════════════════════════════════════
 export async function sendVerificationCode(email: string, role?: string): Promise<void> {
   if (!isEnabled()) {
     logger.warn(`Email disabled, would send verification to ${email}`);
@@ -174,113 +174,118 @@ export async function sendVerificationCode(email: string, role?: string): Promis
   }
 
   const code = generateCode();
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10分钟有效
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
   const id = uuidv4();
 
   await db('email_verifications').insert({
-    id,
-    email,
-    code,
+    id, email, code,
     expires_at: expiresAt.toISOString(),
     used: false,
   });
 
-  // 根据角色选择不同的邮件广告
   const isBizRole = isBusinessRole(role || '');
-  const introHtml = isBizRole ? COMMUNITY_INTRO_FORWARDER : COMMUNITY_INTRO_TRADER;
-  const roleTitle = isBizRole ? '货运代理' : '外贸行业';
+  const lang = role === 'overseas_agent' ? 'en' : 'zh';
+  const roleTitle = role === 'overseas_agent' ? 'Overseas Agent'
+    : isBizRole ? 'Forwarder'
+    : 'Trader';
+  const roleTitleZh = isBizRole ? '货运代理' : '外贸行业';
+  const subject = lang === 'en'
+    ? `Your verification code - 123 Cargo Community (${roleTitle})`
+    : `您的注册验证码 - 123共享外贸物流社区（${roleTitleZh}）`;
 
   const transport = getTransporter();
   await transport.sendMail({
     from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
     to: email,
-    subject: `您的注册验证码 - 123共享外贸物流社区（${roleTitle}）`,
-    html: `
+    subject,
+    html: lang === 'en' ? `
+      <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+        <h2 style="color: #1a56db;">123 Cargo Community</h2>
+        <p>Hello!</p>
+        <p>Your registration verification code:</p>
+        <div style="background: #f3f4f6; padding: 16px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 8px; border-radius: 8px; margin: 16px 0;">
+          ${code}
+        </div>
+        <p style="color: #6b7280; font-size: 14px;">Valid for 10 minutes.</p>
+        <p style="color: #6b7280; font-size: 12px; margin-top: 24px;">If you did not request this, please ignore this email.</p>
+        ${communityIntro(isBizRole, lang)}
+      </div>
+    ` : `
       <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
         <h2 style="color: #1a56db;">123共享外贸物流社区</h2>
-        <p>您好！欢迎注册${roleTitle}账号。</p>
+        <p>您好！欢迎注册${roleTitleZh}账号。</p>
         <p>您的注册验证码为：</p>
         <div style="background: #f3f4f6; padding: 16px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 8px; border-radius: 8px; margin: 16px 0;">
           ${code}
         </div>
         <p style="color: #6b7280; font-size: 14px;">验证码有效期 10 分钟，请尽快完成验证。</p>
         <p style="color: #6b7280; font-size: 12px; margin-top: 24px;">如果这不是您本人的操作，请忽略此邮件。</p>
-        ${introHtml}
+        ${communityIntro(isBizRole, lang)}
       </div>
     `,
   });
 
-  logger.info(`验证码已发送至 ${email}（角色: ${roleTitle}）`);
+  logger.info(`Verification email sent to ${email} (lang: ${lang})`);
 }
 
-// ── 校验验证码 ──
 export async function verifyCode(email: string, code: string): Promise<boolean> {
-  // 原子更新：一次查询完成校验+标记已用，防止并发 TOCTOU
   const result = await db('email_verifications')
     .where({ email, code, used: false })
     .where('expires_at', '>=', new Date().toISOString())
     .update({ used: true });
-
-  // affected_rows > 0 表示成功标记了一条记录
   return result > 0;
 }
 
-// ── 发送询价通知邮件 ──
+// ══════════════════════════════════════════════════════════════
+// 询价通知邮件
+// ══════════════════════════════════════════════════════════════
 export async function sendInquiryNotification(
-  toEmail: string,
-  toName: string,
-  senderName: string,
-  keyword: string,
+  toEmail: string, toName: string, senderName: string, keyword: string,
 ): Promise<void> {
   if (!isEnabled() || !toEmail) return;
-
   const frontendUrl = env.frontendUrl;
   const transport = getTransporter();
-
   try {
     await transport.sendMail({
       from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
       to: toEmail,
-      subject: `📢 您有新的询价 - ${keyword.substring(0, 20)}`,
+      subject: `📢 New inquiry - ${keyword.substring(0, 20)}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
-          <h2 style="color: #1a56db;">123共享外贸物流社区</h2>
-          <p>${toName} 您好！</p>
-          <p>用户 <strong>${senderName}</strong> 对您的推广信息产生了兴趣，并已通过系统发送了询价需求：</p>
+          <h2 style="color: #1a56db;">123 Cargo Community</h2>
+          <p>Hi ${toName},</p>
+          <p><strong>${senderName}</strong> is interested in your listing and sent an inquiry:</p>
           <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin: 12px 0; font-size: 14px;">
-            🔍 查询内容：${keyword.substring(0, 50)}
+            🔍 ${keyword.substring(0, 50)}
           </div>
-          <p>请登录系统查看详细询价信息并进行回复：</p>
+          <p>Please log in to view and reply:</p>
           <a href="${frontendUrl}/admin/inbox" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
-            查看询价并回复
+            View Inquiry & Reply
           </a>
           <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">
-            ⚠️ 请勿直接回复此邮件，所有沟通请通过系统站内信进行。
+            ⚠️ Please do not reply directly to this email. Use in-app messaging.
           </p>
-          ${COMMUNITY_INTRO_TRADER}
+          ${COMMUNITY_INTRO_FORWARDER_EN}
         </div>
       `,
     });
-    logger.info(`询价通知邮件已发送至 ${toEmail}`);
+    logger.info(`Inquiry notification sent to ${toEmail}`);
   } catch (err) {
-    logger.error(`发送询价通知邮件失败 ${toEmail}:`, err);
+    logger.error(`Failed to send inquiry notification to ${toEmail}:`, err);
   }
 }
 
-// ── DDP 询价邮件（英文，推送给海外代理） ──
+// ══════════════════════════════════════════════════════════════
+// DDP 询价邮件（英文，专为海外代理设计）
+// ══════════════════════════════════════════════════════════════
 export async function sendDdpInquiryEmail(
-  toEmail: string,
-  agentName: string,
-  country: string,
-  goodsDesc: string,
-  notes: string,
-  inquirerName: string,
-  inquirerCompany: string,
+  toEmail: string, agentName: string, country: string,
+  goodsDesc: string, notes: string,
+  inquirerName: string, inquirerCompany: string,
 ): Promise<void> {
   if (!isEnabled() || !toEmail) return;
   const frontendUrl = env.frontendUrl;
   const transport = getTransporter();
-
   try {
     await transport.sendMail({
       from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
@@ -290,92 +295,121 @@ export async function sendDdpInquiryEmail(
         <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px;">
           <h2 style="color: #1a56db;">🌍 123 Cargo Community</h2>
           <p>Hi <strong>${agentName}</strong>,</p>
-          <p>A Chinese forwarder is looking for DDP service to <strong>${country}</strong> and you've been matched!</p>
+          <p>A Chinese forwarder is looking for DDP service to <strong>${country}</strong>!</p>
           <div style="background: #f0f7ff; border-left: 4px solid #1a56db; padding: 16px; margin: 16px 0; border-radius: 4px;">
             <p style="margin: 0 0 8px 0; font-weight: bold;">📋 Inquiry Details:</p>
             <p style="margin: 4px 0;">📍 Destination: <strong>${country}</strong></p>
             ${goodsDesc ? `<p style="margin: 4px 0;">📦 Cargo: ${goodsDesc}</p>` : ''}
-            ${notes ? `<p style="margin: 4px 0;">📐 Pcs/Weight/Dims: ${notes}</p>` : ''}
-            <p style="margin: 4px 0; color: #6b7280; font-size: 13px;">👤 Inquirer: ${inquirerCompany} ${inquirerName}</p>
+            ${notes ? `<p style="margin: 4px 0;">📐 ${notes}</p>` : ''}
+            <p style="margin: 4px 0; color: #6b7280; font-size: 13px;">👤 From: ${inquirerCompany} ${inquirerName}</p>
           </div>
-          <p style="font-size: 14px; line-height: 1.6;">Please log in to reply with your quote via internal message:</p>
           <a href="${frontendUrl}/admin/inbox" style="display: block; text-align: center; background: #1a56db; color: white; padding: 14px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; margin: 16px 0;">
             📬 Reply with Quote
           </a>
-          <p style="color: #6b7280; font-size: 13px;">⚠️ Please do not reply to this email. All communication should be through the platform's internal messaging.</p>
+          <p style="color: #6b7280; font-size: 13px;">⚠️ Do not reply to this email. Use in-app messaging.</p>
           <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
           <p style="color: #9ca3af; font-size: 12px;">123 Cargo Community</p>
         </div>
       `,
     });
-    logger.info(`DDP询价邮件已发送至 ${toEmail}`);
+    logger.info(`DDP inquiry email sent to ${toEmail}`);
   } catch (err) {
-    logger.error(`发送DDP询价邮件失败 ${toEmail}:`, err);
+    logger.error(`Failed to send DDP inquiry to ${toEmail}:`, err);
   }
 }
 
-// ── 新消息邮件通知（站内信触发） ──
+// ══════════════════════════════════════════════════════════════
+// 新消息通知邮件（双语，根据收件人角色判断）
+// ══════════════════════════════════════════════════════════════
 export async function sendNewMessageNotification(
-  toEmail: string,
-  toName: string,
-  senderName: string,
-  senderCompany: string,
-  contentPreview: string,
+  toEmail: string, toName: string, senderName: string, senderCompany: string, contentPreview: string,
+  lang: string = 'zh',
 ): Promise<void> {
   if (!isEnabled() || !toEmail) return;
-
   const frontendUrl = env.frontendUrl;
   const transport = getTransporter();
+  const from = senderCompany ? `${senderCompany} ${senderName}` : senderName;
+  const subject = lang === 'en'
+    ? `💬 New message from ${from}`
+    : `💬 您收到了一条新消息 - ${from}`;
 
   try {
     await transport.sendMail({
       from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
       to: toEmail,
-      subject: `💬 您收到了一条新消息 - ${senderCompany || senderName}`,
-      html: `
+      subject,
+      html: lang === 'en' ? `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
-          <h2 style="color: #1a56db;">123共享外贸物流社区</h2>
-          <p>${toName} 您好！</p>
-          <p>用户 <strong>${senderCompany ? `${senderCompany} ` : ''}${senderName}</strong> 给您发了一条消息：</p>
+          <h2 style="color: #1a56db;">123 Cargo Community</h2>
+          <p>Hi ${toName},</p>
+          <p><strong>${from}</strong> sent you a message:</p>
           <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin: 12px 0; font-size: 14px; white-space: pre-wrap;">
             ${contentPreview.substring(0, 300)}
           </div>
-          <p>请登录系统查看并回复：</p>
+          <a href="${frontendUrl}/admin/inbox" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
+            Reply in Inbox
+          </a>
+          <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">⚠️ Do not reply directly to this email.</p>
+          ${COMMUNITY_INTRO_FORWARDER_EN}
+        </div>
+      ` : `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+          <h2 style="color: #1a56db;">123共享外贸物流社区</h2>
+          <p>${toName} 您好！</p>
+          <p>用户 <strong>${from}</strong> 给您发了一条消息：</p>
+          <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin: 12px 0; font-size: 14px; white-space: pre-wrap;">
+            ${contentPreview.substring(0, 300)}
+          </div>
           <a href="${frontendUrl}/admin/inbox" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
             进入收件箱回复
           </a>
-          <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">
-            ⚠️ 请勿直接回复此邮件，所有沟通请通过系统站内信进行。
-          </p>
+          <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">⚠️ 请勿直接回复此邮件。</p>
           ${COMMUNITY_INTRO_FORWARDER}
         </div>
       `,
     });
-    logger.info(`新消息通知邮件已发送至 ${toEmail}`);
+    logger.info(`New message notification sent to ${toEmail}`);
   } catch (err) {
-    logger.error(`发送新消息通知邮件失败 ${toEmail}:`, err);
+    logger.error(`Failed to send message notification to ${toEmail}:`, err);
   }
 }
 
-// ── 账号开通通知邮件（管理员批量导入后用） ──
+// ══════════════════════════════════════════════════════════════
+// 账号开通通知邮件
+// ══════════════════════════════════════════════════════════════
 export async function sendAccountActivationEmail(
-  toEmail: string,
-  toName: string,
-  companyName: string,
-  username: string,
-  password: string,
+  toEmail: string, toName: string, companyName: string,
+  username: string, password: string,
+  lang: string = 'zh',
 ): Promise<void> {
   if (!isEnabled() || !toEmail) return;
-
   const frontendUrl = env.frontendUrl;
   const transport = getTransporter();
+  const subject = lang === 'en'
+    ? `🎉 Your 123 Cargo Community account is ready`
+    : `🎉 您的 123共享外贸物流社区 账号已开通`;
 
   try {
     await transport.sendMail({
       from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
       to: toEmail,
-      subject: `🎉 您的 123共享外贸物流社区 账号已开通`,
-      html: `
+      subject,
+      html: lang === 'en' ? `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+          <h2 style="color: #1a56db;">123 Cargo Community</h2>
+          <p>Hi ${toName},</p>
+          <p>Your account has been created for <strong>${companyName}</strong>:</p>
+          <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 16px 0; font-size: 14px;">
+            <p style="margin: 4px 0;"><strong>Username:</strong> ${username}</p>
+            <p style="margin: 4px 0;"><strong>Password:</strong> ${password}</p>
+          </div>
+          <p style="color: #dc2626; font-size: 13px;">⚠️ Please change your password after first login</p>
+          <a href="${frontendUrl}/login" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
+            Login Now
+          </a>
+          ${COMMUNITY_INTRO_FORWARDER_EN}
+        </div>
+      ` : `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
           <h2 style="color: #1a56db;">123共享外贸物流社区</h2>
           <p>${toName} 您好！</p>
@@ -384,39 +418,53 @@ export async function sendAccountActivationEmail(
             <p style="margin: 4px 0;"><strong>用户名：</strong>${username}</p>
             <p style="margin: 4px 0;"><strong>密码：</strong>${password}</p>
           </div>
-          <p style="color: #dc2626; font-size: 13px;">⚠️ 建议首次登录后立即修改密码</p>
           <a href="${frontendUrl}/login" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
             立即登录
           </a>
-          <p style="color: #6b7280; font-size: 13px; margin-top: 12px;">
-            登录后可发布推广信息、查询舱位、联系客户。</p>
           ${COMMUNITY_INTRO_FORWARDER}
         </div>
       `,
     });
-    logger.info(`账号开通邮件已发送至 ${toEmail}`);
+    logger.info(`Activation email sent to ${toEmail}`);
   } catch (err) {
-    logger.error(`发送账号开通邮件失败 ${toEmail}:`, err);
+    logger.error(`Failed to send activation email to ${toEmail}:`, err);
   }
 }
 
-// ── 未登录提醒邮件 ──
+// ══════════════════════════════════════════════════════════════
+// 未登录提醒邮件
+// ══════════════════════════════════════════════════════════════
 export async function sendInactiveReminderEmail(
-  toEmail: string,
-  toName: string,
-  username: string,
+  toEmail: string, toName: string, username: string,
+  lang: string = 'zh',
 ): Promise<void> {
   if (!isEnabled() || !toEmail) return;
-
   const frontendUrl = env.frontendUrl;
   const transport = getTransporter();
+  const subject = lang === 'en'
+    ? `🔔 ${toName}, your community account is ready!`
+    : `🔔 ${toName}，您的社区账号已开通，快来体验吧！`;
 
   try {
     await transport.sendMail({
       from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
       to: toEmail,
-      subject: `🔔 ${toName}，您的社区账号已开通，快来体验吧！`,
-      html: `
+      subject,
+      html: lang === 'en' ? `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+          <h2 style="color: #1a56db;">123 Cargo Community</h2>
+          <p>Hi ${toName},</p>
+          <p>Your account is ready! Log in to post listings and search for cargo space.</p>
+          <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 16px 0; font-size: 14px;">
+            <p style="margin: 4px 0;"><strong>Username:</strong> ${username}</p>
+            <p style="margin: 4px 0;"><strong>Password:</strong> sent to your email. Use 'Forgot Password' if needed.</p>
+          </div>
+          <a href="${frontendUrl}/login" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
+            Login Now
+          </a>
+          ${COMMUNITY_INTRO_FORWARDER_EN}
+        </div>
+      ` : `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
           <h2 style="color: #1a56db;">123共享外贸物流社区</h2>
           <p>${toName} 您好！</p>
@@ -432,76 +480,88 @@ export async function sendInactiveReminderEmail(
         </div>
       `,
     });
-    logger.info(`未登录提醒邮件已发送至 ${toEmail}`);
+    logger.info(`Inactive reminder sent to ${toEmail}`);
   } catch (err) {
-    logger.error(`发送未登录提醒邮件失败 ${toEmail}:`, err);
+    logger.error(`Failed to send inactive reminder to ${toEmail}:`, err);
   }
 }
 
-/** 律师咨询第一封站内信发送时，同步发外部邮件提醒 */
+// ══════════════════════════════════════════════════════════════
+// 律师咨询通知邮件
+// ══════════════════════════════════════════════════════════════
 export async function sendLegalConsultEmail(
-  toEmail: string,
-  toName: string,
-  senderCompany: string,
-  senderName: string,
-  senderPhone: string,
-  content: string,
+  toEmail: string, toName: string, senderCompany: string,
+  senderName: string, senderPhone: string, content: string,
 ): Promise<void> {
   if (!isEnabled() || !toEmail) return;
-
   const frontendUrl = env.frontendUrl;
   const transport = getTransporter();
-
   try {
     await transport.sendMail({
       from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
       to: toEmail,
-      subject: `⚖️ 社区律师咨询通知 - ${senderCompany || senderName}`,
+      subject: `⚖️ Legal consultation from ${senderCompany || senderName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
-          <h2 style="color: #d97706;">123共享外贸物流社区 · 法律咨询</h2>
-          <p>尊敬的 ${toName} 律师，您好！</p>
-          <p>有社区用户向您发起了法律咨询，详情如下：</p>
+          <h2 style="color: #d97706;">123 Cargo Community · Legal Consultation</h2>
+          <p>Dear ${toName},</p>
+          <p>A community member has requested your legal consultation:</p>
           <table style="width: 100%; border-collapse: collapse; margin: 16px 0; background: #fefce8; border-radius: 8px;">
-            <tr><td style="padding: 8px 12px; font-size: 13px; color: #6b7280;">咨询人</td><td style="padding: 8px 12px; font-weight: bold;">${senderCompany || ''} ${senderName}</td></tr>
-            <tr><td style="padding: 8px 12px; font-size: 13px; color: #6b7280;">联系方式</td><td style="padding: 8px 12px;">${senderPhone || '未提供'}</td></tr>
-            <tr><td style="padding: 8px 12px; font-size: 13px; color: #6b7280;">咨询内容</td><td style="padding: 8px 12px; white-space: pre-wrap;">${content.substring(0, 500)}</td></tr>
+            <tr><td style="padding: 8px 12px; font-size: 13px; color: #6b7280;">Client</td><td style="padding: 8px 12px; font-weight: bold;">${senderCompany || ''} ${senderName}</td></tr>
+            <tr><td style="padding: 8px 12px; font-size: 13px; color: #6b7280;">Contact</td><td style="padding: 8px 12px;">${senderPhone || 'Not provided'}</td></tr>
+            <tr><td style="padding: 8px 12px; font-size: 13px; color: #6b7280;">Inquiry</td><td style="padding: 8px 12px; white-space: pre-wrap;">${content.substring(0, 500)}</td></tr>
           </table>
           <a href="${frontendUrl}/admin/inbox" style="display: inline-block; background: #d97706; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
-            进入收件箱回复
+            Reply in Inbox
           </a>
-          <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">
-            ⚠️ 请勿直接回复此邮件，所有沟通请通过系统站内信进行。
-          </p>
+          <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">⚠️ Do not reply directly to this email.</p>
         </div>
       `,
     });
-    logger.info(`律师咨询邮件已发送至 ${toEmail}`);
+    logger.info(`Legal consult email sent to ${toEmail}`);
   } catch (err) {
-    logger.error(`发送律师咨询邮件失败 ${toEmail}:`, err);
+    logger.error(`Failed to send legal consult email to ${toEmail}:`, err);
   }
 }
 
-/** 会员到期提醒邮件 */
+// ══════════════════════════════════════════════════════════════
+// 试用到期提醒邮件
+// ══════════════════════════════════════════════════════════════
 export async function sendTrialExpiryReminderEmail(
-  toEmail: string,
-  toName: string,
-  trialEnd: string,
-  remainingDays: number,
+  toEmail: string, toName: string, trialEnd: string, remainingDays: number,
+  lang: string = 'zh',
 ): Promise<void> {
   if (!isEnabled() || !toEmail) return;
   const frontendUrl = env.frontendUrl;
   const transport = getTransporter();
+
   const subject = remainingDays <= 0
-    ? '⚠️ 您的社区会员已过期，请及时续期'
-    : `⚠️ 您的社区会员将在 ${remainingDays} 天后到期`;
+    ? (lang === 'en' ? '⚠️ Your membership has expired' : '⚠️ 您的社区会员已过期，请及时续期')
+    : (lang === 'en' ? `⚠️ Your membership expires in ${remainingDays} days` : `⚠️ 您的社区会员将在 ${remainingDays} 天后到期`);
 
   try {
     await transport.sendMail({
       from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
       to: toEmail,
       subject,
-      html: `
+      html: lang === 'en' ? `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+          <h2 style="color: #dc2626;">123 Cargo Community</h2>
+          <p>Hi ${toName},</p>
+          ${remainingDays <= 0
+            ? `<p>Your membership expired on <strong>${trialEnd}</strong>. Some features are now limited.</p>`
+            : `<p>Your membership expires on <strong>${trialEnd}</strong> (<strong style="color: #dc2626; font-size: 18px;">${remainingDays}</strong> days left).</p>`
+          }
+          <p>Limited features after expiry:</p>
+          <ul style="color: #6b7280; font-size: 13px; line-height: 1.8;">
+            <li>❌ Data entry (text parsing, file upload)</li>
+            <li>❌ Send new messages</li>
+            <li>✅ Search & browse normal</li>
+            <li>✅ Inbox can receive messages</li>
+          </ul>
+          <a href="${frontendUrl}/admin/renew" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">Renew Now</a>
+        </div>
+      ` : `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
           <h2 style="color: #dc2626;">123共享外贸物流社区</h2>
           <p>${toName} 您好！</p>
@@ -517,27 +577,24 @@ export async function sendTrialExpiryReminderEmail(
             <li>✅ 收件箱可接收消息</li>
           </ul>
           <a href="${frontendUrl}/admin/renew" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">立即续期</a>
-          <p style="color: #6b7280; font-size: 12px; margin-top: 12px;">如有疑问，请联系管理员。</p>
         </div>
       `,
     });
-    logger.info(`到期提醒邮件已发送至 ${toEmail}${remainingDays > 0 ? `（剩余 ${remainingDays} 天）` : '（已过期）'}`);
+    logger.info(`Expiry reminder sent to ${toEmail}`);
   } catch (err) {
-    logger.error(`发送到期提醒邮件失败 ${toEmail}:`, err);
+    logger.error(`Failed to send expiry reminder to ${toEmail}:`, err);
   }
 }
 
-// ── 邀请海外代理入驻邮件（英文） ──
+// ══════════════════════════════════════════════════════════════
+// 邀请海外代理入驻邮件（英文）
+// ══════════════════════════════════════════════════════════════
 export async function sendInvitationEmail(params: {
-  toEmail: string;
-  agentName: string;
-  inviterName: string;
-  inviterCompany: string;
-  registerUrl: string;
+  toEmail: string; agentName: string; inviterName: string;
+  inviterCompany: string; registerUrl: string;
 }): Promise<void> {
   if (!isEnabled() || !params.toEmail) return;
   const transport = getTransporter();
-
   const inviterInfo = params.inviterCompany
     ? `${params.inviterCompany} (${params.inviterName})`
     : params.inviterName;
@@ -546,50 +603,32 @@ export async function sendInvitationEmail(params: {
     await transport.sendMail({
       from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
       to: params.toEmail,
-      subject: `${params.inviterName} invited you to join 123 Cargo Community — China freight network`,
+      subject: `${params.inviterName} invited you to join 123 Cargo Community`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px;">
           <h2 style="color: #1a56db;">🤝 123 Cargo Community</h2>
           <p>Hi <strong>${params.agentName}</strong>,</p>
-          <p>Your partner <strong>${inviterInfo}</strong> has invited you to join <strong>123 Cargo Community</strong> — a growing network of Chinese freight forwarders looking for reliable overseas agents like you.</p>
-
+          <p>Your partner <strong>${inviterInfo}</strong> invites you to <strong>123 Cargo Community</strong>.</p>
           <div style="background: #f0f7ff; border-left: 4px solid #1a56db; padding: 16px; margin: 20px 0; border-radius: 4px;">
             <p style="margin: 0; font-size: 15px;"><strong>Why join?</strong></p>
           </div>
-
           <table style="width: 100%; font-size: 14px; line-height: 1.8; color: #374151;">
-            <tr><td style="padding: 4px 0;">🌍</td><td style="padding: 4px 8px;"><strong>Receive direct inquiries</strong> — Chinese forwarders search for DDP/clearance/delivery partners daily</td></tr>
-            <tr><td style="padding: 4px 0;">✅</td><td style="padding: 4px 8px;"><strong>Zero membership fee</strong> — No annual fees. Free to join, free to connect</td></tr>
-            <tr><td style="padding: 4px 0;">🤝</td><td style="padding: 4px 8px;"><strong>Build trust with track record</strong> — Complete jobs, earn credit score, get recommended</td></tr>
-            <tr><td style="padding: 4px 0;">📬</td><td style="padding: 4px 8px;"><strong>Built-in messaging</strong> — Communicate directly within the platform</td></tr>
-            <tr><td style="padding: 4px 0;">🔒</td><td style="padding: 4px 8px;"><strong>Verified partners</strong> — Every Chinese forwarder is company-verified</td></tr>
+            <tr><td style="padding: 4px 0;">🌍</td><td style="padding: 4px 8px;"><strong>Receive inquiries</strong> from Chinese forwarders daily</td></tr>
+            <tr><td style="padding: 4px 0;">✅</td><td style="padding: 4px 8px;"><strong>Free to join</strong> — No membership fees</td></tr>
+            <tr><td style="padding: 4px 0;">🤝</td><td style="padding: 4px 8px;"><strong>Build trust</strong> — Earn credit score with completed jobs</td></tr>
+            <tr><td style="padding: 4px 0;">📬</td><td style="padding: 4px 8px;"><strong>In-app messaging</strong> — Connect within the platform</td></tr>
           </table>
-
-          <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 20px 0; font-size: 14px;">
-            <p style="margin: 4px 0; font-weight: bold;">📋 How it works:</p>
-            <p style="margin: 8px 0 4px 0;">1. Register in 1 minute — just your email and company info</p>
-            <p style="margin: 4px 0;">2. Set up your profile — tell forwarders what services you offer</p>
-            <p style="margin: 4px 0;">3. Start receiving inquiries — forwarders will message you directly</p>
-          </div>
-
           <a href="${params.registerUrl}" style="display: block; text-align: center; background: #1a56db; color: white; padding: 14px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; margin: 20px 0;">
-            👉 Accept Invitation & Register
+            👉 Accept Invitation
           </a>
-
-          <p style="color: #6b7280; font-size: 13px;">Your partner ${params.inviterName} will be notified once you join.</p>
-
           <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
-          <p style="color: #9ca3af; font-size: 12px;">
-            Best regards,<br />
-            123 Cargo Community Team<br />
-            <a href="https://123cargo123.com" style="color: #1a56db;">123cargo123.com</a>
-          </p>
+          <p style="color: #9ca3af; font-size: 12px;">123 Cargo Community Team</p>
         </div>
       `,
     });
-    logger.info(`邀请邮件已发送至 ${params.toEmail}`);
+    logger.info(`Invitation email sent to ${params.toEmail}`);
   } catch (err) {
-    logger.error(`发送邀请邮件失败 ${params.toEmail}:`, err);
+    logger.error(`Failed to send invitation to ${params.toEmail}:`, err);
     throw err;
   }
 }
