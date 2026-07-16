@@ -91,24 +91,56 @@ router.get('/forwarders', async (req, res) => {
       .limit(limit)
       .offset(offset);
 
-    const result = [];
-    for (const f of forwarders) {
-      const creditScore = await calculateCreditScore(f.id);
+    const fwIds = forwarders.map((f: any) => f.id);
 
-      // 当前海外代理与该货代的合作次数
-      const coopRow = await db('cooperations')
-        .where({ agent_user_id: userId, forwarder_user_id: f.id })
-        .count('* as total').first() as any;
+    // 批量查询合作次数、评价、争议
+    const [coopRows, reviewRows, disputeRows] = await Promise.all([
+      fwIds.length > 0 ? db('cooperations')
+        .where({ agent_user_id: userId })
+        .whereIn('forwarder_user_id', fwIds)
+        .select('forwarder_user_id')
+        .select(db.raw('COUNT(*) as cnt'))
+        .groupBy('forwarder_user_id') as any : [],
+      fwIds.length > 0 ? db('reviews')
+        .whereIn('reviewee_id', fwIds)
+        .select('reviewee_id', 'rating') as any : [],
+      fwIds.length > 0 ? db('dispute_cases')
+        .whereIn('respondent_id', fwIds)
+        .select('respondent_id')
+        .select(db.raw('COUNT(*) as cnt'))
+        .groupBy('respondent_id') as any : [],
+    ]);
 
-      result.push({
-        id: f.id,
-        display_name: f.display_name,
-        company_name: f.company_name,
-        role: f.role,
-        credit_score: creditScore,
-        cooperation_count: Number(coopRow?.total || 0),
-      });
+    const coopMap: Record<string, number> = {};
+    for (const r of coopRows) coopMap[r.forwarder_user_id] = Number(r.cnt);
+
+    const reviewMap: Record<string, number[]> = {};
+    for (const r of reviewRows) {
+      if (!reviewMap[r.reviewee_id]) reviewMap[r.reviewee_id] = [];
+      reviewMap[r.reviewee_id].push(r.rating);
     }
+
+    const disputeMap: Record<string, number> = {};
+    for (const r of disputeRows) disputeMap[r.respondent_id] = Number(r.cnt);
+
+    const result = forwarders.map((f: any) => {
+      const ratings = reviewMap[f.id] || [];
+      const reviewCount = ratings.length;
+      const avgRating = reviewCount > 0 ? ratings.reduce((a: number, b: number) => a + b, 0) / reviewCount : 0;
+      const totalCoops = coopMap[f.id] || 0;
+      const totalDisputes = disputeMap[f.id] || 0;
+
+      let score = 50;
+      if (reviewCount > 0) score += (avgRating / 5) * 30;
+      else score += 10;
+      score += Math.min(totalCoops, 50) * 0.5;
+      score -= totalDisputes * 15;
+      if (f.card_image) score += 10;
+      if (f.created_at && Math.floor((Date.now() - new Date(f.created_at).getTime()) / 86400000) >= 365) score += 5;
+      score = Math.max(0, Math.min(100, Math.round(score)));
+
+      return { id: f.id, display_name: f.display_name, company_name: f.company_name, role: f.role, credit_score: score, cooperation_count: coopMap[f.id] || 0 };
+    });
 
     res.json({ data: result, total, page, limit });
   } catch (err) {

@@ -8,6 +8,14 @@ import { env } from '../config/env';
 
 const router = Router();
 
+/** 管理员鉴权中间件 */
+async function requireAdmin(req: any, res: any, next: any) {
+  if (req.user?.role !== 'admin') {
+    return res.status(403).json({ error: '仅管理员可操作' });
+  }
+  next();
+}
+
 // DDP文件上传（箱单发票等）- 仅单文件
 const ddpUpload = multer({
   storage: multer.diskStorage({
@@ -33,16 +41,16 @@ router.use(authRequired);
 router.get('/agents', ddpController.agents);
 
 // 全部代理（管理员）
-router.get('/agents/all', ddpController.allAgents);
+router.get('/agents/all', requireAdmin, ddpController.allAgents);
 
 // 添加/编辑代理（管理员）
-router.post('/agents/save', ddpController.saveAgent);
+router.post('/agents/save', requireAdmin, ddpController.saveAgent);
 
 // 审核代理（管理员）
-router.post('/agents/:id/review', ddpController.reviewAgent);
+router.post('/agents/:id/review', requireAdmin, ddpController.reviewAgent);
 
 // 删除代理（管理员）
-router.delete('/agents/:id', ddpController.deleteAgent);
+router.delete('/agents/:id', requireAdmin, ddpController.deleteAgent);
 
 // 海外代理自助入驻
 router.post('/agents/self-onboard', ddpController.selfOnboard);
