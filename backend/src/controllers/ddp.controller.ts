@@ -227,10 +227,17 @@ export const ddpController = {
           .select(db.raw("id as created_by"), 'email', 'company_name')
           .limit(50) as any[];
       } else {
+        const countryQ = country.trim();
+        const portQ = port?.trim() || '';
         agents = await db('ddp_agents')
           .where({ status: 'approved' })
-          .where('country', 'like', `%${country.trim()}%`)
-          .select('id', 'created_by', 'email', 'company_name') as any[];
+          .where('country', 'like', `%${countryQ}%`)
+          .select('id', 'created_by', 'email', 'company_name', 'service_ports')
+          .orderByRaw(portQ
+            ? `CASE WHEN service_ports LIKE '%${portQ.replace(/'/g, "''")}%' THEN 0 ELSE 1 END, completed_orders DESC`
+            : 'completed_orders DESC'
+          )
+          .limit(50) as any[];
       }
 
       if (agents.length === 0) {
