@@ -25,16 +25,22 @@ function useLang() { return useContext(LangContext); }
 // 双语映射表
 // ════════════════════════════════════════════
 const T = {
-  pageTitle: { zh: '🌍 海外DDP到门服务', en: '🌍 Overseas DDP Door-to-Door' },
-  pageSubtitle: { zh: '从中国到全球门到门 · 群友验证的靠谱海外代理 · 一站式DDP/DDU', en: 'China to worldwide door-to-door · Community-verified agents · One-stop DDP/DDU' },
+  pageTitle: { zh: '🌍 全球DDP进出口到门服务', en: '🌍 Global DDP Door-to-Door' },
+  pageSubtitle: { zh: '中国↔全球双向门到门 · 进出口清关派送 · 群友验证的靠谱海外代理', en: 'China ↔ Worldwide · Import/Export DDP · Community-verified agents' },
   tabInquiry: { zh: '📮 我要询价', en: '📮 Submit Inquiry' },
   tabAgents: { zh: '🤝 海外代理', en: '🤝 Overseas Agents' },
   tabStats: { zh: '📊 需求统计', en: '📊 Demand Stats' },
 
   inquiryTitle: { zh: '填写您的DDP到门需求', en: 'Fill in your DDP requirements' },
   inquiryDesc: { zh: '提交后系统自动推送给目的国已入驻的海外代理，通过站内信沟通报价', en: 'Your inquiry will be sent to all registered agents in the destination country via internal messages' },
-  hotCountries: { zh: '热门目的国（点击快速选择）', en: 'Hot destination countries (click to select)' },
-  continueNew: { zh: '继续发布新询价', en: 'Submit another inquiry' },
+  hotCountries: { zh: '热门国家（点击快速选择）', en: 'Hot destination countries (click to select)' },
+  continueNew: { zh: '继续发布新需求', en: 'Submit another inquiry' },
+  directionExport: { zh: '🇨🇳 中国出口 → 全球', en: '🇨🇳 Export from China' },
+  directionImport: { zh: '🌍 全球进口 → 中国', en: '🌍 Import to China' },
+  inquiryDescExport: { zh: '从中国出口到全球，提交后推送给目的国已入驻的海外代理', en: 'Export from China to worldwide. Sent to agents in destination country.' },
+  inquiryDescImport: { zh: '从海外进口到中国，提交后推送给来源国已入驻的海外代理', en: 'Import to China from worldwide. Sent to agents in origin country.' },
+  originCountry: { zh: '来源国家', en: 'Origin Country' },
+  originPort: { zh: '起运港/城市', en: 'Origin Port/City' },
   destCountry: { zh: '目的国家', en: 'Destination Country' },
   destPort: { zh: '目的港/城市', en: 'Destination Port/City' },
   portPlaceholder: { zh: '如：纽约、汉堡、内罗毕', en: 'e.g. New York, Hamburg, Nairobi' },
@@ -51,7 +57,7 @@ const T = {
   uploadHint: { zh: '选填，支持图片/PDF/Word/Excel', en: 'Optional, supports images/PDF/Word/Excel' },
   uploadClick: { zh: '点击选择文件或将文件拖拽到这里', en: 'Click to select files or drag & drop here' },
   uploadLimit: { zh: '支持 JPG/PNG/PDF/Word/Excel，每文件最大20MB', en: 'Supports JPG/PNG/PDF/Word/Excel, max 20MB each' },
-  submitBtn: { zh: '提交询价', en: 'Submit Inquiry' },
+  submitBtn: { zh: '提交需求', en: 'Submit' },
   submitting: { zh: '提交中...', en: 'Submitting...' },
   msgSent: { zh: '✅ 消息已发送，请留意收件箱回复', en: '✅ Message sent, please check your inbox' },
 
@@ -279,6 +285,7 @@ export default function DDPPage() {
 // ════════════════════════════════════════════
 function InquiryTab() {
   const lang = useLang();
+  const [direction, setDirection] = useState<'export' | 'import'>('export');
   const [country, setCountry] = useState('');
   const [port, setPort] = useState('');
   const [goodsDesc, setGoodsDesc] = useState('');
@@ -333,6 +340,7 @@ function InquiryTab() {
     try {
       const uploadedPaths = files.filter(f => f.path).map(f => f.path!);
       const res = await client.post('/ddp/inquiry', {
+        direction: direction,
         country: country.trim(),
         port: port.trim() || undefined,
         goods_desc: goodsDesc.trim() || undefined,
@@ -368,7 +376,7 @@ function InquiryTab() {
         </div>
         <div>
           <p className="text-sm font-semibold text-amber-800">{lang === 'en' ? 'How it works' : '提交后如何收到回复？'}</p>
-          <p className="text-xs text-amber-700 mt-0.5 leading-relaxed">{t(T.inquiryDesc, lang)}</p>
+          <p className="text-xs text-amber-700 mt-0.5 leading-relaxed">{direction === 'export' ? t(T.inquiryDescExport, lang) : t(T.inquiryDescImport, lang)}</p>
           <div className="flex items-center gap-2 mt-2">
             <span className="text-[10px] bg-amber-200/70 text-amber-800 px-2 py-0.5 rounded-full font-medium">lang === 'en' ? '① Sent to agents in that country' : '① 推送给该国代理'</span>
             <span className="text-[10px] text-amber-400">→</span>
@@ -379,9 +387,23 @@ function InquiryTab() {
         </div>
       </div>
 
+      {/* 进出口方向切换 */}
+      <div className="flex items-center gap-2 mb-4 bg-gray-100 rounded-lg p-1 max-w-xs">
+        <button
+          className={`flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-colors ${direction === 'export' ? 'bg-white shadow-sm text-primary-700' : 'text-gray-500 hover:text-gray-700'}`}
+          onClick={() => setDirection('export')}>
+          {t(T.directionExport, lang)}
+        </button>
+        <button
+          className={`flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-colors ${direction === 'import' ? 'bg-white shadow-sm text-primary-700' : 'text-gray-500 hover:text-gray-700'}`}
+          onClick={() => setDirection('import')}>
+          {t(T.directionImport, lang)}
+        </button>
+      </div>
+
       {/* 快速选择国家 */}
       <div className="mb-4">
-        <label className="text-xs font-medium text-gray-500 mb-1.5 block">{t(T.hotCountries, lang)}</label>
+        <label className="text-xs font-medium text-gray-500 mb-1.5 block">{direction === 'export' ? (lang === 'en' ? 'Select destination' : '选择目的国') : (lang === 'en' ? 'Select origin' : '选择来源国')}</label>
         <div className="flex flex-wrap gap-1.5">
           {hotCountries.map((c) => (
             <button
@@ -410,8 +432,8 @@ function InquiryTab() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.destCountry, lang)} <span className="text-red-500">*</span></label>
-            <input className="input-field w-full text-sm" placeholder={lang === 'zh' ? '如：美国、德国、肯尼亚' : 'e.g. USA, Germany, Kenya'} value={country} onChange={e => { setCountry(e.target.value); setResult(null); }} />
+            <label className="text-xs font-medium text-gray-500 mb-1 block">{direction === 'export' ? t(T.destCountry, lang) : t(T.originCountry, lang)} <span className="text-red-500">*</span></label>
+            <input className="input-field w-full text-sm" placeholder={direction === 'export' ? (lang === 'zh' ? '如：美国、德国、肯尼亚' : 'e.g. USA, Germany, Kenya') : (lang === 'zh' ? '如：美国、德国、日本' : 'e.g. USA, Germany, Japan')} value={country} onChange={e => { setCountry(e.target.value); setResult(null); }} />
           </div>
           <div>
             <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.destPort, lang)}</label>
@@ -750,6 +772,7 @@ function AgentOnboarding() {
   const lang = useLang();
   const [companyName, setCompanyName] = useState('');
   const [contactPerson, setContactPerson] = useState('');
+  const [direction, setDirection] = useState<'export' | 'import'>('export');
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
   const [ports, setPorts] = useState('');

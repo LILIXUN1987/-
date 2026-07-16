@@ -190,8 +190,9 @@ export const ddpController = {
   /** 用户提交 DDP 询价 → 推送给该国所有已审核代理 */
   async submitInquiry(req: Request, res: Response, next: NextFunction) {
     try {
-      const { country, port, goods_desc, hs_code, notes, file_paths, weight_kg, volume_cbm, address } = req.body;
-      if (!country?.trim()) return res.status(400).json({ error: '请填写目的国家' });
+      const { direction, country, port, goods_desc, hs_code, notes, file_paths, weight_kg, volume_cbm, address } = req.body;
+      const isImport = direction === 'import';
+      if (!country?.trim()) return res.status(400).json({ error: isImport ? '请填写来源国家' : '请填写目的国家' });
       if (!address?.trim()) return res.status(400).json({ error: '请填写派送地址' });
       if (!notes?.trim()) return res.status(400).json({ error: '请填写详细的件数/重量/尺寸信息，如：1件毛重160KG 120*100*80/1' });
 
@@ -223,14 +224,15 @@ export const ddpController = {
         .select('id', 'created_by', 'email', 'company_name') as any[];
 
       if (agents.length === 0) {
-        return res.json({ message: '已收到您的询价，但目前该国暂无入驻代理，我们会尽快拓展！', notified: 0 });
+        return res.json({ message: isImport ? '已收到您的进口需求，但目前该国暂无入驻代理，我们会尽快拓展！' : '已收到您的询价，但目前该国暂无入驻代理，我们会尽快拓展！', notified: 0 });
       }
 
       // 3. 构造询价详情文本（推送给海外代理 → 英文）
-      const detailParts = [`🌍 New DDP Door-to-Door Inquiry\n`];
+      const directionLabel = isImport ? '🌍 Import to China' : '📦 Export to';
+      const detailParts = [`${directionLabel}\n`];
       detailParts.push(`━━━━━━━━━━━━━━━━━━━━━`);
       detailParts.push(`📋 Requirements`);
-      detailParts.push(`Country: ${country.trim()}${port ? ` / Port: ${port}` : ''}`);
+      detailParts.push(`${isImport ? 'Origin' : 'Destination'}: ${country.trim()}${port ? ` / Port: ${port}` : ''}`);
       if (goods_desc) detailParts.push(`Cargo: ${goods_desc}`);
       if (hs_code) detailParts.push(`HS Code: ${hs_code}`);
       if (notes) detailParts.push(`Pcs/Weight/Dims: ${notes}`);
@@ -283,7 +285,7 @@ export const ddpController = {
       }
 
       res.json({
-        message: `✅ 您的DDP到门询价已发送给 ${country} 的 ${notifiedCount} 位代理，请留意收件箱报价回复`,
+        message: isImport ? `✅ 您的进口需求已发送给 ${country} 的 ${notifiedCount} 位代理，请留意收件箱报价回复` : `✅ 您的DDP到门询价已发送给 ${country} 的 ${notifiedCount} 位代理，请留意收件箱报价回复`,
         notified: notifiedCount,
         inquiry_id: inquiryId,
       });
