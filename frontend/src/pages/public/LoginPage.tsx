@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
-import { Ship, Eye, EyeOff, Loader2, CheckCircle, AlertCircle, Mail, Lock, KeyRound, ArrowLeft, Languages } from 'lucide-react';
+import { Ship, Eye, EyeOff, Loader2, CheckCircle, AlertCircle, Mail, KeyRound, ArrowLeft, Languages } from 'lucide-react';
 import { authApi } from '../../api/auth.api';
 import client from '../../api/client';
 import { LoginT, t, type Lang } from '../../i18n';

@@ -3,7 +3,6 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import TextCargoInput from '../../components/admin/TextCargoInput';
 import { cargoApi } from '../../api/cargo.api';
 import { getRoleChecks } from '../../types';
-import type { DashboardStats } from '../../types';
 import {
   CheckCircle, MapPin, Users, Plane, Ship, Truck, Package,
   Search, Zap, Sparkles, Loader2,
@@ -18,7 +17,6 @@ import QuotePage from './QuotePage';
 import { rawMessagesApi, RawMessage } from '../../api/rawMessages.api';
 import { formatTime } from '../../utils/time';
 import { FileT, t } from '../../i18n';
-import { Languages } from 'lucide-react';
 import { FEATURES } from '../../config/features';
 
 type TabKey = 'overview' | 'entry' | 'query' | 'quote';
@@ -27,7 +25,6 @@ export default function FileUploadPage() {
   const queryClient = useQueryClient();
   const user = useAuthStore((s) => s.user);
   const lang = useAuthStore((s) => s.lang);
-  const setLang = useAuthStore((s) => s.setLang);
   const rc = getRoleChecks(user?.role);
   const isTrader = user?.role === 'trader';
   const isForwarder = user?.role === 'forwarder';

@@ -6,7 +6,6 @@ import GlobalNotification from '../../components/admin/GlobalNotification';
 import OnboardingGuide from '../../components/admin/OnboardingGuide';
 import client from '../../api/client';
 import { t, AdminT } from '../../i18n';
-import { getRoleLabel } from '../../utils/roles';
 import { getRoleChecks } from '../../types';
 import { ToastContainer } from '../../components/common/Toast';
 import { FEATURES } from '../../config/features';
@@ -21,7 +20,6 @@ import {
   Menu,
   X,
   Ship,
-  Star,
   BarChart3,
   CreditCard,
   HelpCircle,
@@ -31,10 +29,7 @@ import {
   FileText,
   Scale,
   AlertTriangle,
-  Wrench,
   Bookmark,
-  FlaskConical,
-  BadgeCheck,
   Handshake,
   ClipboardList,
   Users,

@@ -6,7 +6,7 @@ import { parseTextToCargo, insertParsedCargo } from '../services/textParser.serv
 import { CargoStatus } from '../types';
 import logger from '../utils/logger';
 import { sendInquiryNotification } from '../services/email.service';
-import { buildPortRegex, getCodeByCityName, getAllCityNamesByCode, isMainlandCity, isHongKongMacau, isForeignCity, isMainlandCode, CHINESE_COUNTRY_MAP, getAirportCodesByCountry, extractCityCodesFromEnglish } from '../data/airport-codes';
+import { buildPortRegex, getCodeByCityName, getAllCityNamesByCode, isMainlandCity, isHongKongMacau, isForeignCity, isMainlandCode, getAirportCodesByCountry, extractCityCodesFromEnglish } from '../data/airport-codes';
 import { buildAirlineRegexString } from '../data/airline-codes';
 
 // Build port matching regex once at module load

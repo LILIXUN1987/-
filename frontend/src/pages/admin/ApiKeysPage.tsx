@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import client from '../../api/client';
 import { useAuthStore } from '../../store/authStore';
 import { getRoleChecks } from '../../types';
-import { Key, Plus, Copy, Trash2, Loader2, Eye, EyeOff, CheckCircle, XCircle, AlertCircle, Clock, ExternalLink } from 'lucide-react';
+import { Key, Plus, Copy, Trash2, Loader2, CheckCircle, AlertCircle, Clock, ExternalLink } from 'lucide-react';
 import { toast } from '../../components/common/Toast';
 
 interface ApiKey {

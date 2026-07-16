@@ -3,7 +3,7 @@ import { useAuthStore } from '../../store/authStore';
 import client from '../../api/client';
 import {
   Gift, Send, History, Settings, Loader2, CheckCircle, XCircle,
-  User, Search, ChevronDown, ChevronUp, AlertCircle, Users,
+  User, Users,
 } from 'lucide-react';
 import { getRoleChecks } from '../../types';
 import { toast } from '../../components/common/Toast';

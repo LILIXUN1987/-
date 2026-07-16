@@ -5,7 +5,7 @@ import { FEATURES } from '../../config/features';
 import { getRoleChecks } from '../../types';
 import {
   User, Camera, Save, Loader2, CheckCircle, AlertCircle,
-  Building2, Phone, UserCircle, Image, Bell, FileText, Shield, Scale, Rocket,
+  Building2, Phone, UserCircle, Image, Bell, FileText, Shield, Scale,
   Award, Trash2,
 } from 'lucide-react';
 import client from '../../api/client';

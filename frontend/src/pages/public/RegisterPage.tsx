@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { registerApi, CompanyMate } from '../../api/register.api';
 import { authApi } from '../../api/auth.api';
-import { Ship, Camera, X, CheckCircle, Mail, Loader2, Users, AlertCircle } from 'lucide-react';
+import { Ship, Camera, X, CheckCircle, Loader2, Users, AlertCircle } from 'lucide-react';
 import { t, RegT, type Lang } from '../../i18n';
 import { FEATURES } from '../../config/features';
 import { useAuthStore } from '../../store/authStore';

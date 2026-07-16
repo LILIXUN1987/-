@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import client from '../../api/client';
 import {
-  Gift, Loader2, CheckCircle, Clock, Send, X, MapPin,
+  Gift, Loader2, CheckCircle, Clock, Send, X,
 } from 'lucide-react';
 import { toast } from '../../components/common/Toast';
 

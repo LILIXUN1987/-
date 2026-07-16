@@ -5,8 +5,8 @@ import { useAuthStore } from '../../store/authStore';
 import { getRoleChecks } from '../../types';
 import {
   BarChart3, TrendingUp, Search, Users, Gift,
-  FileUp, Plane, Ship, Truck, Package, Eye, Activity,
-  Sparkles, ArrowRight, Clock, MapPin, Loader2, FileText,
+  FileUp, Plane, Truck, Package, Eye, Activity,
+  Sparkles, MapPin, Loader2, FileText,
   Handshake, AlertTriangle, Bookmark, Globe,
   Shield, Mail, Key, MessageSquare,
 } from 'lucide-react';
