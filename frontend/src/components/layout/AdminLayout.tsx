@@ -148,12 +148,12 @@ function CollapsibleSection({ title, defaultOpen, children }: { title: string; d
     <div className="mb-1">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1 w-full text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-3 py-1.5 mt-3 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100"
+        className="flex items-center gap-2 w-full text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 py-2 mt-2 hover:text-gray-600 transition-colors rounded-xl hover:bg-gray-50"
       >
-        <ChevronDown className={`w-3 h-3 transition-transform ${open ? '' : '-rotate-90'}`} />
+        <ChevronDown className={`w-3 h-3 text-gray-400 transition-transform duration-200 ${open ? 'rotate-0' : '-rotate-90'}`} />
         {title}
       </button>
-      {open && children}
+      {open && <div className="space-y-0.5 mt-0.5">{children}</div>}
     </div>
   );
 }
@@ -230,54 +230,56 @@ export default function AdminLayout() {
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
+    <div className="min-h-screen flex bg-gradient-to-br from-gray-50 to-gray-100">
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/50 z-20 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} flex flex-col`}
+        className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-100 shadow-sm transform transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} flex flex-col`}
       >
-        <div className="p-4 border-b border-gray-200 flex items-center gap-3">
-          {user?.avatar ? (
-            <img src={`/api/uploads/${user.avatar.replace(/^uploads[/\\]/, '')}`} alt="头像" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
-          ) : (
-            <Ship className="w-6 h-6 text-primary-600 flex-shrink-0" />
-          )}
-          <div>
-            <div className="font-bold text-gray-900">{t(AdminT.siteName, lang)}</div>
-            <div className="text-xs text-gray-500 flex items-center gap-1.5 flex-wrap">
-              {user?.display_name || t(AdminT.adminPlaceholder, lang)}
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary-50 text-primary-700 font-medium">
-                {user?.role === 'admin' ? t(AdminT.roleLabelAdmin, lang) :
-                 user?.role === 'forwarder' ? t(AdminT.roleLabelForwarder, lang) :
-                 user?.role === 'trader' ? t(AdminT.roleLabelTrader, lang) :
-                 user?.role === 'lawyer' ? t(AdminT.roleLabelLawyer, lang) :
-                 user?.role === 'inspector' ? t(AdminT.roleLabelInspector, lang) :
-                 user?.role === 'insurer' ? t(AdminT.roleLabelInsurer, lang) :
-                 user?.role === 'overseas_agent' ? t(AdminT.roleLabelOverseasAgent, lang) : ''}
-              </span>
-              {user?.is_newbie && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 font-medium">{t(AdminT.newbieBadge, lang)}</span>
+        {/* ═══ 侧边栏头部 ═══ */}
+        <div className="bg-gradient-to-r from-primary-600 via-primary-700 to-indigo-700 text-white p-4">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center shadow-inner flex-shrink-0">
+              {user?.avatar ? (
+                <img src={`/api/uploads/${user.avatar.replace(/^uploads[/\\]/, '')}`} alt="头像" className="w-9 h-9 rounded-xl object-cover" />
+              ) : (
+                <Ship className="w-5 h-5 text-white" />
               )}
             </div>
-          </div>
-          <div className="flex items-center gap-1">
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-bold leading-tight truncate">{t(AdminT.siteName, lang)}</div>
+              <div className="text-[11px] text-white/80 truncate mt-0.5">{user?.display_name || t(AdminT.adminPlaceholder, lang)}</div>
+            </div>
             <button
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full border transition-all shadow-sm
-                border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 hover:border-amber-400 hover:shadow-md"
+              className="flex items-center justify-center w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex-shrink-0"
               onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
+              title={lang === 'zh' ? 'English' : '中文'}
             >
               <Languages className="w-3.5 h-3.5" />
-              <span className="font-semibold">{lang === 'zh' ? 'EN' : '中文'}</span>
             </button>
-            <button className="lg:hidden p-1 text-gray-500 hover:text-gray-700" onClick={() => setSidebarOpen(false)}>
-            <X className="w-5 h-5" />
-          </button>
+            <button className="lg:hidden flex items-center justify-center w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex-shrink-0" onClick={() => setSidebarOpen(false)}>
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="flex items-center gap-1.5 mt-2.5 flex-wrap">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 text-white font-medium">
+              {user?.role === 'admin' ? t(AdminT.roleLabelAdmin, lang) :
+               user?.role === 'forwarder' ? t(AdminT.roleLabelForwarder, lang) :
+               user?.role === 'trader' ? t(AdminT.roleLabelTrader, lang) :
+               user?.role === 'lawyer' ? t(AdminT.roleLabelLawyer, lang) :
+               user?.role === 'inspector' ? t(AdminT.roleLabelInspector, lang) :
+               user?.role === 'insurer' ? t(AdminT.roleLabelInsurer, lang) :
+               user?.role === 'overseas_agent' ? t(AdminT.roleLabelOverseasAgent, lang) : ''}
+            </span>
+            {user?.is_newbie && (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/30 text-amber-200 font-medium">{t(AdminT.newbieBadge, lang)}</span>
+            )}
           </div>
         </div>
 
-        <nav className="flex-1 p-3 overflow-y-auto">
+        <nav className="flex-1 p-3 overflow-y-auto overflow-x-hidden scrollbar-thin">
           <CollapsibleSection title={t(AdminT.sectionMain, lang)} defaultOpen={true}>
           {mainItems.map((item) => (
             <NavLink
@@ -285,12 +287,21 @@ export default function AdminLayout() {
               to={item.to}
               onClick={() => setSidebarOpen(false)}
               className={({ isActive }) =>
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ' +
-                (isActive ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900')
+                'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ' +
+                (isActive
+                  ? 'bg-gradient-to-r from-primary-50 to-indigo-50 text-primary-700 shadow-sm border border-primary-100'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-white hover:shadow-sm hover:border hover:border-gray-200 border border-transparent')
               }
             >
-              <item.icon className="w-5 h-5" />
-              {item.label}
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-150 ${
+                item.to === '/admin/dashboard' ? 'bg-gradient-to-br from-primary-500 to-indigo-500 text-white shadow-sm' :
+                item.to === '/admin/ai-ask' ? 'bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-sm' :
+                item.to === '/admin/files' ? 'bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-sm' :
+                'bg-gray-100 text-gray-500 group-hover:bg-gray-200'
+              }`}>
+                <item.icon className="w-4 h-4" />
+              </div>
+              <span className="truncate">{item.label}</span>
               {item.to === '/admin/inbox' && <UnreadBadge />}
             </NavLink>
           ))}
@@ -304,12 +315,19 @@ export default function AdminLayout() {
                 to={item.to}
                 onClick={() => setSidebarOpen(false)}
                 className={({ isActive }) =>
-                  'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ' +
-                  (isActive ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900')
+                  'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ' +
+                  (isActive
+                    ? 'bg-gradient-to-r from-primary-50 to-indigo-50 text-primary-700 shadow-sm border border-primary-100'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-white hover:shadow-sm hover:border hover:border-gray-200 border border-transparent')
                 }
               >
-                <item.icon className="w-5 h-5" />
-                {item.label}
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-150 ${
+                  item.to === '/admin/coupon-wallet' ? 'bg-gradient-to-br from-pink-500 to-rose-500 text-white shadow-sm' :
+                  'bg-gray-100 text-gray-500 group-hover:bg-gray-200'
+                }`}>
+                  <item.icon className="w-4 h-4" />
+                </div>
+                <span className="truncate">{item.label}</span>
                 {item.to === '/admin/dg-review' && <DgPendingBadge count={dgPendingCount} />}
               </NavLink>
             ))}
@@ -323,12 +341,16 @@ export default function AdminLayout() {
               to={item.to}
               onClick={() => setSidebarOpen(false)}
               className={({ isActive }) =>
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ' +
-                (isActive ? 'bg-primary-50 text-primary-700' : (item as any).yellow ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900')
+                'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ' +
+                (isActive
+                  ? 'bg-gradient-to-r from-orange-50 to-red-50 text-orange-700 shadow-sm border border-orange-100'
+                  : 'text-orange-600 hover:text-orange-700 hover:bg-white hover:shadow-sm hover:border hover:border-orange-200 border border-transparent')
               }
             >
-              <item.icon className="w-5 h-5" />
-              {item.label}
+              <div className="w-8 h-8 rounded-lg bg-orange-100 text-orange-500 group-hover:bg-orange-200 flex items-center justify-center flex-shrink-0 transition-all duration-150">
+                <item.icon className="w-4 h-4" />
+              </div>
+              <span className="truncate">{item.label}</span>
             </NavLink>
           ))}
           </CollapsibleSection>
@@ -341,12 +363,16 @@ export default function AdminLayout() {
                 to={item.to}
                 onClick={() => setSidebarOpen(false)}
                 className={({ isActive }) =>
-                  'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ' +
-                  (isActive ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900')
+                  'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ' +
+                  (isActive
+                    ? 'bg-gradient-to-r from-primary-50 to-indigo-50 text-primary-700 shadow-sm border border-primary-100'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-white hover:shadow-sm hover:border hover:border-gray-200 border border-transparent')
                 }
               >
-                <item.icon className="w-5 h-5" />
-                {item.label}
+                <div className={`w-8 h-8 rounded-lg bg-gray-100 text-gray-500 group-hover:bg-gray-200 flex items-center justify-center flex-shrink-0 transition-all duration-150`}>
+                  <item.icon className="w-4 h-4" />
+                </div>
+                <span className="truncate">{item.label}</span>
               </NavLink>
             ))}
             </CollapsibleSection>
@@ -354,21 +380,25 @@ export default function AdminLayout() {
 
           <button
             onClick={() => { setContactOpen(true); setContactSent(false); setContactText(''); }}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors mt-4"
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-blue-600 hover:bg-blue-50 hover:border hover:border-blue-200 border border-transparent transition-all duration-150 mt-4"
           >
-            <HelpCircle className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-500 flex items-center justify-center flex-shrink-0">
+              <HelpCircle className="w-4 h-4" />
+            </div>
             {t(AdminT.contactAdmin, lang)}
           </button>
           {role !== 'overseas_agent' && (<>
           </>)}
         </nav>
 
-        <div className="p-3 border-t border-gray-200">
+        <div className="p-3 border-t border-gray-100">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors"
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-red-50 hover:text-red-600 hover:border hover:border-red-200 border border-transparent transition-all duration-150"
           >
-            <LogOut className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-lg bg-gray-100 text-gray-400 flex items-center justify-center flex-shrink-0">
+              <LogOut className="w-4 h-4" />
+            </div>
             {t(AdminT.logout, lang)}
           </button>
         </div>
