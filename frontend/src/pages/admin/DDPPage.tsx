@@ -126,7 +126,12 @@ const T = {
   onboardBtn: { zh: '提交入驻', en: 'Submit' },
   onboardSuccess: { zh: '✅ 入驻成功！您的信息已展示在海外代理列表中', en: '✅ Registered! Your company is now listed in the overseas agents directory' },
   onboardPrompt: { zh: '您尚未填写代理信息，请先完成入驻', en: 'You haven\'t set up your agent profile yet. Please complete your registration.' },
-};
+
+  searchByPort: { zh: '输入口岸代码或城市名搜索', en: 'Search by port code or city name' },
+  topRanked: { zh: '推荐代理', en: 'Recommended Agents' },
+  randomAgents: { zh: '更多代理', en: 'More Agents' },
+  searchFirst: { zh: '输入口岸代码或城市名查找对应的代理商', en: 'Enter a port code or city name to find agents' },
+  noSearchResult: { zh: '未找到匹配的代理，请尝试其他关键词', en: 'No agents found, try a different keyword' },};
 
 // ── 国家国旗映射（常用物流目的国） ──
 const COUNTRY_FLAGS: Record<string, string> = {
@@ -569,208 +574,152 @@ function InquiryTab({ isAgent }: { isAgent?: boolean }) {
 // ════════════════════════════════════════════
 // Tab 2: 海外代理列表
 // ════════════════════════════════════════════
+
 function AgentsTab({ isAgent }: { isAgent?: boolean }) {
   const lang = useLang();
-  const [agents, setAgents] = useState<DDPAgent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState<string>('');
-  const [contactModal, setContactModal] = useState<DDPAgent | null>(null);
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
+  const [contactModal, setContactModal] = useState<any | null>(null);
   const [contactText, setContactText] = useState('');
   const [contactSending, setContactSending] = useState(false);
   const [contactSent, setContactSent] = useState(false);
-  const [reviewModal, setReviewModal] = useState<{ agent: DDPAgent; reviews: any[]; loading: boolean } | null>(null);
+  const topRef = useRef<any[]>([]);
+  const randomRef = useRef<any[]>([]);
 
-  const fetchAgents = async () => {
+  const handleSearch = async () => {
+    const q = query.trim();
+    if (!q) return;
     setLoading(true);
+    setSearched(true);
     try {
+      let list: any[] = [];
       if (isAgent) {
-        const params: any = {};
-        if (search.trim()) params.q = search.trim();
-        const res = await client.get('/overseas/forwarders', { params });
-        setAgents(res.data.data?.map((f: any) => ({
-          id: f.id,
-          company_name: f.company_name,
-          contact_person: f.display_name,
-          country: '',
-          created_by: f.id,
-          credit_score: f.credit_score
-        })) || []);
+        const res = await client.get('/overseas/forwarders', { params: { q, limit: 20 } });
+        list = (res.data.data || []).map((f: any) => ({
+          id: f.id, company_name: f.company_name, contact_person: f.display_name,
+          created_by: f.id, credit_score: f.credit_score || 50, cooperation_count: f.cooperation_count || 0,
+        }));
       } else {
-        const params: any = {};
-        if (selectedCountry) params.country = selectedCountry;
-        const res = await client.get<{ data: DDPAgent[] }>('/ddp/agents', { params });
-        setAgents(res.data.data || []);
+        const portQ = q.toLowerCase();
+        const agentsRes = await client.get('/ddp/agents');
+        list = (agentsRes.data.data || []).filter((a: any) =>
+          (a.service_ports || '').toLowerCase().includes(portQ) ||
+          (a.country || '').toLowerCase().includes(portQ) ||
+          (a.city || '').toLowerCase().includes(portQ) ||
+          (a.company_name || '').toLowerCase().includes(portQ)
+        );
       }
+      const sorted = [...list].sort((a: any, b: any) => (b.completed_orders || 0) - (a.completed_orders || 0));
+      topRef.current = sorted.slice(0, 6);
+      randomRef.current = sorted.slice(6).sort(() => Math.random() - 0.5).slice(0, 6);
+      setResults(list);
     } catch {}
     setLoading(false);
   };
-
-  useEffect(() => { fetchAgents(); }, [selectedCountry]);
-
-  const countries = useMemo(() => {
-    const set = new Set(agents.map(a => a.country));
-    return Array.from(set).sort();
-  }, [agents]);
-
-  const filtered = useMemo(() => {
-    if (!search.trim()) return agents;
-    const q = search.trim().toLowerCase();
-    return agents.filter(a =>
-      a.company_name?.toLowerCase().includes(q) ||
-      a.country?.toLowerCase().includes(q) ||
-      a.city?.toLowerCase().includes(q) ||
-      a.service_ports?.toLowerCase().includes(q) ||
-      a.description?.toLowerCase().includes(q)
-    );
-  }, [agents, search]);
 
   const handleContactSend = async () => {
     if (!contactModal || !contactText.trim()) return;
     setContactSending(true);
     try {
-      const prefix = lang === 'zh' ? `[DDP到门咨询] 您好，我对贵司在${contactModal.country}的DDP到门服务感兴趣，想了解更多详情。\n\n`
-        : `[DDP Inquiry] Hello, I'm interested in your DDP service in ${contactModal.country}. \n\n`;
-      await client.post('/messages', {
-        receiver_id: contactModal.created_by,
-        content: prefix + contactText.trim(),
-      });
+      await client.post('/messages', { receiver_id: contactModal.created_by, content: contactText.trim() });
       setContactSent(true);
       setTimeout(() => { setContactModal(null); setContactSent(false); setContactText(''); }, 2000);
-    } catch {
-      alert(t(T.sendFailed, lang));
-    }
+    } catch { alert(t(T.sendFailed, lang)); }
     setContactSending(false);
-  };
-
-  const handleViewReviews = async (agent: DDPAgent) => {
-    setReviewModal({ agent, reviews: [], loading: true });
-    try {
-      const res = await client.get(`/reviews/stats/${agent.created_by}`);
-      setReviewModal({ agent, reviews: res.data.list || [], loading: false });
-    } catch {
-      setReviewModal({ agent, reviews: [], loading: false });
-    }
   };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+      <div className="flex gap-2 mb-4">
         <div className="relative flex-1">
-          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            className="w-full pl-8 pr-8 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-400 placeholder-gray-400"
-            placeholder={isAgent ? (lang === 'en' ? 'Search Chinese forwarder...' : '搜索中国货代...') : t(T.searchPlaceholder, lang)}
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-          {search && (
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onClick={() => setSearch('')}>✕</button>
-          )}
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input className="w-full pl-9 pr-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400"
+            placeholder={t(T.searchByPort, lang)} value={query}
+            onChange={e => setQuery(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleSearch()} />
         </div>
+        <button className="btn-primary text-sm px-5" onClick={handleSearch} disabled={loading || !query.trim()}>
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />} {lang === 'en' ? 'Search' : '搜索'}
+        </button>
       </div>
 
-      {countries.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          <button
-            className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
-              !selectedCountry ? 'bg-primary-50 border-primary-300 text-primary-700 font-medium' : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
-            }`}
-            onClick={() => setSelectedCountry('')}
-          >
-            {t(T.allCountries, lang)}
-          </button>
-          {countries.map(c => (
-            <button
-              key={c}
-              className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
-                selectedCountry === c ? 'bg-primary-50 border-primary-300 text-primary-700 font-medium' : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
-              }`}
-              onClick={() => setSelectedCountry(c)}
-            >
-              {getCountryEmoji(c)} {c}
-            </button>
-          ))}
-        </div>
-      )}
+      {!searched && <div className="text-center py-16 text-gray-400"><Search className="w-12 h-12 mx-auto mb-3 text-gray-200" /><p className="text-sm">{t(T.searchFirst, lang)}</p></div>}
+      {searched && loading && <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-gray-400" /></div>}
+      {searched && !loading && results.length === 0 && <div className="text-center py-12 text-gray-400 text-sm">{t(T.noSearchResult, lang)}</div>}
 
-      {loading ? (
-        <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-gray-400" /></div>
-      ) : filtered.length === 0 ? (
-        <div className="text-center py-12 text-gray-400 text-sm">
-          {search || selectedCountry ? t(T.noMatch, lang) : t(T.noAgent, lang)}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filtered.map(agent => (
-            <AgentCard
-              key={agent.id}
-              agent={agent}
-              onContact={() => { setContactModal(agent); setContactSent(false); setContactText(''); }}
-              onViewReviews={() => handleViewReviews(agent)}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* 联系代理弹窗 */}
-      {contactModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => { if (!contactSending) setContactModal(null); }}>
-          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md mx-4 border-t-4 border-blue-500 modal-mobile" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-bold text-gray-900 text-base flex items-center gap-2">
-                {getCountryEmoji(contactModal.country)} {t(T.contactTitle, lang)} {contactModal.company_name}
-              </h3>
-              <button onClick={() => setContactModal(null)} className="text-gray-400 hover:text-gray-600"><X className="w-4 h-4" /></button>
-            </div>
-            {contactSent ? (
-              <div className="text-center py-6 text-green-600 text-sm font-medium">{t(T.msgSent, lang)}</div>
-            ) : (
-              <>
-                <p className="text-xs text-gray-500 mb-3">
-                  {t(T.contactDesc, lang)} {contactModal.company_name}（{contactModal.country}），{t(T.contactReply, lang)}
-                </p>
-                <div className="bg-gray-50 rounded-lg p-3 mb-3 text-xs text-gray-600 space-y-1">
-                  <p>📍 {contactModal.country}{contactModal.city ? ` · ${contactModal.city}` : ''}</p>
-                  {contactModal.service_ports && <p>🚢 {t(T.contactOperable, lang)}{contactModal.service_ports}</p>}
-                  {contactModal.reference_price && <p>💰 {t(T.refPrice, lang)}{contactModal.reference_price}</p>}
-                </div>
-                <textarea className="input-field w-full min-h-[100px] text-sm resize-none mb-3" placeholder={t(T.contactPlaceholder, lang)} value={contactText} onChange={e => setContactText(e.target.value)} disabled={contactSending} autoFocus />
-                <button className="btn-primary w-full flex items-center justify-center gap-2 text-sm py-2.5" onClick={handleContactSend} disabled={contactSending || !contactText.trim()}>
-                  {contactSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                  {t(T.contactBtn, lang)}
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* 查看评价弹窗 */}
-      {reviewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setReviewModal(null)}>
-          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-lg mx-4 border-t-4 border-amber-500 modal-mobile" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-bold text-gray-900 text-base">⭐ {reviewModal.agent.company_name} - {t(T.reviewTitle, lang)}</h3>
-              <button onClick={() => setReviewModal(null)} className="text-gray-400 hover:text-gray-600"><X className="w-4 h-4" /></button>
-            </div>
-            {reviewModal.loading ? (
-              <div className="flex justify-center py-8"><Loader2 className="w-5 h-5 animate-spin text-gray-400" /></div>
-            ) : reviewModal.reviews.length === 0 ? (
-              <div className="text-center py-8 text-gray-400 text-sm">{t(T.noReviews, lang)}</div>
-            ) : (
-              <div className="space-y-3 max-h-[400px] overflow-y-auto">
-                {reviewModal.reviews.map((r: any, i: number) => (
-                  <div key={i} className="bg-gray-50 rounded-lg p-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-gray-700">{r.reviewer_name || '匿名'}{r.reviewer_company ? ` · ${r.reviewer_company}` : ''}</span>
-                      <span className="text-amber-500 text-xs">{'⭐'.repeat(r.rating)}</span>
+      {searched && !loading && results.length > 0 && (
+        <div className="space-y-6">
+          {topRef.current.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-lg">🏆</span><h3 className="text-sm font-bold text-gray-700">{t(T.topRanked, lang)}</h3>
+                <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">{lang === 'en' ? 'TOP' : '推荐'}</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {topRef.current.slice(0, 6).map((agent: any, i: number) => (
+                  <div key={agent.id || i} className={"border rounded-xl p-3.5 transition-all hover:shadow-sm " + (i < 3 ? "border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50" : "border-gray-200 bg-white")}>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          {i < 3 && <span className="text-sm">{['🥇','🥈','🥉'][i]}</span>}
+                          <h4 className="text-sm font-semibold text-gray-900 truncate">{agent.company_name || agent.display_name}</h4>
+                        </div>
+                        <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
+                          {agent.contact_person && <span>{agent.contact_person}</span>}
+                          {(agent.cooperation_count || 0) > 0 && <span>🤝 {agent.cooperation_count}{lang === 'en' ? ' coops' : '次合作'}</span>}
+                          <span className={"font-bold " + ((agent.credit_score || 50) >= 75 ? "text-green-600" : "text-amber-600")}>🏆 {agent.credit_score || 50}</span>
+                        </div>
+                      </div>
+                      <button className="text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg px-3 py-1.5 flex-shrink-0" onClick={() => { setContactModal(agent); setContactSent(false); setContactText(''); }}>{lang === 'en' ? 'Contact' : '联系'}</button>
                     </div>
-                    {r.comment && <p className="text-xs text-gray-600">{r.comment}</p>}
-                    <p className="text-[10px] text-gray-400 mt-1">{r.created_at?.slice(0, 10)}</p>
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+          {randomRef.current.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-lg">🔄</span><h3 className="text-sm font-bold text-gray-700">{t(T.randomAgents, lang)}</h3>
+                <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">{lang === 'en' ? 'Random' : '随机'}</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {randomRef.current.slice(0, 6).map((agent: any, i: number) => (
+                  <div key={agent.id || 'r' + i} className="border border-gray-200 bg-white rounded-xl p-3.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-sm font-semibold text-gray-900 truncate">{agent.company_name || agent.display_name}</h4>
+                        <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
+                          {agent.contact_person && <span>{agent.contact_person}</span>}
+                          <span className={"font-bold " + ((agent.credit_score || 50) >= 75 ? "text-green-600" : "text-amber-600")}>🏆 {agent.credit_score || 50}</span>
+                        </div>
+                      </div>
+                      <button className="text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg px-3 py-1.5 flex-shrink-0" onClick={() => { setContactModal(agent); setContactSent(false); setContactText(''); }}>{lang === 'en' ? 'Contact' : '联系'}</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {contactModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => { if (!contactSending) setContactModal(null); }}>
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md mx-4 border-t-4 border-blue-500" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-bold text-gray-900 text-base">📬 {t(T.contactTitle, lang)} {contactModal.company_name || contactModal.display_name}</h3>
+              <button onClick={() => setContactModal(null)} className="text-gray-400 hover:text-gray-600"><X className="w-4 h-4" /></button>
+            </div>
+            {contactSent ? <div className="text-center py-6 text-green-600 text-sm font-medium">{t(T.msgSent, lang)}</div> : (
+              <>
+                <textarea className="input-field w-full min-h-[100px] text-sm resize-none mb-3" placeholder={t(T.contactPlaceholder, lang)} value={contactText} onChange={e => setContactText(e.target.value)} disabled={contactSending} autoFocus />
+                <button className="btn-primary w-full flex items-center justify-center gap-2 text-sm py-2.5" onClick={handleContactSend} disabled={contactSending || !contactText.trim()}>
+                  {contactSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}{t(T.contactBtn, lang)}
+                </button>
+              </>
             )}
           </div>
         </div>
@@ -779,7 +728,7 @@ function AgentsTab({ isAgent }: { isAgent?: boolean }) {
   );
 }
 
-// ════════════════════════════════════════════
+
 // Tab 4: 我的询价
 // ════════════════════════════════════════════
 function MyInquiriesTab() {
