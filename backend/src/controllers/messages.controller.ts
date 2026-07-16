@@ -180,36 +180,57 @@ export const messagesController = {
       const total = filteredIds.length;
       const pagedIds = filteredIds.slice(offset, offset + limit);
 
-      // 对每个联系人，查最后一条消息 + 未读数
-      const data: any[] = [];
-      for (const contactId of pagedIds) {
-        const contactUser = await db('users').where({ id: contactId }).select('display_name', 'company_name', 'avatar').first() as any;
-        if (!contactUser) continue;
+      // 批量查询：一次获取所有用户信息、最后一条消息、未读数
+      const [contactUsers, lastMessages, unreadCounts] = await Promise.all([
+        // 1. 批量查用户信息
+        db('users').whereIn('id', pagedIds).select('id', 'display_name', 'company_name', 'avatar') as any,
+        // 2. 每条对话的最后一条消息（使用子查询）
+        db('messages')
+          .select('*')
+          .whereIn('id', function () {
+            this.select(db.raw('MAX(id)'))
+              .from('messages')
+              .where(function () {
+                this.where('sender_id', userId)
+                  .orWhere('receiver_id', userId);
+              })
+              .groupBy(db.raw('CASE WHEN sender_id = ? THEN receiver_id ELSE sender_id END', [userId]));
+          }) as any,
+        // 3. 批量查未读计数
+        db('messages')
+          .where({ receiver_id: userId, is_read: false })
+          .whereIn('sender_id', pagedIds)
+          .select('sender_id')
+          .select(db.raw('COUNT(*) as cnt'))
+          .groupBy('sender_id') as any,
+      ]);
 
-        const lastMessage = await db('messages')
-          .where(function () {
-            this.where({ sender_id: userId, receiver_id: contactId })
-              .orWhere({ sender_id: contactId, receiver_id: userId });
-          })
-          .orderBy('created_at', 'desc')
-          .first() as any;
+      const userMap: Record<string, any> = {};
+      for (const u of contactUsers) userMap[u.id] = u;
 
-        const unreadCount = await db('messages')
-          .where({ sender_id: contactId, receiver_id: userId, is_read: false })
-          .count('* as total')
-          .first() as any;
-
-        data.push({
-          contact_id: contactId,
-          display_name: contactUser.display_name,
-          company_name: contactUser.company_name,
-          avatar: contactUser.avatar,
-          last_message: lastMessage?.content?.substring(0, 200) || '',
-          last_message_at: lastMessage?.created_at || null,
-          last_is_outgoing: lastMessage?.sender_id === userId,
-          unread_count: Number(unreadCount?.total || 0),
-        });
+      const lastMsgMap: Record<string, any> = {};
+      for (const m of lastMessages) {
+        const otherId = (m.sender_id === userId) ? m.receiver_id : m.sender_id;
+        lastMsgMap[otherId] = m;
       }
+
+      const unreadMap: Record<string, number> = {};
+      for (const r of unreadCounts) unreadMap[r.sender_id] = Number(r.cnt);
+
+      const data = pagedIds.map((contactId: string) => {
+        const cu = userMap[contactId];
+        const lm = lastMsgMap[contactId];
+        return {
+          contact_id: contactId,
+          display_name: cu?.display_name || '',
+          company_name: cu?.company_name || '',
+          avatar: cu?.avatar || null,
+          last_message: lm?.content?.substring(0, 200) || '',
+          last_message_at: lm?.created_at || null,
+          last_is_outgoing: lm?.sender_id === userId,
+          unread_count: unreadMap[contactId] || 0,
+        };
+      });
 
       // 按最后消息时间降序排列
       data.sort((a, b) => {
