@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, createContext, useContext } from 'react';
+import { useState, useEffect, useRef, useMemo, createContext, useContext } from 'react';
 import client from '../../api/client';
 import { useAuthStore } from '../../store/authStore';
 import { FEATURES } from '../../config/features';
@@ -288,6 +288,11 @@ function InquiryTab() {
   const [direction, setDirection] = useState<'export' | 'import'>('export');
   const [country, setCountry] = useState('');
   const [port, setPort] = useState('');
+  const [countrySearch, setCountrySearch] = useState('');
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const [countryList, setCountryList] = useState<string[]>([]);
+  const [portList, setPortList] = useState<{ code: string; name: string }[]>([]);
+  const countryRef = useRef<HTMLDivElement>(null);
   const [goodsDesc, setGoodsDesc] = useState('');
   const [hsCode, setHsCode] = useState('');
   const [notes, setNotes] = useState('');
@@ -356,6 +361,32 @@ function InquiryTab() {
     setLoading(false);
   };
 
+
+
+  // 加载国家列表
+  useEffect(() => {
+    client.get('/ddp/destinations').then(r => setCountryList(r.data.countries || [])).catch(() => {});
+  }, []);
+
+  // 加载港口列表（选择国家后）
+  useEffect(() => {
+    if (country.trim()) {
+      client.get('/ddp/destinations', { params: { country } }).then(r => setPortList(r.data.ports || [])).catch(() => {});
+    } else {
+      setPortList([]);
+    }
+  }, [country]);
+
+  // 点击外部关闭下拉
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (countryRef.current && !countryRef.current.contains(e.target as Node)) {
+        setShowCountryDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
   const resetForm = () => {
     setResult(null);
     setCountry(''); setPort(''); setGoodsDesc(''); setHsCode('');
@@ -413,7 +444,7 @@ function InquiryTab() {
                   ? 'bg-primary-50 border-primary-300 text-primary-700 font-medium'
                   : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
               }`}
-              onClick={() => { setCountry(c); setResult(null); }}
+              onClick={() => { setCountry(c); setCountrySearch(''); setShowCountryDropdown(false); setResult(null); }}
             >
               {getCountryEmoji(c)} {c}
             </button>
@@ -431,13 +462,42 @@ function InquiryTab() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
+          <div className="relative" ref={countryRef}>
             <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.destCountry, lang)} <span className="text-red-500">*</span></label>
-            <input className="input-field w-full text-sm" placeholder={lang === 'zh' ? '如：美国、德国、肯尼亚' : 'e.g. USA, Germany, Kenya'} value={country} onChange={e => { setCountry(e.target.value); setResult(null); }} />
+            <input
+              className="input-field w-full text-sm"
+              placeholder={lang === 'zh' ? '搜索国家...' : 'Search country...'}
+              value={showCountryDropdown ? countrySearch : country}
+              onChange={e => { setCountrySearch(e.target.value); setShowCountryDropdown(true); setCountry(''); setResult(null); }}
+              onFocus={() => { setCountrySearch(country); setShowCountryDropdown(true); }}
+            />
+            {showCountryDropdown && (
+              <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                {countryList
+                  .filter(c => !countrySearch || c.toLowerCase().includes(countrySearch.toLowerCase()))
+                  .slice(0, 30)
+                  .map(c => (
+                    <button
+                      key={c}
+                      className={"w-full text-left px-3 py-1.5 text-sm hover:bg-primary-50 hover:text-primary-700 transition-colors " + (country === c ? 'bg-primary-50 text-primary-700 font-medium' : 'text-gray-700')}
+                      onClick={() => { setCountry(c); setCountrySearch(''); setShowCountryDropdown(false); setResult(null); }}
+                    >{c}</button>
+                  ))
+                }
+                {countryList.filter(c => !countrySearch || c.toLowerCase().includes(countrySearch.toLowerCase())).length === 0 && (
+                  <div className="px-3 py-2 text-xs text-gray-400">{lang === 'en' ? 'No country found' : '未找到匹配国家'}</div>
+                )}
+              </div>
+            )}
           </div>
           <div>
             <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.destPort, lang)}</label>
-            <input className="input-field w-full text-sm" placeholder={t(T.portPlaceholder, lang)} value={port} onChange={e => setPort(e.target.value)} />
+            <select className="input-field w-full text-sm" value={port} onChange={e => setPort(e.target.value)}>
+              <option value="">{lang === 'en' ? 'Auto-detect from country' : '由系统根据目的国推荐'}</option>
+              {portList.slice(0, 50).map(p => (
+                <option key={p.code} value={p.name}>{p.name} ({p.code})</option>
+              ))}
+            </select>
           </div>
           <div className="md:col-span-2">
             <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.goodsDesc, lang)}</label>

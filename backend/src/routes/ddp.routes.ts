@@ -2,6 +2,8 @@ import { Router } from 'express';
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { INTERNATIONAL_ZH_MAP } from '../data/international-zh-map';
+import { INTERNATIONAL_PORTS } from '../data/airport-codes';
 import { authRequired } from '../middleware/auth.middleware';
 import { ddpController } from '../controllers/ddp.controller';
 import { env } from '../config/env';
@@ -65,5 +67,50 @@ router.get('/my-inquiries', ddpController.myInquiries);
 
 // 需求热度统计
 router.get('/stats', ddpController.stats);
+
+
+// 获取DDP目的地数据（国家列表+港口）
+router.get('/destinations', async (req, res) => {
+  try {
+    const { country } = req.query;
+
+    // 从国际机场数据中提取所有国家
+    const countrySet = new Set<string>();
+    for (const [code, info] of Object.entries(INTERNATIONAL_ZH_MAP)) {
+      const entry = info as { en: string; zh: string; country: string };
+      if (entry.country) countrySet.add(entry.country);
+    }
+    const allCountries = Array.from(countrySet).sort();
+
+    // 如果没有指定国家，只返回国家列表
+    if (!country || typeof country !== 'string') {
+      return res.json({ countries: allCountries });
+    }
+
+    // 查找该国家的主要港口/机场
+    const q = country.toLowerCase();
+    const ports: { code: string; name: string }[] = [];
+
+    for (const [code, info] of Object.entries(INTERNATIONAL_ZH_MAP)) {
+      const entry = info as { en: string; zh: string; country: string };
+      if (entry.country && entry.country.toLowerCase().includes(q)) {
+        ports.push({ code, name: entry.zh || entry.en });
+      }
+    }
+
+    // 去重排序
+    const seen = new Set<string>();
+    const uniquePorts = ports.filter(p => {
+      const key = p.name + p.code;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    }).sort((a, b) => a.name.localeCompare(b.name));
+
+    res.json({ countries: allCountries, ports: uniquePorts });
+  } catch (err) {
+    res.status(500).json({ error: '服务器错误' });
+  }
+});
 
 export default router;
