@@ -75,7 +75,6 @@ function useNavItems() {
     { to: '/admin/files', label, icon: FileUp },
     ...(rc.isForwarder || rc.isAdmin ? [{ to: '/admin/subscribe', label: lang === 'en' ? '💳 Subscribe' : '💳 开通月费', icon: Gift }] : []),
     ...(rc.isForwarder || rc.isAdmin ? [{ to: '/admin/coupons', label: lang === 'en' ? '🎫 Coupons' : '🎫 报关券', icon: Gift }] : []),
-    { to: '/admin/api-keys', label: lang === 'en' ? '🔑 API Keys' : '🔑 API 密钥', icon: Key },
     { to: '/admin/price-tables', label: lang === 'en' ? 'Price Tables' : '货代价格表', icon: FileText },
     { to: '/admin/tools', label: lang === 'en' ? '★ My Navigation' : '★ 我的导航库（提交有奖）', icon: Bookmark },
     { to: '/admin/port-services', label: lang === 'en' ? '🚛 Port Services' : '🚛 口岸服务', icon: Truck },
@@ -99,6 +98,7 @@ function useNavItems() {
 
   const adminItems = rc.isAdmin ? [
     { to: '/admin/admin-center', label: '🏢 ' + (lang === 'en' ? 'Admin Center' : '管理中心'), icon: BarChart3 },
+    { to: '/admin/api-keys', label: lang === 'en' ? '🔑 API Keys' : '🔑 API 密钥', icon: Key },
     { to: '/admin/broker-management', label: lang === 'en' ? 'Broker Mgmt' : '报关行管理', icon: Gift },
     { to: '/admin/raw-records', label: lang === 'en' ? 'Raw Records' : '数据录入原始记录', icon: FileText },
     { to: '/admin/batch-import', label: lang === 'en' ? 'Import Directory' : '通讯录导入', icon: FileSpreadsheet },
@@ -106,7 +106,7 @@ function useNavItems() {
 
   // 网安审核模式：非管理员精简菜单（只保留查看类功能）
   if (FEATURES.AUDIT_MODE && !rc.isAdmin) {
-    const keepPaths = ['/admin/dashboard', '/admin/ai-ask', '/admin/files', '/admin/api-keys', '/admin/price-tables', '/admin/card-directory', '/admin/recommend', '/admin/subscribe', '/admin/coupons', '/admin/coupon-wallet', '/admin/port-services'];
+    const keepPaths = ['/admin/dashboard', '/admin/ai-ask', '/admin/files', '/admin/price-tables', '/admin/card-directory', '/admin/recommend', '/admin/subscribe', '/admin/coupons', '/admin/coupon-wallet', '/admin/port-services'];
     return {
       mainItems: mainItems.filter((item: any) => keepPaths.includes(item.to)),
       forwarderItems: forwarderItems.filter((item: any) => keepPaths.includes(item.to)),

@@ -140,7 +140,6 @@ export default function DashboardPage() {
     { to: '/admin/port-services', label: lang === 'en' ? 'Port Services' : '口岸服务', icon: <Truck className="w-4 h-4 text-white" />, color: 'from-amber-500 to-amber-600' },
     ...(!isTrader ? [{ to: '/admin/dangerous-goods', label: lang === 'en' ? 'DG Agent' : '危险品代理', icon: <AlertTriangle className="w-4 h-4 text-white" />, color: 'from-red-500 to-red-600' }, { to: '/admin/overseas-partners', label: lang === 'en' ? 'Partners' : '海外合作商', icon: <Handshake className="w-4 h-4 text-white" />, color: 'from-green-500 to-green-600' }] : []),
     { to: '/admin/ddp', label: lang === 'en' ? 'DDP' : '海外DDP', icon: <Globe className="w-4 h-4 text-white" />, color: 'from-indigo-500 to-indigo-600' },
-    ...(isForwarder || isAdmin ? [{ to: '/admin/api-keys', label: lang === 'en' ? 'API Keys' : 'API 密钥', icon: <Key className="w-4 h-4 text-white" />, color: 'from-slate-500 to-slate-600' }] : []),
     { to: '/admin/recommend', label: lang === 'en' ? 'Invite' : '推荐同行', icon: <Users className="w-4 h-4 text-white" />, color: 'from-emerald-500 to-emerald-600' },
     { to: '/admin/card-directory', label: lang === 'en' ? 'Directory' : '通讯录', icon: <Bookmark className="w-4 h-4 text-white" />, color: 'from-violet-500 to-violet-600' },
     ...(isTrader ? [] : [{ to: '/admin/complaints', label: lang === 'en' ? 'Blacklist' : '避雷针', icon: <Shield className="w-4 h-4 text-white" />, color: 'from-orange-500 to-orange-600' }]),
