@@ -37,8 +37,8 @@ const T = {
   continueNew: { zh: '继续发布新需求', en: 'Submit another inquiry' },
   directionExport: { zh: '🇨🇳 中国出口 → 全球', en: '🇨🇳 Export from China' },
   directionImport: { zh: '🌍 全球进口 → 中国', en: '🌍 Import to China' },
-  inquiryDescExport: { zh: '从中国出口到全球，提交后推送给目的国已入驻的海外代理', en: 'Export from China to worldwide. Sent to agents in destination country.' },
-  inquiryDescImport: { zh: '从海外进口到中国，提交后推送给来源国已入驻的海外代理', en: 'Import to China from worldwide. Sent to agents in origin country.' },
+  inquiryDescExport: { zh: '从中国出口到目的国，推送给当地海外代理报价', en: 'Export from China. Sent to agents in destination country.' },
+  inquiryDescImport: { zh: '从海外进口到中国，推送给社区中国货代报价', en: 'Import to China. Sent to Chinese forwarders in the community.' },
   originCountry: { zh: '来源国家', en: 'Origin Country' },
   originPort: { zh: '起运港/城市', en: 'Origin Port/City' },
   destCountry: { zh: '目的国家', en: 'Destination Country' },
@@ -403,7 +403,7 @@ function InquiryTab() {
 
       {/* 快速选择国家 */}
       <div className="mb-4">
-        <label className="text-xs font-medium text-gray-500 mb-1.5 block">{direction === 'export' ? (lang === 'en' ? 'Select destination' : '选择目的国') : (lang === 'en' ? 'Select origin' : '选择来源国')}</label>
+        <label className="text-xs font-medium text-gray-500 mb-1.5 block">{lang === 'en' ? 'Select destination country' : '选择目的国'}</label>
         <div className="flex flex-wrap gap-1.5">
           {hotCountries.map((c) => (
             <button
@@ -432,8 +432,8 @@ function InquiryTab() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">{direction === 'export' ? t(T.destCountry, lang) : t(T.originCountry, lang)} <span className="text-red-500">*</span></label>
-            <input className="input-field w-full text-sm" placeholder={direction === 'export' ? (lang === 'zh' ? '如：美国、德国、肯尼亚' : 'e.g. USA, Germany, Kenya') : (lang === 'zh' ? '如：美国、德国、日本' : 'e.g. USA, Germany, Japan')} value={country} onChange={e => { setCountry(e.target.value); setResult(null); }} />
+            <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.destCountry, lang)} <span className="text-red-500">*</span></label>
+            <input className="input-field w-full text-sm" placeholder={lang === 'zh' ? '如：美国、德国、肯尼亚' : 'e.g. USA, Germany, Kenya'} value={country} onChange={e => { setCountry(e.target.value); setResult(null); }} />
           </div>
           <div>
             <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.destPort, lang)}</label>

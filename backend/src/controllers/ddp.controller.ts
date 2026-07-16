@@ -192,7 +192,7 @@ export const ddpController = {
     try {
       const { direction, country, port, goods_desc, hs_code, notes, file_paths, weight_kg, volume_cbm, address } = req.body;
       const isImport = direction === 'import';
-      if (!country?.trim()) return res.status(400).json({ error: isImport ? '请填写来源国家' : '请填写目的国家' });
+      if (!country?.trim()) return res.status(400).json({ error: '请填写目的国家' });
       if (!address?.trim()) return res.status(400).json({ error: '请填写派送地址' });
       if (!notes?.trim()) return res.status(400).json({ error: '请填写详细的件数/重量/尺寸信息，如：1件毛重160KG 120*100*80/1' });
 
@@ -217,14 +217,24 @@ export const ddpController = {
         user_id: userId,
       });
 
-      // 2. 查找该国已审核代理
-      const agents = await db('ddp_agents')
-        .where({ status: 'approved' })
-        .where('country', 'like', `%${country.trim()}%`)
-        .select('id', 'created_by', 'email', 'company_name') as any[];
+      // 2. 按目的国查找匹配的服务方
+      // 进口到中国 → 推送给社区的中国货代（forwarder）
+      // 出口到海外 → 推送给 ddp_agents 中服务该国的海外代理
+      let agents: any[] = [];
+      if (isImport) {
+        agents = await db('users')
+          .where({ role: 'forwarder', status: 'approved' })
+          .select(db.raw("id as created_by"), 'email', 'company_name')
+          .limit(50) as any[];
+      } else {
+        agents = await db('ddp_agents')
+          .where({ status: 'approved' })
+          .where('country', 'like', `%${country.trim()}%`)
+          .select('id', 'created_by', 'email', 'company_name') as any[];
+      }
 
       if (agents.length === 0) {
-        return res.json({ message: isImport ? '已收到您的进口需求，但目前该国暂无入驻代理，我们会尽快拓展！' : '已收到您的询价，但目前该国暂无入驻代理，我们会尽快拓展！', notified: 0 });
+        return res.json({ message: '已收到您的需求，但目前暂无匹配的服务方，我们会尽快拓展！', notified: 0 });
       }
 
       // 3. 构造询价详情文本（推送给海外代理 → 英文）
@@ -285,7 +295,7 @@ export const ddpController = {
       }
 
       res.json({
-        message: isImport ? `✅ 您的进口需求已发送给 ${country} 的 ${notifiedCount} 位代理，请留意收件箱报价回复` : `✅ 您的DDP到门询价已发送给 ${country} 的 ${notifiedCount} 位代理，请留意收件箱报价回复`,
+        message: isImport ? `✅ 您的进口需求已发送给 ${notifiedCount} 位中国货代，请留意收件箱报价回复` : `✅ 您的询价已发送给 ${country} 的 ${notifiedCount} 位海外代理，请留意收件箱报价回复`,
         notified: notifiedCount,
         inquiry_id: inquiryId,
       });
