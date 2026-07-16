@@ -76,11 +76,14 @@ export const complaintsController = {
             created_by: req.user!.id,
           });
 
+          // 用系统账号发送风控预警通知
+          const systemUser = await db('users').where({ username: 'admin' }).select('id').first() as any;
+          const sysId = systemUser?.id || req.user!.id;
           const admins = await db('users').where({ role: 'admin' }).select('id');
           for (const admin of admins) {
             await db('messages').insert({
               id: uuidv4(),
-              sender_id: req.user!.id,
+              sender_id: sysId,
               receiver_id: admin.id,
               content: `⚠️ 风控预警：${target_company} 已被 ${(complainerCount as any)?.total} 家不同公司投诉，请到「风控中心」审核是否群发提醒通知。`,
               is_read: false,
