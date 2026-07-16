@@ -5,17 +5,14 @@ import { cargoApi } from '../../api/cargo.api';
 import { getRoleChecks } from '../../types';
 import type { DashboardStats } from '../../types';
 import {
-  CheckCircle, MapPin, Clock, Users, Plane, Ship, Truck, Package,
-  TrendingUp, Search, Plus, Database, Activity, Zap, Sparkles, ArrowRight, Loader2,
+  CheckCircle, MapPin, Users, Plane, Ship, Truck, Package,
+  Search, Zap, Sparkles, Loader2,
 } from 'lucide-react';
 import CategoryQueryPanel from '../../components/admin/CategoryQueryPanel';
-import TrialBanner from '../../components/admin/TrialBanner';
 import TraderGuide from '../../components/admin/TraderGuide';
-import ForwarderStats from '../../components/admin/ForwarderStats';
 import TraderTrending from '../../components/admin/TraderTrending';
 import ExpressInquiryPanel from '../../components/admin/ExpressInquiryPanel';
 import ActivityFeed from '../../components/admin/ActivityFeed';
-import NewbieBanner from '../../components/admin/NewbieBanner';
 import { useAuthStore } from '../../store/authStore';
 import QuotePage from './QuotePage';
 import { rawMessagesApi, RawMessage } from '../../api/rawMessages.api';
