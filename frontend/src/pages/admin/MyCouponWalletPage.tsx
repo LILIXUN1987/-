@@ -2,9 +2,17 @@ import { useState, useEffect } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import client from '../../api/client';
 import {
-  Gift, Loader2, CheckCircle, Clock, Send, X, FileText,
+  Gift, Loader2, CheckCircle, Clock, Send, X, MapPin,
 } from 'lucide-react';
 import { toast } from '../../components/common/Toast';
+
+interface Broker {
+  id: string;
+  company_name: string;
+  port_code: string;
+  port_name: string;
+  unit_price: number;
+}
 
 interface CouponItem {
   id: string;
@@ -29,6 +37,7 @@ export default function MyCouponWalletPage() {
   const [using, setUsing] = useState(false);
   const [usageHistory, setUsageHistory] = useState<any[]>([]);
   const [tab, setTab] = useState<'coupons' | 'history'>('coupons');
+  const [brokers, setBrokers] = useState<Broker[]>([]);
 
   const fetchCoupons = async () => {
     setLoading(true);
@@ -46,7 +55,12 @@ export default function MyCouponWalletPage() {
     } catch {}
   };
 
-  useEffect(() => { fetchCoupons(); fetchUsage(); }, []);
+  useEffect(() => {
+    fetchCoupons();
+    fetchUsage();
+    // 加载报关行列表（用于口岸选择）
+    client.get('/customs-coupons/active-brokers').then(r => setBrokers(r.data.data || [])).catch(() => {});
+  }, []);
 
   const handleUse = async () => {
     if (!useModal) return;
@@ -224,8 +238,20 @@ export default function MyCouponWalletPage() {
                   placeholder={lang === 'en' ? 'e.g. Electronic components' : '如：电子产品'} />
               </div>
               <div>
-                <label className="text-xs font-medium text-gray-600 mb-1 block">{lang === 'en' ? 'Customs Port' : '报关口岸'}</label>
-                <input className="input-field text-sm bg-gray-100 text-gray-500" value={declInfo.port} disabled />
+                <label className="text-xs font-medium text-gray-600 mb-1 block">{lang === 'en' ? 'Customs Port *' : '报关口岸 *'}</label>
+                <select className="input-field text-sm"
+                  value={declInfo.port}
+                  onChange={e => setDeclInfo(d => ({ ...d, port: e.target.value }))}>
+                  {brokers.length === 0 ? (
+                    <option value="广州白云机场">{lang === 'en' ? 'Guangzhou Baiyun Airport' : '广州白云机场（默认）'}</option>
+                  ) : (
+                    brokers.map(b => (
+                      <option key={b.id} value={b.port_name || b.port_code}>
+                        {b.port_name || b.port_code} — {b.company_name}
+                      </option>
+                    ))
+                  )}
+                </select>
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-600 mb-1 block">{lang === 'en' ? 'Notes (optional)' : '备注（选填）'}</label>

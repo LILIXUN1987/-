@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { authRequired } from '../middleware/auth.middleware';
 import db from '../config/database';
@@ -7,14 +7,31 @@ import logger from '../utils/logger';
 const router = Router();
 router.use(authRequired);
 
-const CURRENT_MONTH = new Date().toISOString().slice(0, 7); // YYYY-MM
-
 // ══════════════════════════════════════════════════════════════
 // 通用：获取当前月份字符串
 // ══════════════════════════════════════════════════════════════
 function getCurrentMonth(): string {
   return new Date().toISOString().slice(0, 7);
 }
+
+/** 管理员鉴权中间件 */
+async function requireAdmin(req: any, res: any, next: any) {
+  if (req.user?.role !== 'admin') {
+    return res.status(403).json({ error: '仅管理员可操作' });
+  }
+  next();
+}
+
+// ── 获取激活的报关行列表（用于口岸选择，所有用户可查） ──
+router.get('/active-brokers', async (req, res) => {
+  try {
+    const brokers = await db('customs_brokers')
+      .where({ is_active: true })
+      .select('id', 'company_name', 'port_code', 'port_name', 'unit_price', 'daily_limit')
+      .orderBy('port_code', 'asc');
+    res.json({ data: brokers });
+  } catch (err) { logger.error('[coupon] active brokers error:', err); res.status(500).json({ error: '查询失败' }); }
+});
 
 // ══════════════════════════════════════════════════════════════
 // 1. 订阅状态查询
@@ -171,15 +188,18 @@ router.post('/send', async (req, res) => {
       sent_at: new Date().toISOString(),
     });
 
-    // 给外贸发送站内信通知
+    // 给外贸发送站内信通知（用系统账号发送，附带赠送人信息）
     const forwarder = await db('users').where({ id: req.user!.id }).first() as any;
-    await db('messages').insert({
-      id: uuidv4(),
-      sender_id: req.user!.id,
-      receiver_id: traderId,
-      content: `🎫 ${forwarder.display_name || '一位货代'} 赠送您一张50元报关券！\n可在「我的券包」中查看和使用。`,
-      created_at: new Date().toISOString(),
-    });
+    const systemUser = await db('users').where({ username: 'admin' }).first() as any;
+    if (systemUser) {
+      await db('messages').insert({
+        id: uuidv4(),
+        sender_id: systemUser.id,
+        receiver_id: traderId,
+        content: `🎫 ${forwarder.display_name || '一位货代'}（${forwarder.company_name || ''}）向您赠送了一张50元报关券！\n可在「我的券包」中查看和使用。\n━━━━━━━━━━━━━━━━━━━━\n赠券人：${forwarder.display_name || ''} ${forwarder.company_name || ''}`,
+        created_at: new Date().toISOString(),
+      });
+    }
 
     res.json({ message: `✅ 已赠送报关券给 ${trader.display_name || trader.company_name || ''}` });
   } catch (err) { logger.error('[coupon] send error:', err); res.status(500).json({ error: '赠送失败' }); }
@@ -370,7 +390,7 @@ router.post('/broker/complete', async (req, res) => {
 // ══════════════════════════════════════════════════════════════
 // 11. 管理员：报关行列表
 // ══════════════════════════════════════════════════════════════
-router.get('/admin/brokers', async (req, res) => {
+router.get('/admin/brokers', requireAdmin, async (req, res) => {
   try {
     const brokers = await db('customs_brokers').orderBy('created_at', 'desc');
     res.json({ data: brokers });
@@ -380,7 +400,7 @@ router.get('/admin/brokers', async (req, res) => {
 // ══════════════════════════════════════════════════════════════
 // 12. 管理员：新增/编辑报关行
 // ══════════════════════════════════════════════════════════════
-router.post('/admin/brokers', async (req, res) => {
+router.post('/admin/brokers', requireAdmin, async (req, res) => {
   try {
     const { id, company_name, contact_person, phone, port_code, port_name, unit_price, daily_limit, is_active } = req.body;
     if (!company_name) return res.status(400).json({ error: '请填写公司名' });
@@ -407,7 +427,7 @@ router.post('/admin/brokers', async (req, res) => {
 // ══════════════════════════════════════════════════════════════
 // 13. 管理员：券使用统计
 // ══════════════════════════════════════════════════════════════
-router.get('/admin/stats', async (req, res) => {
+router.get('/admin/stats', requireAdmin, async (req, res) => {
   try {
     const [issuedCount, sentCount, usedCount, pendingOrders, completedOrders] = await Promise.all([
       db('customs_coupons').count('* as total').first(),
@@ -439,7 +459,7 @@ router.get('/admin/stats', async (req, res) => {
 // ══════════════════════════════════════════════════════════════
 // 14. 管理员：周结确认
 // ══════════════════════════════════════════════════════════════
-router.post('/admin/settlement', async (req, res) => {
+router.post('/admin/settlement', requireAdmin, async (req, res) => {
   try {
     const { brokerId, weekEnding } = req.body;
     const endDate = weekEnding || new Date().toISOString().split('T')[0];
@@ -476,23 +496,16 @@ router.post('/admin/settlement', async (req, res) => {
 // ══════════════════════════════════════════════════════════════
 router.post('/cron/issue-monthly', async (req, res) => {
   try {
-    const prevMonth = new Date();
-    prevMonth.setMonth(prevMonth.getMonth() - 1);
-    const monthStr = prevMonth.toISOString().slice(0, 7); // 上个月
+    const thisMonth = new Date().toISOString().slice(0, 7);
 
+    // 查出所有活跃订阅中 current_month 不等于本月的（即本月尚未发券的）
     const subs = await db('monthly_subscriptions')
       .where({ status: 'active' })
-      .where('current_month', '<', monthStr)
+      .where('current_month', '<>', thisMonth)
       .select('*');
 
     let issued = 0;
     for (const sub of subs) {
-      const thisMonth = new Date().toISOString().slice(0, 7);
-      // 检查本月是否已发
-      const exists = await db('customs_coupons')
-        .where({ subscription_id: sub.id, month: thisMonth }).first();
-      if (exists) continue;
-
       await db('customs_coupons').insert({
         id: uuidv4(),
         subscription_id: sub.id,
@@ -501,7 +514,6 @@ router.post('/cron/issue-monthly', async (req, res) => {
         month: thisMonth,
         status: 'issued',
       });
-      // 更新订阅的当前月份
       await db('monthly_subscriptions').where({ id: sub.id }).update({
         current_month: thisMonth,
         last_paid_at: new Date().toISOString(),
