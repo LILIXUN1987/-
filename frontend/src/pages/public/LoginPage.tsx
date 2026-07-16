@@ -69,7 +69,7 @@ export default function LoginPage() {
     if (rc.isOverseasAgent) {
       setOverseasWelcome(true);
       setTimeout(() => {
-        navigate('/admin/ddp', { replace: true });
+        navigate('/admin/dashboard', { replace: true });
       }, 2000);
     } else if (rc.isAdmin || rc.isForwarder || rc.isLawyer || rc.isInspector || rc.isInsurer) {
       navigate('/admin/dashboard', { replace: true });

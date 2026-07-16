@@ -76,6 +76,7 @@ function useNavItems() {
     { to: '/admin/profile', label: t(AdminT.profile, lang), icon: User },
   ] : [
     { to: '/admin/dashboard', label: lang === 'en' ? '🏠 Dashboard' : '🏠 首页', icon: BarChart3 },
+    { to: '/admin/ai-ask', label: lang === 'en' ? '🤖 AI Ask' : '🤖 AI 问答', icon: Bot },
     { to: '/admin/files', label, icon: FileUp },
     ...(rc.isForwarder || rc.isAdmin ? [{ to: '/admin/subscribe', label: lang === 'en' ? '💳 Subscribe' : '💳 开通月费', icon: Gift }] : []),
     ...(rc.isForwarder || rc.isAdmin ? [{ to: '/admin/coupons', label: lang === 'en' ? '🎫 Coupons' : '🎫 报关券', icon: Gift }] : []),

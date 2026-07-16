@@ -22,12 +22,7 @@ export const dashboardController = {
 
       // ── 3. 用户个人统计 ──
       const myCargos = await db('cargo_spaces')
-        .leftJoin('uploaded_files', 'cargo_spaces.uploaded_file_id', 'uploaded_files.id')
-        .leftJoin('raw_messages', 'cargo_spaces.uploaded_file_id', 'raw_messages.id')
-        .where(function (this: any) {
-          this.where('uploaded_files.uploaded_by', userId)
-            .orWhere('raw_messages.uploaded_by', userId);
-        })
+        .where('uploaded_by', userId)
         .select(
           db.raw('COUNT(*) as total'),
           db.raw("SUM(CASE WHEN cargo_spaces.status = 'available' AND cargo_spaces.valid_to >= date('now') THEN 1 ELSE 0 END) as active"),
@@ -42,13 +37,8 @@ export const dashboardController = {
       const sevenDaysAgoStr = sevenDaysAgo.toISOString();
 
       const weeklyViews = await db('cargo_spaces')
-        .leftJoin('uploaded_files', 'cargo_spaces.uploaded_file_id', 'uploaded_files.id')
-        .leftJoin('raw_messages', 'cargo_spaces.uploaded_file_id', 'raw_messages.id')
-        .where(function (this: any) {
-          this.where('uploaded_files.uploaded_by', userId)
-            .orWhere('raw_messages.uploaded_by', userId);
-        })
-        .where('cargo_spaces.updated_at', '>=', sevenDaysAgoStr)
+        .where('uploaded_by', userId)
+        .where('updated_at', '>=', sevenDaysAgoStr)
         .select(db.raw("date(cargo_spaces.updated_at) as day"))
         .select(db.raw('SUM(cargo_spaces.view_count) as views'))
         .groupByRaw("date(cargo_spaces.updated_at)")

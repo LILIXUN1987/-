@@ -946,6 +946,7 @@ export const cargoController = {
             notes,
             status: 'available',
             uploaded_file_id: null,
+            uploaded_by: userId,
             view_count: 0,
             inquiry_count: 0,
             created_at: db.fn.now(),
@@ -961,13 +962,8 @@ export const cargoController = {
       // 全量替换模式
       if (mode === 'replace') {
         const userCargoIds = await db('cargo_spaces')
-          .leftJoin('uploaded_files', 'cargo_spaces.uploaded_file_id', 'uploaded_files.id')
-          .leftJoin('raw_messages', 'cargo_spaces.uploaded_file_id', 'raw_messages.id')
-          .where(function (this: any) {
-            this.where('uploaded_files.uploaded_by', userId)
-              .orWhere('raw_messages.uploaded_by', userId);
-          })
-          .select('cargo_spaces.id') as any[];
+          .where('uploaded_by', userId)
+          .select('id') as any[];
 
         for (const c of userCargoIds) {
           await db('cargo_spaces').where({ id: c.id }).delete();

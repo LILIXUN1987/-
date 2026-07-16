@@ -966,6 +966,7 @@ export async function insertParsedCargo(rows: ParsedCargoRow[], uploadedBy: stri
       
       contact_info: uploaderContact || row.contact_info || null,
       notes,
+      uploaded_by: uploadedBy || null,
       status: 'available',
     };
   });

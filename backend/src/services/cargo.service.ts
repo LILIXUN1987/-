@@ -103,9 +103,12 @@ export const cargoService = {
     const cargo = await db('cargo_spaces').where({ id: cargoId }).first() as any;
     if (!cargo) return { cargo: null, isOwner: false };
 
+    // 优先使用 uploaded_by 字段
+    if (cargo.uploaded_by) return { cargo, isOwner: cargo.uploaded_by === userId };
+
+    // 兼容旧数据：通过 uploaded_file_id 检查
     if (!cargo.uploaded_file_id) return { cargo, isOwner: false };
 
-    // 同时检查 uploaded_files 和 raw_messages
     const [file, raw] = await Promise.all([
       db('uploaded_files').where({ id: cargo.uploaded_file_id }).first(),
       db('raw_messages').where({ id: cargo.uploaded_file_id }).first(),

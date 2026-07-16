@@ -164,6 +164,7 @@ export async function parseAndStore(fileId: string): Promise<void> {
     await fileService.updateStatus(fileId, 'processing');
 
     const file = await fileService.getById(fileId);
+    const uploadedBy = (file as any).uploaded_by || null;
     const ext = path.extname(file.original_filename).toLowerCase();
 
     let headers: string[] = [];
@@ -179,7 +180,7 @@ export async function parseAndStore(fileId: string): Promise<void> {
       rows = await parsePDF(file.file_path);
 
       // For PDF, we use Claude-extracted fields directly
-      const inserted = await insertCargoRows(fileId, rows, true);
+      const inserted = await insertCargoRows(fileId, rows, true, uploadedBy);
       await fileService.updateStatus(fileId, 'processed', undefined, inserted);
       logger.info(`PDF parse complete for ${fileId}: ${inserted} rows`);
       return;
@@ -204,7 +205,7 @@ export async function parseAndStore(fileId: string): Promise<void> {
     const transformedRows = transformRows(rows, mapping);
 
     // Insert into cargo_spaces
-    const inserted = await insertCargoRows(fileId, transformedRows, false);
+    const inserted = await insertCargoRows(fileId, transformedRows, false, uploadedBy);
     await fileService.updateStatus(fileId, 'processed', undefined, inserted);
 
     logger.info(`Parse complete for ${fileId}: ${inserted} rows inserted`);
@@ -233,13 +234,15 @@ function transformRows(
 async function insertCargoRows(
   fileId: string,
   rows: Record<string, unknown>[],
-  isFromPdf: boolean
+  isFromPdf: boolean,
+  uploadedBy?: string | null
 ): Promise<number> {
   const today = new Date().toISOString().split('T')[0];
 
   const cargoRows = rows.map((row) => ({
     id: uuidv4(),
     uploaded_file_id: fileId,
+    uploaded_by: uploadedBy || null,
     region: String(row.region || '未知'),
     warehouse_name: String(row.warehouse_name || '未知仓库'),
     warehouse_address: row.warehouse_address ? String(row.warehouse_address) : null,
