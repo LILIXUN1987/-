@@ -1,47 +1,50 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import client from '../../api/client';
-import { Send, Loader2, Sparkles, Bot, User, AlertCircle } from 'lucide-react';
+import { Send, Loader2, Sparkles, Bot, User } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
 
-const SUGGESTIONS = [
-  '深圳到洛杉矶空运多少钱',
-  '最近哪条航线最热门',
-  '广州到纽约海运推荐',
-  '哪家货代被投诉最多',
-];
-
 export default function AiAskPanel() {
   const lang = useAuthStore((s) => s.lang);
-  const user = useAuthStore((s) => s.user);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [trending, setTrending] = useState<string[]>([]);
   const endRef = useRef<HTMLDivElement>(null);
+  const greetingShown = useRef(false);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // 初始问候语
-  if (messages.length === 0) {
+  // 加载热搜作为快捷问题
+  useEffect(() => {
+    client.get('/cargo-spaces/trending').then((r: any) => {
+      const hot = (r.data?.hotSearches || []).slice(0, 4).map((h: any) => h.keyword);
+      if (hot.length >= 2) setTrending(hot);
+    }).catch(() => {});
+  }, []);
+
+  // 初始问候语（只显示一次）
+  if (messages.length === 0 && !greetingShown.current) {
+    greetingShown.current = true;
     const greeting = lang === 'en'
-      ? {
-          role: 'assistant' as const,
-          content: `👋 Hi! I'm the logistics AI assistant. I can check community data to answer your questions about:\n\n📦 **Freight rates & routes** – real listings from forwarders\n🛡️ **Company reputation** – community complaints & blacklist\n📊 **Market trends** – popular routes this week\n\nTry asking one of these, or type your own question!`,
-        }
-      : {
-          role: 'assistant' as const,
-          content: `👋 你好！我是物流AI助手，可以帮你查社区数据来回答：\n\n📦 **运价与航线** — 社区货代发布的真实舱位信息\n🛡️ **公司口碑** — 社区避雷投诉数据\n📊 **市场趋势** — 本周热门航线搜索\n\n试试问下面这些问题，或者直接输入你的问题！`,
-        };
-    if (messages.length === 0) {
-      setMessages([greeting]);
-    }
+      ? { role: 'assistant' as const, content: `👋 Hi! I'm the logistics AI assistant. I can check community data to answer your questions about:\n\n📦 **Freight rates & routes** – real listings from forwarders\n🛡️ **Company reputation** – community complaints & blacklist\n📊 **Market trends** – popular routes this week\n\nTry asking one of the suggestions below, or type your own question!` }
+      : { role: 'assistant' as const, content: `👋 你好！我是物流AI助手，可以帮你查社区数据来回答：\n\n📦 **运价与航线** — 社区货代发布的真实舱位信息\n🛡️ **公司口碑** — 社区避雷投诉数据\n📊 **市场趋势** — 本周热门航线搜索\n\n试试问下面的热门问题，或者直接输入你的问题！` };
+    setMessages([greeting]);
   }
+
+  // 快捷问题：优先用热搜，没有则用默认
+  const suggestions = trending.length >= 2 ? trending : [
+    lang === 'en' ? 'Air freight from Shenzhen to LAX' : '深圳到洛杉矶空运多少钱',
+    lang === 'en' ? 'Hottest routes this week' : '最近哪条航线最热门',
+    lang === 'en' ? 'Guangzhou to New York sea freight' : '广州到纽约海运推荐',
+    lang === 'en' ? 'Most complained forwarders' : '哪家货代被投诉最多',
+  ];
 
   const handleSubmit = async (question?: string) => {
     const q = (question || input).trim();
@@ -57,9 +60,7 @@ export default function AiAskPanel() {
     } catch {
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: lang === 'en'
-          ? '❌ Service temporarily unavailable, please try again later.'
-          : '❌ 服务暂时不可用，请稍后再试。',
+        content: lang === 'en' ? '❌ Service temporarily unavailable, please try again later.' : '❌ 服务暂时不可用，请稍后再试。',
       }]);
     }
     setLoading(false);
@@ -125,13 +126,11 @@ export default function AiAskPanel() {
             {lang === 'en' ? '💡 Try asking:' : '💡 试试问：'}
           </p>
           <div className="flex flex-wrap gap-1.5">
-            {SUGGESTIONS.map((s, i) => (
-              <button
-                key={i}
+            {suggestions.map((s, i) => (
+              <button key={i}
                 className="text-[11px] px-2 py-1 bg-amber-50 text-amber-700 rounded-full border border-amber-200 hover:bg-amber-100 transition-colors"
                 onClick={() => handleSubmit(s)}
-                disabled={loading}
-              >
+                disabled={loading}>
                 {s}
               </button>
             ))}
@@ -159,9 +158,7 @@ export default function AiAskPanel() {
           </button>
         </div>
         <p className="text-[10px] text-gray-300 mt-1.5 text-center">
-          {lang === 'en'
-            ? 'Answers reference community data,仅供参考'
-            : '回答基于社区数据生成，仅供参考'}
+          {lang === 'en' ? 'Answers reference community data,仅供参考' : '回答基于社区数据生成，仅供参考'}
         </p>
       </div>
     </div>

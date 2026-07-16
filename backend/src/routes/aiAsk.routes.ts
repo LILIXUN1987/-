@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { authRequired, authOptional } from '../middleware/auth.middleware';
+import { aiAskLimiter } from '../middleware/rateLimit.middleware';
 import { aiAskController } from '../controllers/aiAsk.controller';
 
 const router = Router();
 
-// 公开接口（无需登录，但限制频率）
-router.post('/ask', authOptional, aiAskController.ask);
+// AI问答接口（已登录用户更宽松，未登录用户限流更严）
+router.post('/ask', authOptional, aiAskLimiter, aiAskController.ask);
 
 export default router;

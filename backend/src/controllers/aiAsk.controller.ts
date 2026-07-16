@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import db from '../config/database';
 import { aiChat, isAiConfigured } from '../services/ai.service';
+import logger from '../utils/logger';
 
 export const aiAskController = {
   async ask(req: Request, res: Response, next: NextFunction) {
@@ -10,7 +11,13 @@ export const aiAskController = {
         return res.status(400).json({ error: '请输入您的问题' });
       }
 
-      const q = question.trim().substring(0, 200);
+      const isAuth = !!req.user;
+      let q = question.trim();
+      let truncated = false;
+      if (q.length > 200) {
+        q = q.substring(0, 200);
+        truncated = true;
+      }
 
       // ── 1. 搜索相关运价 ──
       const keywords = q.match(/[A-Za-z]{3,}/g) || [];
@@ -35,7 +42,12 @@ export const aiAskController = {
           .limit(8) as any[];
 
         if (relatedCargos.length > 0) {
-          cargoContext = '当前社区中的相关运价信息：\n' + relatedCargos.map((c: any) =>
+          // 未登录用户脱敏：去掉联系方式
+          const sanitized = isAuth ? relatedCargos : relatedCargos.map((c: any) => {
+            const { contact_info, ...rest } = c;
+            return { ...rest, contact_info: null };
+          });
+          cargoContext = '当前社区中的相关运价信息：\n' + sanitized.map((c: any) =>
             `  - ${c.origin_port || '?'} → ${c.dest_port || '?'}${c.airline_code ? ` (${c.airline_code})` : ''}${c.price_per_kg ? ` ¥${c.price_per_kg}/kg` : ''}${c.price_per_cbm ? ` ¥${c.price_per_cbm}/cbm` : ''}${c.notes ? ` ${c.notes.substring(0, 80)}` : ''} 有效期:${c.valid_from || '?'}~${c.valid_to || '?'}`
           ).join('\n');
         }
@@ -114,7 +126,12 @@ ${complaintContext}
       // ── 5. 调用AI生成回答 ──
       let answer = '';
       if (isAiConfigured()) {
-        answer = await aiChat(systemPrompt, q, { maxTokens: 2048, temperature: 0.5 });
+        try {
+          answer = await aiChat(systemPrompt, q, { maxTokens: 2048, temperature: 0.5 });
+        } catch (aiErr) {
+          logger.error('[AI] AI API call failed:', aiErr);
+          answer = '抱歉，AI服务暂时不可用，请稍后再试。';
+        }
       } else {
         // 未配置AI时的降级回答
         const hasData = cargoContext || complaintContext || trendingContext;
@@ -128,6 +145,10 @@ ${complaintContext}
         }
       }
 
+      if (truncated) {
+        answer = `⚠️ 您的问题超过200字，已自动截断。\n\n${answer}`;
+      }
+
       res.json({
         question: q,
         answer,
@@ -139,6 +160,7 @@ ${complaintContext}
         },
       });
     } catch (err) {
+      logger.error('[AI] aiAsk error:', err);
       next(err);
     }
   },

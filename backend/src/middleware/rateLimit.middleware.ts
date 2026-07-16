@@ -84,6 +84,18 @@ export const forgotLimiter = rateLimit({
   },
 });
 
+// AI问答限流 — AI调用有成本，未登录用户更严格
+export const aiAskLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 10, // 10次/分钟
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: '查询过于频繁，请稍后再试',
+    code: 'AI_ASK_RATE_LIMITED',
+  },
+});
+
 // 发送验证码限流 — 每10分钟最多10次
 export const sendCodeLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
