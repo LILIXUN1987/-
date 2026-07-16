@@ -90,20 +90,33 @@ export default function DashboardPage() {
   const lang = useAuthStore((s) => s.lang);
   const rc = getRoleChecks(user?.role);
 
-  const { data, isLoading } = useQuery<DashboardData>({
+  const { data, isLoading, isError } = useQuery<DashboardData>({
     queryKey: ['dashboard'],
     queryFn: () => client.get('/dashboard').then((r) => r.data),
-    refetchInterval: 60000,
+    refetchInterval: 120000,
   });
 
   if (isLoading) {
     return <div className="flex items-center justify-center py-32"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /></div>;
   }
 
-  const isForwarder = rc.isForwarder || rc.isAdmin;
+  if (isError || !data) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 text-gray-400">
+        <Activity className="w-12 h-12 mb-4 text-gray-200" />
+        <p className="text-sm">{lang === 'en' ? 'Failed to load dashboard data. Please refresh the page.' : '加载失败，请刷新页面重试'}</p>
+        <button className="mt-4 btn-outline text-sm" onClick={() => window.location.reload()}>
+          {lang === 'en' ? 'Refresh' : '刷新页面'}
+        </button>
+      </div>
+    );
+  }
+
+  const isForwarder = rc.isForwarder;
   const isAdmin = rc.isAdmin;
   const isTrader = user?.role === 'trader';
   const isOverseasAgent = rc.isOverseasAgent;
+  const isOtherRole = !isForwarder && !isAdmin && !isTrader && !isOverseasAgent;
   const roleLabel = isForwarder ? (lang === 'en' ? 'Forwarder' : '货代') : isTrader ? (lang === 'en' ? 'Trader' : '外贸') : isOverseasAgent ? (lang === 'en' ? 'Overseas Agent' : '海外代理') : rc.isLawyer ? (lang === 'en' ? 'Lawyer' : '律师') : user?.role || '';
   const greeting = greet(lang);
 
@@ -118,8 +131,8 @@ export default function DashboardPage() {
     ] : []),
     // 报关券/券包
     ...(isTrader ? [{ to: '/admin/coupon-wallet', label: lang === 'en' ? 'My Coupons' : '我的券包', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
-    ...(isForwarder || isAdmin ? [{ to: '/admin/subscribe', label: lang === 'en' ? 'Subscribe' : '开通月费', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-emerald-500 to-emerald-600' }] : []),
-    ...(isForwarder || isAdmin ? [{ to: '/admin/coupons', label: lang === 'en' ? 'Coupons' : '报关券', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
+    ...(isAdmin ? [{ to: '/admin/subscribe', label: lang === 'en' ? 'Subscribe' : '开通月费', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-emerald-500 to-emerald-600' }] : []),
+    ...(isForwarder ? [{ to: '/admin/coupons', label: lang === 'en' ? 'Coupons' : '报关券', icon: <Gift className="w-4 h-4 text-white" />, color: 'from-pink-500 to-pink-600' }] : []),
     // 其余功能
     { to: '/admin/ai-ask', label: lang === 'en' ? 'AI Ask' : 'AI 问答', icon: <Sparkles className="w-4 h-4 text-white" />, color: 'from-amber-500 to-orange-500' },
     { to: '/admin/price-tables', label: lang === 'en' ? 'Price Tables' : '价格表', icon: <FileText className="w-4 h-4 text-white" />, color: 'from-purple-500 to-purple-600' },
@@ -240,7 +253,21 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* 今日热搜 */}
+          
+          {/* 律师/检测/保险：平台概览 */}
+          {isOtherRole && (
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+              <SectionTitle icon={<Package className="w-4 h-4 text-primary-500" />} title={lang === 'en' ? 'Platform Overview' : '平台概览'} />
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <StatCard value={data?.globalStats?.availableCargos} label={lang === 'en' ? 'Cargos' : '可用舱位'} icon={<Plane className="w-4 h-4 text-white" />} color="from-primary-500 to-primary-600" />
+                <StatCard value={data?.globalStats?.totalUsers} label={lang === 'en' ? 'Users' : '注册用户'} icon={<Users className="w-4 h-4 text-white" />} color="from-green-500 to-green-600" />
+                <StatCard value={data?.globalStats?.regions} label={lang === 'en' ? 'Regions' : '覆盖地区'} icon={<Globe className="w-4 h-4 text-white" />} color="from-purple-500 to-purple-600" />
+                <StatCard value={data?.globalStats?.todayAir} label={lang === 'en' ? 'New Today' : '今日新发布'} icon={<TrendingUp className="w-4 h-4 text-white" />} color="from-amber-500 to-amber-600" />
+              </div>
+            </div>
+          )}
+
+{/* 今日热搜 */}
           {data?.trending && data.trending.length > 0 && (
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
               <SectionTitle icon={<TrendingUp className="w-4 h-4 text-orange-500" />} title={lang === 'en' ? 'Trending Searches' : '今日热搜'} />
