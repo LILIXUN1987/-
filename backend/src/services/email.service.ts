@@ -241,16 +241,21 @@ export async function verifyCode(email: string, code: string): Promise<boolean> 
 // ══════════════════════════════════════════════════════════════
 export async function sendInquiryNotification(
   toEmail: string, toName: string, senderName: string, keyword: string,
+  lang: string = 'zh',
 ): Promise<void> {
   if (!isEnabled() || !toEmail) return;
   const frontendUrl = env.frontendUrl;
   const transport = getTransporter();
+  const subject = lang === 'en'
+    ? `📢 New inquiry - ${keyword.substring(0, 20)}`
+    : `📢 您有新的询价 - ${keyword.substring(0, 20)}`;
+
   try {
     await transport.sendMail({
       from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
       to: toEmail,
-      subject: `📢 New inquiry - ${keyword.substring(0, 20)}`,
-      html: `
+      subject,
+      html: lang === 'en' ? `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
           <h2 style="color: #1a56db;">123 Cargo Community</h2>
           <p>Hi ${toName},</p>
@@ -258,14 +263,25 @@ export async function sendInquiryNotification(
           <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin: 12px 0; font-size: 14px;">
             🔍 ${keyword.substring(0, 50)}
           </div>
-          <p>Please log in to view and reply:</p>
           <a href="${frontendUrl}/admin/inbox" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
             View Inquiry & Reply
           </a>
-          <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">
-            ⚠️ Please do not reply directly to this email. Use in-app messaging.
-          </p>
+          <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">⚠️ Do not reply directly to this email.</p>
           ${COMMUNITY_INTRO_FORWARDER_EN}
+        </div>
+      ` : `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+          <h2 style="color: #1a56db;">123共享外贸物流社区</h2>
+          <p>${toName} 您好！</p>
+          <p>用户 <strong>${senderName}</strong> 对您的推广信息产生了兴趣：</p>
+          <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin: 12px 0; font-size: 14px;">
+            🔍 查询内容：${keyword.substring(0, 50)}
+          </div>
+          <a href="${frontendUrl}/admin/inbox" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
+            查看询价并回复
+          </a>
+          <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">⚠️ 请勿直接回复此邮件。</p>
+          ${COMMUNITY_INTRO_FORWARDER}
         </div>
       `,
     });
