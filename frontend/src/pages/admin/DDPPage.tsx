@@ -376,16 +376,17 @@ function InquiryTab({ isAgent }: { isAgent?: boolean }) {
     client.get('/ddp/destinations').then(r => setCountryList(r.data.countries || [])).catch(() => {});
   }, []);
 
-  // 加载港口列表（选择国家后，保留旧数据防闪烁）
-  const [portLoading, setPortLoading] = useState(false);
+  // 加载港口列表（用ref缓存上一次结果，避免闪烁）
+  const portListRef = useRef<{ code: string; name: string }[]>([]);
   useEffect(() => {
     if (country.trim()) {
-      setPortLoading(true);
       client.get('/ddp/destinations', { params: { country } }).then(r => {
-        setPortList(r.data.ports || []);
-        setPortLoading(false);
-      }).catch(() => setPortLoading(false));
+        const list = r.data.ports || [];
+        portListRef.current = list;
+        setPortList(list);
+      }).catch(() => {});
     } else {
+      portListRef.current = [];
       setPortList([]);
     }
   }, [country]);
@@ -505,13 +506,15 @@ function InquiryTab({ isAgent }: { isAgent?: boolean }) {
             )}
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.destPort, lang)}{portLoading ? <Loader2 className="w-3 h-3 animate-spin inline ml-1 text-gray-400" /> : null}</label>
-            <select className="input-field w-full text-sm" value={port} onChange={e => setPort(e.target.value)}>
-              <option value="">{lang === 'en' ? 'Auto-detect from country' : '由系统根据目的国推荐'}</option>
-              {portList.slice(0, 50).map(p => (
-                <option key={p.code} value={p.name}>{p.name} ({p.code})</option>
-              ))}
-            </select>
+            <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.destPort, lang)}</label>
+            <div className="relative">
+              <select className="input-field w-full text-sm" value={port} onChange={e => setPort(e.target.value)}>
+                <option value="">{lang === 'en' ? 'Auto-detect from country' : '由系统根据目的国推荐'}</option>
+                {portList.length > 0 && portList.slice(0, 50).map(p => (
+                  <option key={p.code} value={p.name}>{p.name} ({p.code})</option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className="md:col-span-2">
             <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.goodsDesc, lang)}</label>
