@@ -158,7 +158,7 @@ export default function AiAskPanel() {
           </button>
         </div>
         <p className="text-[10px] text-gray-300 mt-1.5 text-center">
-          {lang === 'en' ? 'Answers reference community data,仅供参考' : '回答基于社区数据生成，仅供参考'}
+          {lang === 'en' ? 'Answers reference community data, for reference only' : '回答基于社区数据生成，仅供参考'}
         </p>
       </div>
     </div>

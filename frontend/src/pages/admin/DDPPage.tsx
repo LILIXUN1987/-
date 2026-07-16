@@ -170,7 +170,7 @@ export default function DDPPage() {
   const rc = getRoleChecks(user?.role);
   // 网安审核模式：非管理员隐藏
   if (FEATURES.AUDIT_MODE && !rc.isAdmin) {
-    return <div className="text-center py-16 text-gray-400">功能维护中</div>;
+    return <div className="text-center py-16 text-gray-400">lang === 'en' ? 'Under maintenance' : '功能维护中'</div>;
   }
 
   const isAgent = rc.isOverseasAgent;
@@ -370,11 +370,11 @@ function InquiryTab() {
           <p className="text-sm font-semibold text-amber-800">{lang === 'en' ? 'How it works' : '提交后如何收到回复？'}</p>
           <p className="text-xs text-amber-700 mt-0.5 leading-relaxed">{t(T.inquiryDesc, lang)}</p>
           <div className="flex items-center gap-2 mt-2">
-            <span className="text-[10px] bg-amber-200/70 text-amber-800 px-2 py-0.5 rounded-full font-medium">① 推送给该国代理</span>
+            <span className="text-[10px] bg-amber-200/70 text-amber-800 px-2 py-0.5 rounded-full font-medium">lang === 'en' ? '① Sent to agents in that country' : '① 推送给该国代理'</span>
             <span className="text-[10px] text-amber-400">→</span>
-            <span className="text-[10px] bg-amber-200/70 text-amber-800 px-2 py-0.5 rounded-full font-medium">② 代理站内信回复</span>
+            <span className="text-[10px] bg-amber-200/70 text-amber-800 px-2 py-0.5 rounded-full font-medium">lang === 'en' ? '② Agent replies via message' : '② 代理站内信回复'</span>
             <span className="text-[10px] text-amber-400">→</span>
-            <span className="text-[10px] bg-amber-200/70 text-amber-800 px-2 py-0.5 rounded-full font-medium">③ 您收件箱查看</span>
+            <span className="text-[10px] bg-amber-200/70 text-amber-800 px-2 py-0.5 rounded-full font-medium">lang === 'en' ? '③ Check your inbox' : '③ 您收件箱查看'</span>
           </div>
         </div>
       </div>

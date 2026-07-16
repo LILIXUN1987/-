@@ -24,7 +24,7 @@ export default function ToolsPage() {
 
   // 网安审核模式：非管理员隐藏
   if (FEATURES.AUDIT_MODE && !rc.isAdmin) {
-    return <div className="text-center py-16 text-gray-400">功能维护中</div>;
+    return <div className="text-center py-16 text-gray-400">lang === 'en' ? 'Under maintenance' : '功能维护中'</div>;
   }
 
   const [tab, setTab] = useState<TabKey>('links');

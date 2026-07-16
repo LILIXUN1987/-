@@ -10,33 +10,32 @@ export const inviteController = {
     try {
       const { agent_email, agent_name, inviter_english_name, inviter_english_company } = req.body;
       if (!agent_email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(agent_email)) {
-        return res.status(400).json({ error: '请填写有效的邮箱地址' });
+        return res.status(400).json({ error: '请填写有效的邮箱地址', en: 'Please enter a valid email address' });
       }
       if (!inviter_english_name?.trim()) {
-        return res.status(400).json({ error: '请填写您的英文姓名，老外需要知道您是谁' });
+        return res.status(400).json({ error: '请填写您的英文姓名', en: 'Please enter your English name' });
       }
 
       const inviterId = req.user!.id;
       const inviter = await db('users').where({ id: inviterId }).first() as any;
-      if (!inviter) return res.status(404).json({ error: '用户不存在' });
+      if (!inviter) return res.status(404).json({ error: '用户不存在', en: 'User not found' });
 
-      // 检查该邮箱是否已被邀请过
+      const email = agent_email.toLowerCase().trim();
+
       const existing = await db('agent_invitations')
-        .where({ agent_email: agent_email.toLowerCase().trim(), inviter_id: inviterId })
+        .where({ agent_email: email, inviter_id: inviterId })
         .whereNot('status', 'expired')
         .first();
       if (existing) {
-        return res.json({ message: '该邮箱已被邀请，无需重复发送' });
+        return res.json({ message: '该邮箱已被邀请，无需重复发送', en: 'This email has already been invited' });
       }
 
-      // 检查该邮箱是否已注册
-      const registered = await db('users').where({ email: agent_email.toLowerCase().trim() }).first();
+      const registered = await db('users').where({ email }).first();
       if (registered) {
-        return res.json({ message: '该邮箱已注册社区账号，无需再次邀请' });
+        return res.json({ message: '该邮箱已注册社区账号，无需再次邀请', en: 'This email is already registered' });
       }
 
       const id = uuidv4();
-      const email = agent_email.toLowerCase().trim();
       const name = agent_name?.trim() || '';
 
       await db('agent_invitations').insert({
@@ -49,7 +48,6 @@ export const inviteController = {
         status: 'pending',
       });
 
-      // 发送邀请邮件（使用英文名/公司）
       const frontendUrl = process.env.FRONTEND_URL || 'https://123cargo123.com';
       const registerUrl = `${frontendUrl}/register?ref=${inviter.referral_code || ''}&email=${encodeURIComponent(email)}`;
 
@@ -66,7 +64,6 @@ export const inviteController = {
         logger.error(`发送邀请邮件失败 ${email}:`, err);
       }
 
-      // ── 发送即送：邀请人立即获得 +15 天 ──
       if (inviter.trial_end) {
         const inviterEnd = new Date(inviter.trial_end + 'T23:59:59');
         const now = new Date();
@@ -76,11 +73,10 @@ export const inviteController = {
         logger.info(`邀请人 ${inviter.username} 获得 +15 天奖励`);
       }
 
-      res.status(201).json({ message: '邀请已发送，+15天试用期已到账', id });
+      res.status(201).json({ message: '邀请已发送，+15天试用期已到账', en: 'Invitation sent! +15 trial days granted', id });
     } catch (err) { next(err); }
   },
 
-  // ── 我的邀请记录 ──
   async myInvitations(req: Request, res: Response, next: NextFunction) {
     try {
       const data = await db('agent_invitations')

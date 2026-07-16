@@ -15,7 +15,7 @@ import { isBusinessRole } from '../../types';
 import { getRoleLabel } from '../../utils/roles';
 
 /** 提取后端错误消息 */
-function extractError(err: unknown, fallback = '操作失败'): string {
+function extractError(err: unknown, fallback: string): string {
   return (err as { response?: { data?: { error?: string } } })?.response?.data?.error || fallback;
 }
 
@@ -172,7 +172,7 @@ export default function ProfilePage() {
       }
 
       await authApi.updateProfile(fd);
-      setSuccess('个人信息更新成功');
+      setSuccess(lang === 'en' ? 'Profile updated' : '个人信息更新成功');
       setCardFile(null);
       await checkAuth();
     } catch (err: unknown) {
@@ -192,7 +192,7 @@ export default function ProfilePage() {
       await client.put('/auth/profile', { notify_inquiry_email: notifyEmail, notify_inquiry_site: notifySite, notify_all_messages_email: notifyAllMessages });
       setSuccess('通知设置已更新');
       setTimeout(() => setSuccess(''), 3000);
-    } catch { setError('保存失败'); }
+    } catch { setError(lang === 'en' ? 'Save failed' : '保存失败'); }
     setNotifySaving(false);
   };
 

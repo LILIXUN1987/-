@@ -55,6 +55,7 @@ const TIER_INFO = [
 
 export default function ReferralBanner() {
   const user = useAuthStore((s) => s.user);
+  const lang = useAuthStore((s) => s.lang);
   const rc = getRoleChecks(user?.role);
   const isTrader = rc.isTrader;
   const [stats, setStats] = useState<ReferralStats | null>(null);
@@ -159,7 +160,7 @@ export default function ReferralBanner() {
       <div className="bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 border border-green-200 rounded-2xl p-5 shadow-sm h-full flex flex-col">
         <div className="flex items-center gap-2 mb-3">
           <Gift className="w-5 h-5 text-green-600" />
-          <h3 className="font-semibold text-green-900 text-sm">推荐好友进社区</h3>
+          <h3 className="font-semibold text-green-900 text-sm">lang === 'en' ? 'Refer Friends' : '推荐好友进社区'</h3>
         </div>
 
         {/* QR Code + Stats */}
@@ -233,20 +234,20 @@ export default function ReferralBanner() {
         <div className="flex gap-2 mt-auto pt-2">
           <button className="flex-1 text-xs bg-white/70 text-green-800 border border-green-200 rounded-lg py-2 hover:bg-white transition-colors flex items-center justify-center gap-1"
             onClick={() => openModal('benefits')}>
-            <Award className="w-3.5 h-3.5" /> 权益说明
+            <Award className="w-3.5 h-3.5" /> lang === 'en' ? 'Benefits' : '权益说明'
           </button>
           <button className="flex-1 text-xs bg-white/70 text-green-800 border border-green-200 rounded-lg py-2 hover:bg-white transition-colors flex items-center justify-center gap-1"
             onClick={() => openModal('history')}>
-            <Users className="w-3.5 h-3.5" /> 推荐记录
+            <Users className="w-3.5 h-3.5" /> lang === 'en' ? 'History' : '推荐记录'
           </button>
           <button className="flex-1 text-xs bg-white/70 text-green-800 border border-green-200 rounded-lg py-2 hover:bg-white transition-colors flex items-center justify-center gap-1"
             onClick={() => openModal('leaderboard')}>
-            <TrendingUp className="w-3.5 h-3.5" /> 排行榜
+            <TrendingUp className="w-3.5 h-3.5" /> lang === 'en' ? 'Leaderboard' : '排行榜'
           </button>
         </div>
 
         <div className="bg-white/60 rounded-lg px-3 py-1.5 mt-2 text-xs text-gray-500 text-center">
-          推广码：<span className="font-mono font-bold text-green-700">{stats.referral_code}</span>
+          lang === 'en' ? 'Code: ' : '推广码：'<span className="font-mono font-bold text-green-700">{stats.referral_code}</span>
         </div>
       </div>
 
@@ -271,8 +272,8 @@ export default function ReferralBanner() {
             {/* Tab 切换 */}
             <div className="flex gap-1 px-6 pt-4 pb-2 bg-gray-50/50">
               {([
-                { key: 'benefits', label: '权益说明', icon: Award },
-                { key: 'history', label: '推荐记录', icon: Users },
+                { key: 'benefits', label: lang === 'en' ? 'Benefits' : '权益说明', icon: Award },
+                { key: 'history', label: lang === 'en' ? 'History' : '推荐记录', icon: Users },
                 { key: 'leaderboard', label: '推荐排行', icon: TrendingUp },
               ] as const).map(tab => (
                 <button key={tab.key}
@@ -373,7 +374,7 @@ export default function ReferralBanner() {
                   ) : history.length === 0 ? (
                     <div className="text-center py-12 text-gray-400">
                       <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                      <p className="text-sm">暂无推荐记录</p>
+                      <p className="text-sm">暂无lang === 'en' ? 'History' : '推荐记录'</p>
                       <p className="text-xs mt-1">分享您的推荐码邀请好友加入社区</p>
                     </div>
                   ) : (
@@ -409,7 +410,7 @@ export default function ReferralBanner() {
                           本月推荐达人
                         </h4>
                         {leaderboard.thisMonth.length === 0 ? (
-                          <div className="text-center py-6 text-gray-400 text-sm">本月暂无推荐数据</div>
+                          <div className="text-center py-6 text-gray-400 text-sm">lang === 'en' ? 'No data this month' : '本月暂无推荐数据'</div>
                         ) : (
                           <div className="space-y-1.5">
                             {leaderboard.thisMonth.map((entry, i) => (
@@ -471,7 +472,7 @@ function BenefitRow({ icon: Icon, label, unlocked, value, fallback }: {
   );
 }
 
-/* ── 排行榜行 ── */
+/* ── lang === 'en' ? 'Leaderboard' : '排行榜'行 ── */
 function LeaderboardRow({ index, entry }: { index: number; entry: LeaderboardEntry }) {
   const medalColors = ['text-yellow-500', 'text-gray-400', 'text-amber-600'];
   const medalIcons = ['🥇', '🥈', '🥉'];

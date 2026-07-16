@@ -30,6 +30,7 @@ function extractTags(bio: string | null, max = 4): string[] {
 
 export default function LawyersPage() {
   const user = useAuthStore((s) => s.user);
+  const lang = useAuthStore((s) => s.lang);
 
   // ── 搜索 & 分页 ──
   const [search, setSearch] = useState('');
@@ -70,7 +71,7 @@ export default function LawyersPage() {
       setConsultText('');
       setTimeout(() => { setConsultLawyer(null); setConsultSent(false); }, 3000);
     } catch (err: any) {
-      setConsultError(err?.response?.data?.error || '发送失败，请重试');
+      setConsultError(err?.response?.data?.error || lang === 'en' ? 'Send failed, please retry' : '发送失败，请重试');
     }
     setConsultSending(false);
   };
@@ -84,8 +85,8 @@ export default function LawyersPage() {
       {/* ── 页面标题 ── */}
       <div className="flex items-center justify-between mb-2">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">社区律师</h1>
-          <p className="text-gray-500 text-sm mt-0.5">免费向社区律师咨询物流相关法律问题</p>
+          <h1 className="text-2xl font-bold text-gray-900">lang === 'en' ? 'Community Lawyers' : '社区律师'</h1>
+          <p className="text-gray-500 text-sm mt-0.5">lang === 'en' ? 'Free legal consultation for logistics-related issues' : '免费向社区律师咨询物流相关法律问题'</p>
         </div>
         {total > 0 && (
           <div className="text-xs text-gray-400 bg-gray-100 px-3 py-1.5 rounded-lg flex-shrink-0">
@@ -100,7 +101,7 @@ export default function LawyersPage() {
           <Scale className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
           <div className="text-sm text-amber-800 space-y-1">
             <p className="font-medium">📋 说明</p>
-            <p>选择您想咨询的律师，点击「咨询TA」即可发送站内信。</p>
+            <p>选择您想咨询的律师，点击「lang === 'en' ? 'Consult' : '咨询TA'」即可发送站内信。</p>
             <p>律师将在收件箱中回复您，咨询内容同时抄送管理员便于监督。</p>
             <p className="text-xs text-amber-600">* 咨询内容仅供参考，不构成正式法律意见</p>
           </div>
@@ -112,7 +113,7 @@ export default function LawyersPage() {
         <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
         <input
           className="w-full pl-10 pr-16 py-2.5 text-sm border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 placeholder-gray-400 bg-white transition-all"
-          placeholder="搜索律师姓名、律所名称或专长领域..."
+          placeholder="lang === 'en' ? 'Search by lawyer name, firm name, or specialty...' : '搜索律师姓名、律所名称或专长领域...'"
           value={search}
           onChange={handleSearchChange}
         />
@@ -121,7 +122,7 @@ export default function LawyersPage() {
             className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-md transition-colors"
             onClick={() => { setSearch(''); setPage(1); }}
           >
-            清空
+            lang === 'en' ? 'Clear' : '清空'
           </button>
         )}
       </div>
@@ -135,10 +136,10 @@ export default function LawyersPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
           <Scale className="w-12 h-12 text-gray-200 mx-auto mb-3" />
           <p className="text-gray-400 text-sm font-medium">
-            {search ? '未找到匹配的律师' : '暂无社区律师入驻'}
+            {search ? lang === 'en' ? 'No matching lawyers found' : '未找到匹配的律师' : lang === 'en' ? 'No lawyers registered yet' : '暂无社区律师入驻'}
           </p>
           <p className="text-gray-300 text-xs mt-1">
-            {search ? '请尝试其他关键词' : '请耐心等待'}
+            {search ? lang === 'en' ? 'Try different keywords' : '请尝试其他关键词' : lang === 'en' ? 'Please wait patiently' : '请耐心等待'}
           </p>
         </div>
       ) : (
@@ -201,7 +202,7 @@ export default function LawyersPage() {
                           {lawyer.bio}
                         </p>
                       ) : (
-                        <p className="text-sm text-gray-400 italic mb-2.5">该律师暂未填写介绍</p>
+                        <p className="text-sm text-gray-400 italic mb-2.5">lang === 'en' ? 'This lawyer has not filled in introduction yet' : '该律师暂未填写介绍'</p>
                       )}
 
                       {/* 专长标签 */}
@@ -238,7 +239,7 @@ export default function LawyersPage() {
                             onClick={() => setCardPreview(cardUrl)}
                           >
                             <Eye className="w-3.5 h-3.5" />
-                            查看名片
+                            lang === 'en' ? 'View Card' : '查看名片'
                           </button>
                         )}
                       </div>
@@ -262,14 +263,14 @@ export default function LawyersPage() {
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                 >
                   <ChevronLeft className="w-3 h-3" />
-                  上一页
+                  lang === 'en' ? 'Previous' : '上一页'
                 </button>
                 <button
                   className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40 transition-colors"
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => p + 1)}
                 >
-                  下一页
+                  lang === 'en' ? 'Next' : '下一页'
                   <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
@@ -334,7 +335,7 @@ export default function LawyersPage() {
           <div className="relative max-w-lg max-h-[80vh] mx-4" onClick={(e) => e.stopPropagation()}>
             <img
               src={cardPreview}
-              alt="律师名片"
+              alt="lang === 'en' ? 'Business Card' : '律师名片'"
               className="max-w-full max-h-[80vh] rounded-xl shadow-2xl"
             />
             <button
