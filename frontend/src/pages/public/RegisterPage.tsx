@@ -5,6 +5,7 @@ import { authApi } from '../../api/auth.api';
 import { Ship, Camera, X, CheckCircle, Mail, Loader2, Users, AlertCircle } from 'lucide-react';
 import { t, RegT, type Lang } from '../../i18n';
 import { FEATURES } from '../../config/features';
+import { useAuthStore } from '../../store/authStore';
 
 /** 后端错误消息 → 字段名映射 */
 const BACKEND_ERROR_MAP: Record<string, string> = {
@@ -44,7 +45,8 @@ export default function RegisterPage() {
   });
   const [cardImage, setCardImage] = useState<File | null>(null);
   const [cardPreview, setCardPreview] = useState<string | null>(null);
-  const lang: Lang = form.role === 'overseas_agent' ? 'en' : 'zh';
+  const storeLang = useAuthStore((s) => s.lang);
+  const lang: Lang = form.role === 'overseas_agent' ? 'en' : storeLang;
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState('');
@@ -86,6 +88,18 @@ export default function RegisterPage() {
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    // 校验文件类型：只接受图片
+    if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type)) {
+      setFieldError('card', lang === 'en' ? 'Only JPG/PNG/WebP images are accepted' : '仅支持 JPG/PNG/WebP 格式图片');
+      e.target.value = '';
+      return;
+    }
+    // 校验文件大小：最大 20MB
+    if (file.size > 20 * 1024 * 1024) {
+      setFieldError('card', lang === 'en' ? 'File size must be under 20MB' : '文件大小不能超过 20MB');
+      e.target.value = '';
+      return;
+    }
     setCardImage(file);
     setFieldErrors(prev => { const n = { ...prev }; delete n['card']; return n; });
     const reader = new FileReader();
@@ -177,7 +191,13 @@ export default function RegisterPage() {
              registeredRole === 'inspector' || registeredRole === 'insurer' ? t(RegT.restrictedSuccess, lang) :
              t(RegT.loginDefault, lang)}
           </p>
-          <p className="text-sm font-bold text-red-600 mb-6">{t(RegT.warning, lang)}</p>
+          {(registeredRole === 'forwarder') && (
+            <p className="text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-4">{t(RegT.forwarderCouponTip, lang)}</p>
+          )}
+          {(registeredRole === 'trader') && (
+            <p className="text-sm text-pink-600 bg-pink-50 border border-pink-200 rounded-lg px-4 py-3 mb-4">{t(RegT.traderCouponTip, lang)}</p>
+          )}
+          <p className="text-sm font-bold text-red-600 mb-4">{t(RegT.warning, lang)}</p>
           <button className="btn-primary w-full" onClick={() => navigate('/login')}>{t(RegT.goLogin, lang)}</button>
         </div>
       </div>

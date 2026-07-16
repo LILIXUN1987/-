@@ -90,6 +90,11 @@ export const registerController = {
         const retryBytes = randomBytes(6);
         referralCode = 'RF' + Array.from(retryBytes, (b) => chars[b % chars.length]).join('');
       }
+      // 5次重试后仍然冲突则使用时间戳后缀保证唯一
+      const finalCheck = await db('users').where({ referral_code: referralCode }).first();
+      if (finalCheck) {
+        referralCode = 'RF' + Date.now().toString(36).toUpperCase();
+      }
 
       // 是否有推荐人（双边奖励：新人也得+2天）
       let hasReferrer = false;
@@ -98,15 +103,9 @@ export const registerController = {
         hasReferrer = !!referrer && referrer.id !== id;
       }
       const bonusDays = hasReferrer ? 2 : 0;
-      // 律师不设置体验期，永久有效
+      // 所有角色统一为30天试用期（律师也从永久改为30天）
       let trialEnd: string;
-      if (role === 'lawyer') {
-        trialEnd = '2099-12-31'; // 永久有效
-      } else if (role === 'overseas_agent') {
-        trialEnd = new Date(Date.now() + (30 + bonusDays) * 86400000).toISOString().split('T')[0];
-      } else {
-        trialEnd = new Date(Date.now() + (30 + bonusDays) * 86400000).toISOString().split('T')[0];
-      }
+      trialEnd = new Date(Date.now() + (30 + bonusDays) * 86400000).toISOString().split('T')[0];
       await db('users').insert({
         id,
         username,
@@ -124,7 +123,7 @@ export const registerController = {
         wca_id: wca_id || null,
         role: role || 'trader',
         status: 'approved',
-        is_newbie: is_newbie === true || is_newbie === 'true' ? 1 : 0,
+        is_newbie: 1, // 新注册用户默认就是新手
         registered_ip: req.ip || null,
       });
 

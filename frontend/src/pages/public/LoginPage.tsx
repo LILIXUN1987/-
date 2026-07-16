@@ -74,7 +74,7 @@ export default function LoginPage() {
     } else if (rc.isAdmin || rc.isForwarder || rc.isLawyer || rc.isInspector || rc.isInsurer) {
       navigate('/admin/dashboard', { replace: true });
     } else {
-      navigate('/chat', { replace: true });
+      navigate('/admin/dashboard', { replace: true });
     }
   }
 
