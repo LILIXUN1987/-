@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { authRequired } from '../middleware/auth.middleware';
 import { referralController } from '../controllers/referral.controller';
+import { registerLimiter } from '../middleware/rateLimit.middleware';
 
 const router = Router();
 
@@ -13,7 +14,7 @@ router.get('/stats', referralController.stats);
 router.get('/history', referralController.history);
 router.get('/leaderboard', referralController.leaderboard);
 router.get('/benefits', referralController.benefits);
-router.post('/recommend', referralController.recommend);
+router.post('/recommend', registerLimiter, referralController.recommend);
 router.get('/recommendations', referralController.recommendations);
 
 export default router;
