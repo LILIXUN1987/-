@@ -5,6 +5,14 @@ import { authRequired, authOptional } from '../middleware/auth.middleware';
 
 const router = Router();
 
+/** 管理员鉴权中间件 */
+async function requireAdmin(req: any, res: any, next: any) {
+  if (req.user?.role !== 'admin') {
+    return res.status(403).json({ error: '仅管理员可操作' });
+  }
+  next();
+}
+
 // ── 导航列表（公开，无需登录） ──
 router.get('/', async (req, res) => {
   try {
@@ -47,13 +55,10 @@ router.post('/', authRequired, async (req, res) => {
       return res.status(400).json({ error: '请填写标题、网址和分类' });
     }
 
-    // 检查是否已存在
-    const existing = await db('nav_links')
-      .where({ url: url.trim() })
-      .orWhere('title', title.trim())
-      .first();
+    // 检查是否已存在（仅按 URL 去重，不同来源的同名链接允许存在）
+    const existing = await db('nav_links').where({ url: url.trim() }).first();
     if (existing) {
-      return res.status(400).json({ error: '该链接或标题已存在，请勿重复提交', code: 'DUPLICATE_LINK' });
+      return res.status(400).json({ error: '该链接已存在，请勿重复提交', code: 'DUPLICATE_LINK' });
     }
 
     await db('nav_links').insert({
@@ -72,10 +77,8 @@ router.post('/', authRequired, async (req, res) => {
 
 
 // ── 待审核列表（管理员） ──
-router.get("/pending", authRequired, async (req, res) => {
+router.get("/pending", authRequired, requireAdmin, async (req, res) => {
   try {
-    const user = await db("users").where({ id: req.user!.id }).first() as any;
-    if (user?.role !== "admin") return res.status(403).json({ error: "仅管理员可操作" });
     const data = await db("nav_links")
       .leftJoin("users", "nav_links.submitted_by", "users.id")
       .where({ "nav_links.status": "pending" })
@@ -87,10 +90,8 @@ router.get("/pending", authRequired, async (req, res) => {
 });
 
 // ── 审核链接（管理员：批准/驳回） ──
-router.post("/:id/review", authRequired, async (req, res) => {
+router.post("/:id/review", authRequired, requireAdmin, async (req, res) => {
   try {
-    const user = await db("users").where({ id: req.user!.id }).first() as any;
-    if (user?.role !== "admin") return res.status(403).json({ error: "仅管理员可操作" });
     const { action } = req.body;
     if (!["approved", "rejected"].includes(action)) return res.status(400).json({ error: "参数不完整" });
     const link = await db("nav_links").where({ id: req.params.id }).first() as any;
