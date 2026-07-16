@@ -376,10 +376,15 @@ function InquiryTab({ isAgent }: { isAgent?: boolean }) {
     client.get('/ddp/destinations').then(r => setCountryList(r.data.countries || [])).catch(() => {});
   }, []);
 
-  // 加载港口列表（选择国家后）
+  // 加载港口列表（选择国家后，保留旧数据防闪烁）
+  const [portLoading, setPortLoading] = useState(false);
   useEffect(() => {
     if (country.trim()) {
-      client.get('/ddp/destinations', { params: { country } }).then(r => setPortList(r.data.ports || [])).catch(() => {});
+      setPortLoading(true);
+      client.get('/ddp/destinations', { params: { country } }).then(r => {
+        setPortList(r.data.ports || []);
+        setPortLoading(false);
+      }).catch(() => setPortLoading(false));
     } else {
       setPortList([]);
     }
@@ -500,7 +505,7 @@ function InquiryTab({ isAgent }: { isAgent?: boolean }) {
             )}
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.destPort, lang)}</label>
+            <label className="text-xs font-medium text-gray-500 mb-1 block">{t(T.destPort, lang)}{portLoading ? <Loader2 className="w-3 h-3 animate-spin inline ml-1 text-gray-400" /> : null}</label>
             <select className="input-field w-full text-sm" value={port} onChange={e => setPort(e.target.value)}>
               <option value="">{lang === 'en' ? 'Auto-detect from country' : '由系统根据目的国推荐'}</option>
               {portList.slice(0, 50).map(p => (
