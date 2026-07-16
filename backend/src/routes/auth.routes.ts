@@ -4,7 +4,7 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { authController } from '../controllers/auth.controller';
 import { authRequired } from '../middleware/auth.middleware';
-import { loginLimiter, forgotLimiter, uploadLimiter } from '../middleware/rateLimit.middleware';
+import { loginLimiter, forgotLimiter, uploadLimiter, sendCodeLimiter } from '../middleware/rateLimit.middleware';
 
 const router = Router();
 
@@ -69,7 +69,7 @@ const uploadAvatar = multer({
 });
 
 router.post('/login', loginLimiter, authController.login);
-router.post('/send-code', authController.sendCode);
+router.post('/send-code', sendCodeLimiter, authController.sendCode);
 router.post('/check-code', authController.checkCode);
 router.get('/company-mates', authController.companyMates);
 router.get('/me', authRequired, authController.me);

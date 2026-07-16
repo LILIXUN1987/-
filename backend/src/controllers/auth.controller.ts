@@ -85,7 +85,8 @@ export const authController = {
       }
       const user = await db('users').where({ phone }).first();
       if (!user) {
-        return res.status(404).json({ error: '未找到该用户' });
+        // 返回相同结构但不暴露用户是否存在
+        return res.json({ id: null, display_name: null, company_name: null });
       }
       // 只返回必要信息，不暴露邮箱
       res.json({ id: (user as any).id, display_name: (user as any).display_name, company_name: (user as any).company_name });

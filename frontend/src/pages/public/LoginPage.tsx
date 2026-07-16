@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { Ship, Eye, EyeOff, Loader2, CheckCircle, AlertCircle, Mail, Lock, KeyRound, ArrowLeft, Languages } from 'lucide-react';
@@ -16,6 +16,14 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const welcomeTimerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  // 组件卸载时清理未执行的跳转定时器
+  useEffect(() => {
+    return () => {
+      if (welcomeTimerRef.current) clearTimeout(welcomeTimerRef.current);
+    };
+  }, []);
 
   // ── 找回密码状态 ──
   const [forgotOpen, setForgotOpen] = useState(false);
@@ -68,7 +76,7 @@ export default function LoginPage() {
     const rc = getRoleChecks(role);
     if (rc.isOverseasAgent) {
       setOverseasWelcome(true);
-      setTimeout(() => {
+      welcomeTimerRef.current = setTimeout(() => {
         navigate('/admin/dashboard', { replace: true });
       }, 2000);
     } else if (rc.isAdmin || rc.isForwarder || rc.isLawyer || rc.isInspector || rc.isInsurer) {

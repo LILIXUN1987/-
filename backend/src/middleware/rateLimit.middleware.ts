@@ -84,6 +84,18 @@ export const forgotLimiter = rateLimit({
   },
 });
 
+// 发送验证码限流 — 每10分钟最多10次
+export const sendCodeLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: '验证码发送过于频繁，请稍后再试',
+    code: 'SEND_CODE_RATE_LIMITED',
+  },
+});
+
 // 文件上传限流 — 每 IP 每10分钟最多50次（防止批量填满硬盘，但也给大货代集中注册留空间）
 export const uploadLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
