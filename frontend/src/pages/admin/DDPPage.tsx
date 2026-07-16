@@ -248,7 +248,7 @@ export default function DDPPage() {
         </div>
 
         {/* Tab 内容 */}
-        {tab === 'inquiry' && <InquiryTab />}
+                {tab === 'inquiry' && <InquiryTab isAgent={isAgent} />}
         {tab === 'agents' && <AgentsTab />}
         {tab === 'stats' && <StatsTab />}
         {tab === 'inquiries' && <MyInquiriesTab />}
@@ -291,9 +291,9 @@ export default function DDPPage() {
 // ════════════════════════════════════════════
 // Tab 1: 我要询价
 // ════════════════════════════════════════════
-function InquiryTab() {
+function InquiryTab({ isAgent }: { isAgent?: boolean }) {
   const lang = useLang();
-  const [direction, setDirection] = useState<'export' | 'import'>('export');
+  const [direction, setDirection] = useState<'export' | 'import'>(isAgent ? 'import' : 'export');
   const [country, setCountry] = useState('');
   const [port, setPort] = useState('');
   const [countrySearch, setCountrySearch] = useState('');
@@ -426,7 +426,7 @@ function InquiryTab() {
         </div>
       </div>
 
-      {/* 进出口方向切换 */}
+      {!isAgent && (
       <div className="flex items-center gap-2 mb-4 bg-gray-100 rounded-lg p-1 max-w-xs">
         <button
           className={`flex-1 py-1.5 px-3 text-xs font-medium rounded-md transition-colors ${direction === 'export' ? 'bg-white shadow-sm text-primary-700' : 'text-gray-500 hover:text-gray-700'}`}
@@ -439,10 +439,11 @@ function InquiryTab() {
           {t(T.directionImport, lang)}
         </button>
       </div>
+      )}
 
       {/* 快速选择国家 */}
       <div className="mb-4">
-        <label className="text-xs font-medium text-gray-500 mb-1.5 block">{lang === 'en' ? 'Select destination country' : '选择目的国'}</label>
+        <label className="text-xs font-medium text-gray-500 mb-1.5 block">{direction === 'import' ? (lang === 'en' ? 'Select origin country' : '选择来源国') : (lang === 'en' ? 'Select destination country' : '选择目的国')}</label>
         <div className="flex flex-wrap gap-1.5">
           {hotCountries.map((c) => (
             <button
