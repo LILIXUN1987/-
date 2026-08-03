@@ -14,7 +14,6 @@ import {
   Target,
   Building2,
 } from 'lucide-react';
-import TrialBanner from '../../components/admin/TrialBanner';
 import { useUnreadStore } from '../../store/unreadStore';
 import { FEATURES } from '../../config/features';
 import BusinessScopeModal from '../../components/admin/BusinessScopeModal';
@@ -676,7 +675,6 @@ export default function DashboardPage() {
         {/* ── 货代/管理员 ── */}
         {(isForwarder || isAdmin) && (
           <>
-            {!isLawyer && !isRestricted && !isOverseasAgent && <TrialBanner />}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <BannerCard icon={MessageSquare} title={lang === 'en' ? 'Inquiries' : '询盘管理'} subtitle={lang === 'en' ? 'Manage trader inquiries' : '统一管理外贸询价'} badge="📋" color="indigo" onClick={() => navigate('/admin/inquiries')} />
               <BannerCard icon={Users} title={lang === 'en' ? 'Customers' : '客户关系'} subtitle={lang === 'en' ? 'Track relationships' : '收券/询价客户追踪'} badge="👥" color="teal" onClick={() => navigate('/admin/customer-relations')} />
@@ -703,7 +701,6 @@ export default function DashboardPage() {
         {/* ── 外贸用户 ── */}
         {isTrader && (
           <>
-            {!isLawyer && !isRestricted && !isOverseasAgent && <TrialBanner />}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <BannerCard icon={Gift} title={lang === 'en' ? 'My Coupons' : '我的券包'} subtitle={lang === 'en' ? 'Coupons from forwarders' : '货代送的报关券'} badge="🎫" color="pink" onClick={() => navigate('/admin/coupon-wallet')} />
               <BannerCard icon={Scale} title={lang === 'en' ? 'Port Lawyers' : '口岸律师'} subtitle={lang === 'en' ? 'Legal services for logistics' : '合同审核·货代纠纷·法律咨询'} badge="⚖️" color="amber" onClick={() => navigate('/admin/lawyers')} />

@@ -112,6 +112,29 @@ export default function AdminLayout() {
                 )}
               </span>
             )}
+            {/* ── 试用剩余天数 ── */}
+            {planStatus?.trialEnd && (() => {
+              const now = new Date();
+              const end = new Date((planStatus.trialEnd as string) + 'T23:59:59');
+              const remaining = Math.max(0, Math.ceil((end.getTime() - now.getTime()) / 86400000));
+              if (remaining <= 0) return null;
+              const isUrgent = remaining <= 7;
+              return (
+                <div className={`w-full mt-1.5 text-[10px] rounded-lg px-2 py-1.5 flex items-center justify-between gap-1 ${
+                  isUrgent ? 'bg-red-400/20 text-red-100' : 'bg-white/10 text-white/80'
+                }`}>
+                  <span>
+                    {isUrgent ? '⚠️' : '⏰'} {lang === 'en' ? `${remaining}d trial left` : `免费体验剩余 ${remaining} 天`}
+                  </span>
+                  <button
+                    onClick={() => navigate(isUrgent ? '/admin/renew' : '/admin/subscribe')}
+                    className="text-[10px] font-bold bg-white/20 hover:bg-white/30 px-1.5 py-0.5 rounded transition-colors flex-shrink-0"
+                  >
+                    {isUrgent ? (lang === 'en' ? 'Renew' : '续期') : (lang === 'en' ? 'Upgrade' : '升级')} →
+                  </button>
+                </div>
+              );
+            })()}
           </div>
         </div>
 
