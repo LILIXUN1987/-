@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import client from '../../api/client';
 import { useAuthStore } from '../../store/authStore';
+import { getRoleChecks } from '../../types';
 import {
   CreditCard, Plus, Save, Trash2, Loader2, Search,
   CheckCircle, Clock, AlertTriangle, AlertCircle, X,
-  ExternalLink, Copy, Smartphone,
+  Smartphone,
 } from 'lucide-react';
 import { formatTime } from '../../utils/time';
-import { getRoleChecks } from '../../types';
 import { getRoleLabel } from '../../utils/roles';
 
 interface Plan {
@@ -29,27 +29,27 @@ export default function AdminRenewPage() {
   const user = useAuthStore((s) => s.user);
   const rc = getRoleChecks(user?.role);
   const isAdmin = rc.isAdmin;
+  const isOverseasAgent = rc.isOverseasAgent;
   const myRole = user?.role || '';
   const myTrialEnd = user?.trial_end || '';
 
-  // 非管理员默认跳到自助续期
   const [tab, setTab] = useState<TabKey>(isAdmin ? 'plans' : 'self');
 
   // ── 自助续期 ──
-  const [selfPlans, setSelfPlans] = useState<(Plan & { selected?: boolean })[]>([]);
+  const [selfPlans, setSelfPlans] = useState<Plan[]>([]);
   const [selfLoading, setSelfLoading] = useState(true);
   const [alipayConfigured, setAlipayConfigured] = useState(false);
+  const [wechatConfigured, setWechatConfigured] = useState(false);
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
-  const [payUrl, setPayUrl] = useState('');
+  const [qrcodeContent, setQrcodeContent] = useState('');  // 二维码内容
+  const [payChannel, setPayChannel] = useState<'alipay' | 'wechat'>('wechat');
   const [payOrderId, setPayOrderId] = useState('');
   const [payLoading, setPayLoading] = useState(false);
   const [paySuccess, setPaySuccess] = useState(false);
   const [payError, setPayError] = useState('');
 
-  // 当前用户续期记录
   const [myOrders, setMyOrders] = useState<any[]>([]);
 
-  // ── 管理员：套餐管理 ──
   const [plans, setPlans] = useState<Plan[]>([]);
   const [records, setRecords] = useState<RenewalRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,27 +66,24 @@ export default function AdminRenewPage() {
   const [renewing, setRenewing] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Plan | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [copied, setCopied] = useState(false);
 
-  // ── 加载套餐列表（自助） ──
   useEffect(() => {
     if (tab !== 'self') return;
     setSelfLoading(true);
     client.get('/payment/plans').then((r: any) => {
-      setSelfPlans((r.data?.data || []).map((p: Plan) => ({ ...p })));
+      setSelfPlans(r.data?.data || []);
       setAlipayConfigured(r.data?.alipay_configured || false);
-    }).catch((err) => { console.warn('[AdminRenewPage] failed to load plans:', err); }).finally(() => setSelfLoading(false));
+      setWechatConfigured(r.data?.wechat_configured || false);
+    }).catch(() => {}).finally(() => setSelfLoading(false));
   }, [tab]);
 
-  // ── 加载我的订单 ──
   useEffect(() => {
     if (tab !== 'self') return;
     client.get('/payment/my-orders').then((r: any) => {
       setMyOrders(r.data?.data || []);
-    }).catch((err) => { console.warn('[AdminRenewPage] failed to load orders:', err); });
+    }).catch(() => {});
   }, [tab, paySuccess]);
 
-  // ── 管理员数据加载 ──
   useEffect(() => {
     if (tab === 'plans') loadPlans();
     else if (tab === 'records') loadRecords();
@@ -111,19 +108,25 @@ export default function AdminRenewPage() {
     setLoading(false);
   };
 
-  // ── 创建支付 ──
-  const handlePay = async (planId: string) => {
+  const handlePay = async (channel: 'alipay' | 'wechat') => {
+    if (!selectedPlanId) return;
     setPayLoading(true);
     setPayError('');
-    setPayUrl('');
+    setQrcodeContent('');
     setPaySuccess(false);
+    setPayChannel(channel);
     try {
-      const r = await client.post('/payment/create-order', { plan_id: planId });
-      setPayUrl(r.data.pay_url);
+      const r = await client.post('/payment/create-order', { plan_id: selectedPlanId, channel });
       setPayOrderId(r.data.order_id);
-      // 新窗口打开支付宝
-      window.open(r.data.pay_url, '_blank');
-      // 开始轮询
+
+      if (r.data.pay_method === 'redirect') {
+        // 支付宝：在新窗口打开收银台
+        window.open(r.data.pay_content, '_blank');
+      } else {
+        // 扫码：显示二维码
+        setQrcodeContent(r.data.pay_content);
+      }
+
       pollOrder(r.data.order_id);
     } catch (err: any) {
       setPayError(err?.response?.data?.error || '创建订单失败');
@@ -140,18 +143,15 @@ export default function AdminRenewPage() {
         }
       } catch {}
     }, 3000);
-    // 5分钟后停止轮询
     setTimeout(() => clearInterval(timer), 300000);
   };
 
-  const copyPayUrl = () => {
-    navigator.clipboard.writeText(payUrl).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+  const whichConfigured = () => {
+    if (alipayConfigured) return 'alipay';
+    if (wechatConfigured) return 'wechat';
+    return 'none';
   };
 
-  // ── 管理员函数 ──
   const handleSavePlan = async () => {
     if (!planForm.name || !planForm.days) return;
     try {
@@ -188,12 +188,11 @@ export default function AdminRenewPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">会员续期</h1>
           <p className="text-sm text-gray-500">
-            {tab === 'self' ? '选择套餐，支付宝扫码自助续期' : '管理员手动续期（替代支付的过渡方案）'}
+            {tab === 'self' ? '选择套餐，扫码支付 · 支持微信/支付宝' : '管理员手动续期'}
           </p>
         </div>
       </div>
 
-      {/* ── 标签导航（管理员看到全部，普通用户只看到自助续期） ── */}
       <div className="flex gap-1 mb-6 bg-gray-100 rounded-lg p-1 max-w-xl flex-wrap">
         {([
           { key: 'self' as const, label: '💳 自助续期' },
@@ -217,13 +216,10 @@ export default function AdminRenewPage() {
       {/* ════════════════════════════════════════════ */}
       {tab === 'self' && (
         <div>
-          {/* 当前状态 */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">当前角色：<strong className="text-gray-700">
-                  {getRoleLabel(myRole, 'zh')}
-                </strong></p>
+                <p className="text-sm text-gray-500">当前角色：<strong className="text-gray-700">{getRoleLabel(myRole, 'zh')}</strong></p>
                 <p className="text-sm text-gray-500 mt-1">
                   会员有效期至：
                   <strong className={myTrialEnd && new Date(myTrialEnd + 'T23:59:59') < new Date() ? 'text-red-600' : 'text-green-600'}>
@@ -234,20 +230,20 @@ export default function AdminRenewPage() {
                   )}
                 </p>
               </div>
-              {alipayConfigured && (
-                <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full font-medium">✅ 支付宝已就绪</span>
-              )}
+              <div className="flex gap-1.5">
+                {alipayConfigured && <span className="text-[10px] text-green-600 bg-green-50 px-2 py-0.5 rounded-full font-medium">✅ 支付宝</span>}
+                {wechatConfigured && <span className="text-[10px] text-green-600 bg-green-50 px-2 py-0.5 rounded-full font-medium">✅ 微信支付</span>}
+              </div>
             </div>
           </div>
 
-          {/* 套餐选择 */}
           {selfLoading ? (
             <div className="text-center py-12"><Loader2 className="w-6 h-6 animate-spin text-gray-400 mx-auto" /></div>
-          ) : !alipayConfigured ? (
+          ) : whichConfigured() === 'none' ? (
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-8 text-center">
               <CreditCard className="w-12 h-12 text-amber-400 mx-auto mb-3" />
               <h3 className="text-lg font-bold text-amber-800 mb-2">支付系统正在配置中</h3>
-              <p className="text-sm text-amber-600">支付宝支付功能暂未开放，请联系管理员办理续期</p>
+              <p className="text-sm text-amber-600">扫码/支付宝支付功能暂未开放，请联系管理员办理续期</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -256,25 +252,54 @@ export default function AdminRenewPage() {
                   className={`bg-white rounded-xl shadow-sm border-2 p-5 cursor-pointer transition-all hover:shadow-md ${
                     selectedPlanId === p.id ? 'border-primary-500 ring-2 ring-primary-200' : 'border-gray-200'
                   }`}
-                  onClick={() => { setSelectedPlanId(p.id); setPayUrl(''); setPaySuccess(false); setPayError(''); }}
+                  onClick={() => { setSelectedPlanId(p.id); setQrcodeContent(''); setPaySuccess(false); setPayError(''); }}
                 >
                   <div className="text-lg font-bold text-gray-900 mb-1">{p.name}</div>
-                  <div className="text-3xl font-bold text-primary-600 mb-2">¥{Number(p.price).toFixed(0)}</div>
+                  <div className="text-3xl font-bold text-primary-600 mb-2">{isOverseasAgent ? '$' : '¥'}{Number(p.price).toFixed(isOverseasAgent ? 2 : 0)}</div>
                   <div className="text-sm text-gray-500">{p.days} 天</div>
-                  <div className="text-xs text-gray-400 mt-1">折合 ¥{(Number(p.price) / p.days).toFixed(1)}/天</div>
+                  <div className="text-xs text-gray-400 mt-1">{isOverseasAgent ? '$' : '折合¥'}{(Number(p.price) / p.days).toFixed(isOverseasAgent ? 2 : 1)}/天</div>
+
                   {selectedPlanId === p.id && (
-                    <div className="mt-3">
+                    <div className="mt-3 space-y-2">
                       {paySuccess ? (
                         <div className="flex items-center gap-1.5 text-green-600 text-sm font-medium">
                           <CheckCircle className="w-4 h-4" /> 支付成功，会员已续期
                         </div>
+                      ) : payOrderId && !paySuccess ? (
+                        <div className="text-center">
+                          {qrcodeContent ? (
+                            <>
+                              <div className="inline-flex items-center justify-center bg-gray-50 p-2 rounded-xl border border-gray-200">
+                                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(qrcodeContent)}`}
+                                  alt="Payment QR Code" className="w-44 h-44" />
+                              </div>
+                              <p className="text-xs text-gray-500 mt-2">打开微信/支付宝「扫一扫」付款</p>
+                            </>
+                          ) : (
+                            <p className="text-sm text-gray-600 mb-2">✅ 支付宝收银台已在新窗口打开</p>
+                          )}
+                          <div className="flex items-center justify-center gap-2 mt-2 text-xs text-gray-400">
+                            <Loader2 className="w-3 h-3 animate-spin text-primary-500" />
+                            等待支付完成...
+                          </div>
+                        </div>
                       ) : (
-                        <button className="btn-primary w-full text-sm py-2 flex items-center justify-center gap-1"
-                          onClick={(e) => { e.stopPropagation(); handlePay(p.id); }}
-                          disabled={payLoading}>
-                          {payLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Smartphone className="w-4 h-4" />}
-                          支付宝支付
-                        </button>
+                        <div className="space-y-2">
+                          {wechatConfigured && (
+                            <button className="w-full text-sm py-2 flex items-center justify-center gap-1 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                              onClick={(e) => { e.stopPropagation(); handlePay('wechat'); }} disabled={payLoading}>
+                              {payLoading && payChannel === 'wechat' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Smartphone className="w-4 h-4" />}
+                              微信官方支付
+                            </button>
+                          )}
+                          {alipayConfigured && (
+                            <button className="w-full text-sm py-2 flex items-center justify-center gap-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                              onClick={(e) => { e.stopPropagation(); handlePay('alipay'); }} disabled={payLoading}>
+                              {payLoading && payChannel === 'alipay' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Smartphone className="w-4 h-4" />}
+                              支付宝
+                            </button>
+                          )}
+                        </div>
                       )}
                     </div>
                   )}
@@ -285,26 +310,6 @@ export default function AdminRenewPage() {
 
           {payError && <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 rounded-lg px-4 py-3 mb-4"><AlertCircle className="w-4 h-4" />{payError}</div>}
 
-          {payUrl && !paySuccess && (
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
-              <div className="flex items-start gap-3">
-                <ExternalLink className="w-5 h-5 text-blue-600 mt-0.5" />
-                <div className="text-sm text-blue-800">
-                  <p className="font-medium mb-1">✅ 订单已创建，请在新打开的支付宝页面完成支付</p>
-                  <p className="text-xs text-blue-600">如果未自动跳转，可复制下面链接在浏览器打开</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <code className="text-xs bg-white px-2 py-1 rounded border border-blue-200 truncate max-w-md">{payUrl}</code>
-                    <button className="flex items-center gap-1 text-xs text-blue-700 bg-white px-2 py-1 rounded border border-blue-200 hover:bg-blue-50 transition-colors" onClick={copyPayUrl}>
-                      {copied ? <CheckCircle className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                      {copied ? '已复制' : '复制'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 我的续期记录 */}
           {myOrders.length > 0 && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
               <h3 className="font-semibold text-gray-900 text-sm mb-3">📜 我的续期记录</h3>
@@ -314,9 +319,10 @@ export default function AdminRenewPage() {
                     <div>
                       <span className="font-medium">{o.plan_name || '套餐'}</span>
                       <span className="text-gray-400 ml-2">{o.days}天</span>
+                      {o.channel && <span className="text-[10px] ml-1 text-gray-400">({o.channel === 'wechat' ? '微信' : o.channel === 'alipay' ? '支付宝' : o.channel})</span>}
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="font-bold text-primary-600">¥{Number(o.amount).toFixed(2)}</span>
+                      <span className="font-bold text-primary-600">{isOverseasAgent ? '$' : '¥'}{Number(o.amount).toFixed(2)}</span>
                       <span className={`text-xs px-2 py-0.5 rounded-full ${
                         o.status === 'paid' ? 'bg-green-100 text-green-700' :
                         o.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-500'
@@ -333,7 +339,7 @@ export default function AdminRenewPage() {
         </div>
       )}
 
-      {/* ════ 以下管理员功能保持不变 ════ */}
+      {/* ════ 管理员功能 ════ */}
       {isAdmin && tab === 'plans' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
@@ -345,7 +351,7 @@ export default function AdminRenewPage() {
                   <div key={p.id} className="flex items-center justify-between bg-gray-50 rounded-lg px-4 py-3">
                     <div>
                       <div className="font-medium text-gray-800">{p.name}</div>
-                      <div className="text-xs text-gray-500">{p.days}天 / ¥{Number(p.price).toFixed(2)}</div>
+                      <div className="text-xs text-gray-500">{p.days}天 / {isOverseasAgent ? '$' : '¥'}{Number(p.price).toFixed(2)}</div>
                     </div>
                     <div className="flex gap-2">
                       <button className="text-xs px-2 py-1 bg-primary-100 text-primary-700 rounded hover:bg-primary-200 transition-colors"
@@ -460,7 +466,6 @@ export default function AdminRenewPage() {
         </div>
       )}
 
-      {/* ════ 删除套餐确认弹窗 ════ */}
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => { if (!isDeleting) setDeleteTarget(null); }}>
           <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm mx-4 border-t-4 border-red-500" onClick={(e) => e.stopPropagation()}>

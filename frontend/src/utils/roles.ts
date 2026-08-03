@@ -15,6 +15,7 @@ export const ROLE_LABELS: Record<string, string> = {
   inspector: '检测认证',
   insurer: '运输保险',
   overseas_agent: '海外代理',
+  broker: '报关行',
 };
 
 /** 中英双语标签 */
@@ -26,6 +27,7 @@ export const ROLE_I18N_LABELS: Record<string, LangText> = {
   inspector: { zh: '检测认证', en: 'Inspector' },
   insurer: { zh: '运输保险', en: 'Insurer' },
   overseas_agent: { zh: '海外代理', en: 'Overseas Agent' },
+  broker: { zh: '报关行', en: 'Broker' },
 };
 
 /** 获取角色双语标签 */
@@ -43,4 +45,5 @@ export const ROLE_ICONS: Record<string, string> = {
   inspector: '🔬',
   insurer: '🛡️',
   overseas_agent: '🌍',
+  broker: '🏢',
 };

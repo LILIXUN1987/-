@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { UserPublic, getRoleChecks } from '../types';
+import { UserPublic, getRoleChecks, LoginResponse } from '../types';
 import { authApi } from '../api/auth.api';
 
 type Lang = 'zh' | 'en';
@@ -25,16 +25,21 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: !!localStorage.getItem('token'),
   lang: (localStorage.getItem('lang') as Lang) || 'zh',
 
+  // 共享登录后状态设置逻辑
+  _handleLoginResponse: (res: LoginResponse) => {
+    const { token, user } = res;
+    localStorage.setItem('token', token);
+    const rc = getRoleChecks(user.role);
+    const defaultLang = rc.isOverseasAgent ? 'en' : 'zh';
+    localStorage.setItem('lang', defaultLang);
+    set({ token, user, isAuthenticated: true, isLoading: false, lang: defaultLang });
+  },
+
   login: async (username: string, password: string) => {
     set({ isLoading: true });
     try {
-      const { token, user } = await authApi.login({ username, password });
-      localStorage.setItem('token', token);
-      // 海外代理默认英文
-      const rc = getRoleChecks(user.role);
-      const defaultLang = rc.isOverseasAgent ? 'en' : 'zh';
-      localStorage.setItem('lang', defaultLang);
-      set({ token, user, isAuthenticated: true, isLoading: false, lang: defaultLang });
+      const res = await authApi.login({ username, password });
+      (useAuthStore.getState() as any)._handleLoginResponse(res);
     } catch (err) {
       set({ isLoading: false });
       throw err;
@@ -44,12 +49,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   userLogin: async (username: string, password: string) => {
     set({ isLoading: true });
     try {
-      const { token, user } = await authApi.userLogin({ username, password });
-      localStorage.setItem('token', token);
-      const rc = getRoleChecks(user.role);
-      const defaultLang = rc.isOverseasAgent ? 'en' : 'zh';
-      localStorage.setItem('lang', defaultLang);
-      set({ token, user, isAuthenticated: true, isLoading: false, lang: defaultLang });
+      const res = await authApi.userLogin({ username, password });
+      (useAuthStore.getState() as any)._handleLoginResponse(res);
     } catch (err) {
       set({ isLoading: false });
       throw err;

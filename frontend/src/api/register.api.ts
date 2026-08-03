@@ -25,6 +25,8 @@ export const registerApi = {
     wca_id?: string;
     ref?: string;
     is_newbie?: boolean;
+    is_enterprise?: boolean;
+    license_image?: File;
   }) => {
     const formData = new FormData();
     formData.append('username', data.username);
@@ -40,9 +42,9 @@ export const registerApi = {
     if (data.wca_id) formData.append('wca_id', data.wca_id);
     if (data.ref) formData.append('ref', data.ref);
     if (data.is_newbie) formData.append('is_newbie', 'true');
-    if (data.card_image) {
-      formData.append('card_image', data.card_image);
-    }
+    if (data.is_enterprise) formData.append('is_enterprise', 'true');
+    if (data.card_image) formData.append('card_image', data.card_image);
+    if (data.license_image) formData.append('license_image', data.license_image);
     return client.post('/register', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }).then(r => r.data);

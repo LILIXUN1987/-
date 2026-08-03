@@ -550,6 +550,156 @@ export const messagesController = {
     } catch (err) { next(err); }
   },
 
+  // ── 律师：我的咨询列表 ──
+  async lawyerConsultations(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.id;
+      const { page: pageStr, limit: limitStr } = req.query;
+      const page = Math.max(1, parseInt(pageStr as string) || 1);
+      const limit = Math.min(50, Math.max(1, parseInt(limitStr as string) || 20));
+      const offset = (page - 1) * limit;
+
+      // 筛选：【律师咨询】消息
+      const baseQuery = db('messages')
+        .leftJoin('users as sender', 'messages.sender_id', 'sender.id')
+        .where('messages.receiver_id', userId)
+        .where('messages.content', 'like', '【律师咨询】%');
+
+      const countResult = await baseQuery.clone().count('* as total').first();
+      const total = Number((countResult as any)?.total || 0);
+
+      const rows = await baseQuery.clone()
+        .select(
+          'messages.id',
+          'messages.content',
+          'messages.is_read',
+          'messages.created_at',
+          'sender.id as sender_id',
+          'sender.display_name as sender_name',
+          'sender.company_name as sender_company',
+          'sender.phone as sender_phone',
+        )
+        .orderBy('messages.created_at', 'desc')
+        .limit(limit)
+        .offset(offset);
+
+      // 补充回复状态
+      const result: any[] = [];
+      for (const msg of rows as any[]) {
+        const replyCount = await db('messages')
+          .where({ sender_id: userId, receiver_id: msg.sender_id })
+          .where('created_at', '>', msg.created_at)
+          .count('* as total')
+          .first();
+        // 脱敏手机
+        const phone = msg.sender_phone || '';
+        const maskedPhone = phone.length >= 7
+          ? phone.slice(0, 3) + '****' + phone.slice(-4)
+          : phone;
+        result.push({
+          id: msg.id,
+          content: msg.content,
+          isRead: !!msg.is_read,
+          createdAt: msg.created_at,
+          senderId: msg.sender_id,
+          senderName: msg.sender_name,
+          senderCompany: msg.sender_company,
+          senderPhone: maskedPhone,
+          hasReply: Number((replyCount as any)?.total || 0) > 0,
+          replyCount: Number((replyCount as any)?.total || 0),
+        });
+      }
+
+      // 统计数据
+      const today = new Date().toISOString().split('T')[0];
+      const todayCount = await db('messages')
+        .where('receiver_id', userId)
+        .where('content', 'like', '【律师咨询】%')
+        .where('created_at', '>=', today + ' 00:00:00')
+        .count('* as total').first() as any;
+      const repliedCount = await db('messages')
+        .where('receiver_id', userId)
+        .where('content', 'like', '【律师咨询】%')
+        .count('* as total').first() as any;
+
+      let respondedCount = 0;
+      for (const r of result) {
+        if (r.hasReply) respondedCount++;
+      }
+
+      res.json({
+        data: result,
+        total, page, limit,
+        stats: {
+          today: Number(todayCount?.total || 0),
+          total,
+          responded: respondedCount,
+        },
+      });
+    } catch (err) { next(err); }
+  },
+
+  // ── 检测认证/运输保险：我的咨询列表（通用，按角色过滤） ──
+  async serviceConsultations(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.id;
+      const user = await db('users').where({ id: userId }).first() as any;
+      const role = user?.role;
+      if (!role || !['inspector', 'insurer'].includes(role)) {
+        return res.status(403).json({ error: '仅检测认证/运输保险用户可查看' });
+      }
+
+      const prefix = role === 'inspector' ? '【检测认证咨询】' : '【运输保险咨询】';
+      const { page: pageStr, limit: limitStr } = req.query;
+      const page = Math.max(1, parseInt(pageStr as string) || 1);
+      const limit = Math.min(50, Math.max(1, parseInt(limitStr as string) || 20));
+      const offset = (page - 1) * limit;
+
+      const baseQuery = db('messages')
+        .leftJoin('users as sender', 'messages.sender_id', 'sender.id')
+        .where('messages.receiver_id', userId)
+        .where('messages.content', 'like', `${prefix}%`);
+
+      const [{ total }] = await baseQuery.clone().count('* as total') as any[];
+      const rows = await baseQuery.clone()
+        .select(
+          'messages.id', 'messages.content', 'messages.is_read', 'messages.created_at',
+          'sender.id as sender_id', 'sender.display_name as sender_name',
+          'sender.company_name as sender_company', 'sender.phone as sender_phone',
+        )
+        .orderBy('messages.created_at', 'desc')
+        .limit(limit).offset(offset) as any[];
+
+      const result: any[] = [];
+      for (const msg of rows) {
+        const replyCount = await db('messages')
+          .where({ sender_id: userId, receiver_id: msg.sender_id })
+          .where('created_at', '>', msg.created_at)
+          .count('* as total').first();
+        const phone = msg.sender_phone || '';
+        result.push({
+          id: msg.id, content: msg.content, isRead: !!msg.is_read, createdAt: msg.created_at,
+          senderId: msg.sender_id, senderName: msg.sender_name, senderCompany: msg.sender_company,
+          senderPhone: phone.length >= 7 ? phone.slice(0, 3) + '****' + phone.slice(-4) : phone,
+          hasReply: Number((replyCount as any)?.total || 0) > 0,
+          replyCount: Number((replyCount as any)?.total || 0),
+        });
+      }
+
+      const today = new Date().toISOString().split('T')[0];
+      const todayCount = await db('messages')
+        .where('receiver_id', userId).where('content', 'like', `${prefix}%`)
+        .where('created_at', '>=', today + ' 00:00:00').count('* as total').first() as any;
+
+      const respondedCount = result.filter((r: any) => r.hasReply).length;
+
+      res.json({
+        data: result, total: Number(total || 0), page, limit,
+        stats: { today: Number(todayCount?.total || 0), total: Number(total || 0), responded: respondedCount },
+      });
+    } catch (err) { next(err); }
+  },
+
   // ── 检测认证 / 运输保险 随机咨询 ──
   async serviceConsult(req: Request, res: Response, next: NextFunction) {
     try {
@@ -635,5 +785,65 @@ export const messagesController = {
     } catch (err) {
       next(err);
     }
+  },
+
+  // ── 收到的询价列表（货代视角：外贸+同行发给我的所有非系统消息） ──
+  async receivedInquiries(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.id;
+      const { page: pageStr, limit: limitStr } = req.query;
+      const page = Math.max(1, parseInt(pageStr as string) || 1);
+      const limit = Math.min(50, Math.max(1, parseInt(limitStr as string) || 20));
+      const offset = (page - 1) * limit;
+
+      // 我收到的所有消息（排除系统通知、管理员、自动生成的咨询消息）
+      const baseQuery = db('messages')
+        .leftJoin('users as sender', 'messages.sender_id', 'sender.id')
+        .where('messages.receiver_id', userId)
+        .whereNot('sender.role', 'admin')
+        .whereNot('messages.content', 'like', '【律师咨询】%')
+        .whereNot('messages.content', 'like', '【检测认证咨询】%')
+        .whereNot('messages.content', 'like', '【运输保险咨询】%');
+
+      const countResult = await baseQuery.clone().count('* as total').first();
+      const total = Number((countResult as any)?.total || 0);
+
+      const rows = await baseQuery.clone()
+        .select(
+          'messages.id',
+          'messages.content',
+          'messages.is_read',
+          'messages.created_at',
+          'sender.id as sender_id',
+          'sender.display_name as sender_name',
+          'sender.company_name as sender_company',
+        )
+        .orderBy('messages.created_at', 'desc')
+        .limit(limit)
+        .offset(offset);
+
+      // 补充回复状态
+      const result: any[] = [];
+      for (const msg of rows as any[]) {
+        const replyCount = await db('messages')
+          .where({ sender_id: userId, receiver_id: msg.sender_id })
+          .where('created_at', '>', msg.created_at)
+          .count('* as total')
+          .first();
+        result.push({
+          id: msg.id,
+          content: msg.content,
+          isRead: !!msg.is_read,
+          createdAt: msg.created_at,
+          senderId: msg.sender_id,
+          senderName: msg.sender_name,
+          senderCompany: msg.sender_company,
+          hasReply: Number((replyCount as any)?.total || 0) > 0,
+          replyCount: Number((replyCount as any)?.total || 0),
+        });
+      }
+
+      res.json({ data: result, total, page, limit });
+    } catch (err) { next(err); }
   },
 };

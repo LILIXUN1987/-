@@ -1,7 +1,7 @@
 // ════════════════════════════════════════════
 // 角色类型体系
 // ════════════════════════════════════════════
-export const USER_ROLES = ['admin', 'forwarder', 'trader', 'lawyer', 'inspector', 'insurer', 'overseas_agent'] as const;
+export const USER_ROLES = ['admin', 'forwarder', 'trader', 'lawyer', 'inspector', 'insurer', 'overseas_agent', 'broker'] as const;
 export type UserRole = typeof USER_ROLES[number];
 
 export const RoleGroup = {
@@ -47,11 +47,14 @@ export interface User {
   bio: string | null;
   is_newbie: number;
   last_active_date: string | null;
+  port_city: string | null;
+  port_code: string | null;
+  operable_ports: string | null;
   created_at: string;
   updated_at: string;
 }
 
-export type UserPublic = Pick<User, 'id' | 'username' | 'display_name' | 'company_name' | 'phone' | 'email' | 'email_verified' | 'gender' | 'card_image' | 'avatar' | 'role' | 'status' | 'jc_trans_id' | 'wca_id' | 'trial_end' | 'referral_code' | 'notify_inquiry_email' | 'notify_inquiry_site' | 'notify_all_messages_email' | 'is_verified_company' | 'company_license' | 'bio' | 'is_newbie' | 'created_at'>;
+export type UserPublic = Pick<User, 'id' | 'username' | 'display_name' | 'company_name' | 'phone' | 'email' | 'email_verified' | 'gender' | 'card_image' | 'avatar' | 'role' | 'status' | 'jc_trans_id' | 'wca_id' | 'trial_end' | 'referral_code' | 'notify_inquiry_email' | 'notify_inquiry_site' | 'notify_all_messages_email' | 'is_verified_company' | 'company_license' | 'bio' | 'is_newbie' | 'created_at' | 'port_city' | 'port_code' | 'operable_ports'>;
 
 // ── Uploaded File ──
 export type FileStatus = 'uploaded' | 'processing' | 'processed' | 'error' | 'pending_mapping';

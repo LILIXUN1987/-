@@ -19,7 +19,7 @@ const ROLE_COLORS: Record<string, string> = {
   overseas_agent: 'bg-purple-50 text-purple-700',
 };
 
-type TabKey = 'overview' | 'users';
+type TabKey = 'overview' | 'activity' | 'users';
 
 export default function AdminStatsPage() {
   const user = useAuthStore((s) => s.user);
@@ -28,16 +28,19 @@ export default function AdminStatsPage() {
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<TabKey>('overview');
   const [userSearch, setUserSearch] = useState('');
+  const [activity, setActivity] = useState<any>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [s, a] = await Promise.all([
+      const [s, a, act] = await Promise.all([
         client.get<AdminStatsResponse>('/admin/stats'),
         client.get<{ data: UserAnalyticsRow[] }>('/admin/user-analytics'),
+        client.get('/admin/publish-stats'),
       ]);
       setStats(s.data);
       setAnalytics(a.data.data || []);
+      setActivity(act.data);
     } catch { /* ignore */ }
     setLoading(false);
   }, []);
@@ -91,7 +94,7 @@ export default function AdminStatsPage() {
         <>
           {/* ── Tab Bar ── */}
           <div className="flex gap-1 mb-6 bg-gray-100 rounded-lg p-1 max-w-md">
-            {([{ key: 'overview', label: '📊 数据概览' }, { key: 'users', label: '👥 用户分析' }] as const).map((t) => (
+            {([{ key: 'overview', label: '📊 数据概览' }, { key: 'activity', label: '📋 活跃记录' }, { key: 'users', label: '👥 用户分析' }] as const).map((t) => (
               <button
                 key={t.key}
                 className={`flex-1 py-2.5 text-sm font-medium rounded-md transition-colors ${
@@ -106,6 +109,9 @@ export default function AdminStatsPage() {
 
           {/* ════════ 数据概览 ════════ */}
           {tab === 'overview' && <OverviewTab stats={stats} />}
+
+          {/* ════════ 活跃记录 ════════ */}
+          {tab === 'activity' && <ActivityTab activity={activity} />}
 
           {/* ════════ 用户分析 ════════ */}
           {tab === 'users' && (
@@ -123,6 +129,54 @@ export default function AdminStatsPage() {
 }
 
 // ── 数据概览子组件 ──
+// ════════════════════════════════════════════
+// 活跃记录 Tab
+// ════════════════════════════════════════════
+function ActivityTab({ activity }: { activity: any }) {
+  if (!activity) return <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 animate-spin text-gray-400" /></div>;
+  const { publishers, searchers, recentSearches, recentPublishes } = activity;
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <h3 className="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2"><FileText className="w-4 h-4 text-blue-500" />发布舱位的用户<span className="text-xs text-gray-400 font-normal">({publishers?.length || 0}人)</span></h3>
+          <div className="max-h-80 overflow-y-auto space-y-1.5">
+            {publishers?.map((u: any, i: number) => (
+              <div key={i} className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2 text-xs">
+                <div className="min-w-0 flex-1"><span className="font-medium text-gray-800 truncate">{u.display_name}</span><span className="text-gray-400 ml-1.5 truncate">{u.company_name || ''}</span></div>
+                <span className="text-blue-600 font-bold ml-2 flex-shrink-0">{u.count}条</span><span className="text-gray-400 ml-2 flex-shrink-0 text-[10px]">{u.last_at?.slice(0,10)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <h3 className="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2"><Search className="w-4 h-4 text-green-500" />搜索过的用户<span className="text-xs text-gray-400 font-normal">({searchers?.length || 0}人)</span></h3>
+          <div className="max-h-80 overflow-y-auto space-y-1.5">
+            {searchers?.map((u: any, i: number) => (
+              <div key={i} className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2 text-xs">
+                <div className="min-w-0 flex-1"><span className="font-medium text-gray-800 truncate">{u.display_name}</span><span className="text-gray-400 ml-1.5 truncate">{u.company_name || ''}</span></div>
+                <span className="text-green-600 font-bold ml-2 flex-shrink-0">{u.count}次</span><span className="text-gray-400 ml-2 flex-shrink-0 text-[10px]">{u.last_at?.slice(0,10)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <h3 className="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2"><TrendingUp className="w-4 h-4 text-amber-500" />最近搜索关键词</h3>
+        <div className="overflow-x-auto"><table className="w-full text-xs"><thead><tr className="text-left text-gray-400 border-b"><th className="pb-2 font-medium">用户</th><th className="pb-2 font-medium">分类</th><th className="pb-2 font-medium">关键词</th><th className="pb-2 font-medium">时间</th></tr></thead><tbody>
+          {recentSearches?.map((s: any, i: number) => (<tr key={i} className="border-b border-gray-50"><td className="py-2"><span className="font-medium text-gray-800">{s.display_name}</span><span className="text-gray-400 ml-1">{s.company_name||''}</span></td><td className="py-2"><span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-full">{s.category||'--'}</span></td><td className="py-2 text-gray-600 max-w-[200px] truncate">{s.keyword}</td><td className="py-2 text-gray-400">{s.created_at?.slice(0,16)}</td></tr>))}
+        </tbody></table></div>
+      </div>
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <h3 className="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2"><FileText className="w-4 h-4 text-purple-500" />最近发布记录</h3>
+        <div className="overflow-x-auto"><table className="w-full text-xs"><thead><tr className="text-left text-gray-400 border-b"><th className="pb-2 font-medium">用户</th><th className="pb-2 font-medium">分类</th><th className="pb-2 font-medium">内容</th><th className="pb-2 font-medium">时间</th></tr></thead><tbody>
+          {recentPublishes?.map((p: any, i: number) => (<tr key={i} className="border-b border-gray-50"><td className="py-2"><span className="font-medium text-gray-800">{p.display_name}</span><span className="text-gray-400 ml-1">{p.company_name||''}</span></td><td className="py-2"><span className="text-[10px] bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded-full">{p.category||'--'}</span></td><td className="py-2 text-gray-600 max-w-[250px] truncate">{p.content}</td><td className="py-2 text-gray-400">{p.created_at?.slice(0,16)}</td></tr>))}
+        </tbody></table></div>
+      </div>
+    </div>
+  );
+}
+
 function OverviewTab({ stats }: { stats: AdminStatsResponse }) {
   const todayCards = [
     { label: '新增注册', value: stats.today?.newUsers, icon: UserPlus, bg: 'bg-green-50', text: 'text-green-600' },

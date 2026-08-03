@@ -13,7 +13,7 @@ export const dashboardController = {
 
       // ── 1. 用户基础信息 ──
       const user = await db('users')
-        .select('id', 'display_name', 'company_name', 'role', 'avatar', 'trial_end', 'email', 'phone', 'is_newbie')
+        .select('id', 'display_name', 'company_name', 'role', 'avatar', 'trial_end', 'email', 'phone', 'is_newbie', 'is_verified_company', 'company_license', 'business_scope')
         .where({ id: userId })
         .first() as any;
 
@@ -134,7 +134,36 @@ export const dashboardController = {
         .orderBy('search_logs.created_at', 'desc')
         .limit(8) as any[];
 
+      // ── 今日社区动态（货代视角） ──
+      const todayPulse = await db('search_logs')
+        .where('created_at', '>=', todayStr)
+        .count('* as total')
+        .first() as any;
+      const todayMatches = await db('messages')
+        .where('created_at', '>=', todayStr)
+        .where('content', 'like', '%📢%')
+        .count('* as total')
+        .first() as any;
+      const todayNewCargo = await db('cargo_spaces')
+        .where('created_at', '>=', todayStr)
+        .count('* as total')
+        .first() as any;
+      const hotKw = await db('search_logs')
+        .where('created_at', '>=', todayStr)
+        .whereNotNull('keyword')
+        .select('keyword')
+        .select(db.raw('COUNT(*) as cnt'))
+        .groupBy('keyword')
+        .orderBy('cnt', 'desc')
+        .limit(5) as any[];
+
       res.json({
+        pulse: {
+          searches: Number(todayPulse?.total || 0),
+          matches: Number(todayMatches?.total || 0),
+          newCargo: Number(todayNewCargo?.total || 0),
+          hotKeywords: hotKw.map((k: any) => k.keyword),
+        },
         user: {
           display_name: user?.display_name || '',
           company_name: user?.company_name || '',
@@ -144,6 +173,9 @@ export const dashboardController = {
           email: user?.email || null,
           phone: user?.phone || null,
           is_newbie: !!user?.is_newbie,
+          is_verified_company: !!user?.is_verified_company,
+          company_license: user?.company_license || null,
+          business_scope: user?.business_scope || null,
         },
         globalStats: {
           totalUsers: globalStats.users || 0,

@@ -65,6 +65,10 @@ export default function CategoryQueryPanel({ showOnly, initialKeyword }: Categor
     }
   }, [initialKeyword]);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
+  const [uploadFiles, setUploadFiles] = useState<Record<string, File | null>>({});
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const [validHours, setValidHours] = useState<Record<string, string>>({});
+  const [phoneNumber, setPhoneNumber] = useState<Record<string, string>>({});
   const [contactDialog, setContactDialog] = useState<{ contactInfo: string; cargoKey: string; uploadedFileId?: string; fullRecord?: any; searchKeyword?: string } | null>(null);
   const [contactText, setContactText] = useState('');
   const [contactSending, setContactSending] = useState(false);
@@ -322,6 +326,12 @@ export default function CategoryQueryPanel({ showOnly, initialKeyword }: Categor
       if (!keyword.trim()) return;
     }
 
+    // 附上有效期和手机号
+    const vh = validHours[category] || '';
+    const ph = phoneNumber[category] || '';
+    if (vh) keyword += ` [有效期:${vh}小时]`;
+    if (ph) keyword += ` [电话:${ph}]`;
+
     if (category === '空运出口') {
       const codes = keyword.match(/[A-Z0-9]{3}/g) || [];
       const chinesePorts = keyword.match(/广州|深圳|上海|北京|香港|杭州|宁波|南京|成都|重庆|武汉|西安|昆明|厦门|青岛|天津|大连|郑州|长沙|济南|福州|海口|三亚|乌鲁木齐|哈尔滨|沈阳|贵阳|南宁|兰州|太原|合肥|南昌|呼和浩特|银川|西宁|拉萨|珠海|揭阳|湛江|惠州|佛山|梅州|温州|义乌|舟山|台州|徐州|常州|南通|无锡|扬州|盐城|淮安|连云港|烟台|威海|临沂|潍坊|日照|济宁|桂林|北海|柳州|泉州|晋江|武夷山|宜昌|襄阳|恩施|鄂州|绵阳|泸州|宜宾|南充|西昌|丽江|大理|西双版纳|香格里拉|敦煌|喀什|包头|呼伦贝尔|鄂尔多斯|胡志明|曼谷|东京|大阪|首尔|新加坡|洛杉矶|纽约|伦敦|迪拜|巴黎|法兰克福|悉尼|墨尔本|雅加达|马尼拉|吉隆坡|河内|金边|仰光|德里|孟买|达卡|科伦坡|伊斯坦布尔|莫斯科|塞内加尔|达喀尔|越南|泰国|印度|日本|韩国|马来西亚|菲律宾|柬埔寨|缅甸|孟加拉|尼泊尔|斯里兰卡|阿联酋|沙特|土耳其|俄罗斯|英国|法国|德国|意大利|西班牙|荷兰|比利时|瑞士|美国|加拿大|墨西哥|巴西|阿根廷|智利|秘鲁|澳大利亚|新西兰|埃及|南非|尼日利亚|肯尼亚|摩洛哥|津巴布韦|莫桑比克|马里|刚果金|科特迪瓦|坦桑尼亚|加纳|喀麦隆|塞拉利昂|埃塞俄比亚|安哥拉|阿尔及利亚|突尼斯|苏丹|乌干达|卢旺达|赞比亚|几内亚|贝宁|多哥|刚果布|加蓬|马拉维|哈萨克斯坦|巴基斯坦|印度尼西亚|老挝|蒙古|爱尔兰|罗马尼亚|乌克兰|哥伦比亚|厄瓜多尔|巴拿马|多米尼加|古巴/g) || [];
@@ -505,6 +515,57 @@ export default function CategoryQueryPanel({ showOnly, initialKeyword }: Categor
                         onChange={e => setKeywords(prev => ({ ...prev, [query.key]: e.target.value }))}
                         onKeyDown={e => handleKeyDown(e, query.key)}
                       />
+                      {/* ── 有效期 + 手机号 ── */}
+                      <div className="flex items-center gap-2 mt-2">
+                        <select
+                          className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                          value={validHours[query.key] || ''}
+                          onChange={e => setValidHours(prev => ({ ...prev, [query.key]: e.target.value }))}
+                        >
+                          <option value="">⏱ 不设截止时间</option>
+                          <option value="1">⏰ 报价截止：1小时内</option>
+                          <option value="3">⏰ 报价截止：3小时内</option>
+                          <option value="6">⏰ 报价截止：6小时内</option>
+                          <option value="12">⏰ 报价截止：12小时内</option>
+                          <option value="24">⏰ 报价截止：24小时内</option>
+                        </select>
+                        <input
+                          type="tel"
+                          className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 flex-1"
+                          placeholder="📱 手机号（选填）"
+                          value={phoneNumber[query.key] || ''}
+                          onChange={e => setPhoneNumber(prev => ({ ...prev, [query.key]: e.target.value }))}
+                        />
+                      </div>
+
+                      {/* ── 可选上传图片/箱单/发票 ── */}
+                      <div className="mt-2">
+                        <input
+                          type="file"
+                          accept=".pdf,.jpg,.jpeg,.png,.xlsx,.xls,.doc,.docx"
+                          className="hidden"
+                          ref={el => { fileInputRefs.current[query.key] = el; }}
+                          onChange={e => {
+                            const f = e.target.files?.[0] || null;
+                            setUploadFiles(prev => ({ ...prev, [query.key]: f }));
+                          }}
+                        />
+                        <button
+                          type="button"
+                          className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${
+                            uploadFiles[query.key]
+                              ? 'bg-green-50 border-green-400 text-green-700 shadow-sm'
+                              : 'bg-white border-dashed border-amber-300 text-amber-600 hover:bg-amber-50 hover:border-amber-400'
+                          }`}
+                          onClick={() => fileInputRefs.current[query.key]?.click()}
+                        >
+                          {uploadFiles[query.key] ? (
+                            <><span className="text-base">📎</span> {uploadFiles[query.key]!.name.length > 20 ? uploadFiles[query.key]!.name.substring(0, 20) + '...' : uploadFiles[query.key]!.name}<span className="text-red-400 ml-2 text-xs" onClick={(e) => { e.stopPropagation(); setUploadFiles(prev => ({ ...prev, [query.key]: null })); }}>✕ 移除</span></>
+                          ) : (
+                            <><span className="text-lg">📎</span> 可选上传图片或者箱单发票</>
+                          )}
+                        </button>
+                      </div>
                       {query.key === '海运出口' && (
                         <div className="mt-1.5 space-y-0.5 text-xs text-red-500 leading-relaxed">
                           <p>1，始发港城市+目的港城市或者三字代码或者目的国家粗略查询</p>
@@ -544,19 +605,66 @@ export default function CategoryQueryPanel({ showOnly, initialKeyword }: Categor
                     <div className="bg-green-50 border-2 border-green-300 rounded-xl p-4 text-sm text-green-800 font-medium leading-relaxed text-left">
                       {(result as any).push_message}
                     </div>
-                  ) : /\d+\s*(?:件|KG|CBM|kg|箱|吨)/.test(kw) ? (
-                    <div>
-                      <p>未找到匹配的推广信息</p>
-                      <p className="text-green-600 font-medium mt-1">✅ 您的需求已推送给相关发布者，请留意收件箱报价</p>
-                    </div>
                   ) : (
-                    <p>未找到相关推广信息</p>
+                    <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-5 text-center">
+                      <p className="text-2xl mb-2">🔍</p>
+                      <p className="text-sm font-bold text-amber-800 mb-1">暂未找到匹配的舱位信息</p>
+                      <p className="text-xs text-amber-600 mb-3">
+                        {/\d+\s*(?:件|KG|CBM|kg|箱|吨)/.test(kw)
+                          ? '您的需求已记录，系统已推送给相关发布者，请留意收件箱报价'
+                          : '当前社区暂无此航线舱位。您可以：'}
+                      </p>
+                      {!/\d+\s*(?:件|KG|CBM|kg|箱|吨)/.test(kw) && (
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+                          <button
+                            onClick={() => {
+                              const el = document.querySelector('[data-tab="entry"]') as HTMLElement;
+                              if (el) el.click();
+                            }}
+                            className="text-xs font-bold bg-amber-500 text-white px-4 py-2 rounded-xl hover:bg-amber-600 transition-colors"
+                          >
+                            📝 去发布舱位
+                          </button>
+                          <span className="text-xs text-amber-400">或</span>
+                          <span className="text-xs text-amber-600">换个关键词试试</span>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               )}
 
               {result && result.data.length > 0 && !isLoading && (
                 <div className="space-y-2">
+                  {/* ── 排序规则说明 ── */}
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl px-4 py-3">
+                    <details className="group">
+                      <summary className="flex items-center gap-2 cursor-pointer text-xs font-bold text-blue-700 select-none">
+                        <span className="text-base">📊</span>
+                        <span>排序规则：综合加权排名</span>
+                        <span className="text-blue-400 group-open:hidden ml-auto text-[10px]">展开查看</span>
+                      </summary>
+                      <div className="mt-2 pt-2 border-t border-blue-200/50 grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                        <div className="bg-white/70 rounded-lg p-2 text-center">
+                          <span className="text-blue-600 font-bold">50%</span>
+                          <p className="text-gray-500 text-[10px]">精准匹配度</p>
+                        </div>
+                        <div className="bg-white/70 rounded-lg p-2 text-center">
+                          <span className="text-amber-600 font-bold">20%</span>
+                          <p className="text-gray-500 text-[10px]">企业认证</p>
+                        </div>
+                        <div className="bg-white/70 rounded-lg p-2 text-center">
+                          <span className="text-green-600 font-bold">20%</span>
+                          <p className="text-gray-500 text-[10px]">信用评分</p>
+                        </div>
+                        <div className="bg-white/70 rounded-lg p-2 text-center">
+                          <span className="text-purple-600 font-bold">10%</span>
+                          <p className="text-gray-500 text-[10px]">时间新鲜度</p>
+                        </div>
+                      </div>
+                    </details>
+                  </div>
+
                   {/* 5要素精准推送提示 */}
                   {(result as any).push_message && (
                     <div className="bg-green-50 border-2 border-green-300 rounded-xl p-4 text-sm text-green-800 font-medium leading-relaxed">
@@ -576,13 +684,27 @@ export default function CategoryQueryPanel({ showOnly, initialKeyword }: Categor
                             </span>
                           )}
                         </div>
-                        {item.valid_from && (
-                          <span className="text-xs text-gray-400 flex-shrink-0">
-                            {dayjs(item.valid_from).format('MM-DD')} ~ {dayjs(item.valid_to).format('MM-DD')}
-                          </span>
-                        )}
+                        {/* 有效期 + 发布时间 */}
+                        <div className="flex items-center gap-2 text-[10px] text-gray-400 flex-shrink-0">
+                          {item.created_at && (
+                            <span className="flex items-center gap-0.5 text-gray-400">
+                              🕐 {dayjs(item.created_at).format('MM-DD HH:mm')}
+                            </span>
+                          )}
+                          {item.valid_from && (
+                            <span className="text-gray-300">
+                              {dayjs(item.valid_from).format('MM-DD')}~{dayjs(item.valid_to).format('MM-DD')}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <p className="text-xs text-gray-600 leading-relaxed">{item.notes}</p>
+                      {/* 如果有舱位来源公司标记，高亮展示 */}
+                      {item.notes && item.notes.includes('【来源：') && (
+                        <span className="inline-block text-[10px] bg-amber-50 text-amber-700 border border-amber-200 rounded px-1.5 py-0.5 mt-1 font-medium">
+                          📌 {item.notes.match(/【来源：(.+?)】/)?.[1] || ''}
+                        </span>
+                      )}
                       {item.contact_info && (
                         <div className="flex items-center gap-1 mt-1.5 text-xs text-primary-600">
                           <User className="w-3 h-3" />

@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Sitemap: https://123cargo123.com/sitemap.xml
+
+# 禁止爬取 API 和管理后台敏感路径
+Disallow: /api/
+Disallow: /admin/admin-center
+Disallow: /admin/stats
+
+# 禁止爬取静态资源目录（让爬虫专注于页面内容）
+# Allow: /assets/

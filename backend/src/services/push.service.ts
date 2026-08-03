@@ -1,16 +1,20 @@
 import webpush from 'web-push';
 import db from '../config/database';
 import logger from '../utils/logger';
+import { env } from '../config/env';
 
-// 生成 VAPID 密钥（首次运行）
-const VAPID_PUBLIC_KEY = 'BLn6aCkPBdk8ZqzCjCRBAPyQJ60dD-eK55PjJPfOWF8byo3LDQ6q4bHE2vAH3LJ_y8nbRRWzAKXgFi6tKmhqVXM';
-const VAPID_PRIVATE_KEY = '1bN8oXfSJCNdR6vYTy6NH7GgPq5Zm3wKxL9jF2cVt0A';
+const VAPID_PUBLIC_KEY = env.vapid.publicKey;
+const VAPID_PRIVATE_KEY = env.vapid.privateKey;
 
-webpush.setVapidDetails(
-  'mailto:support@tiangaocargo.com',
-  VAPID_PUBLIC_KEY,
-  VAPID_PRIVATE_KEY,
-);
+if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
+  webpush.setVapidDetails(
+    env.vapid.subject,
+    VAPID_PUBLIC_KEY,
+    VAPID_PRIVATE_KEY,
+  );
+} else {
+  logger.warn('VAPID 密钥未配置，Web Push 功能将不可用');
+}
 
 export { VAPID_PUBLIC_KEY };
 

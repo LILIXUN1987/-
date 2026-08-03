@@ -29,11 +29,17 @@ export default function GlobalNotification() {
           setToastData({ sender, content: latest.content });
           setToastVisible(true);
 
-          // 浏览器通知
-          if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('📬 123共享外贸物流社区', {
-              body: `${sender} 给您发了一条消息`,
-            });
+          // 浏览器通知（PWA 兼容）
+          if (Notification.permission === 'granted') {
+            const show = async () => {
+              if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                const reg = await navigator.serviceWorker.ready;
+                reg.showNotification('📬 123共享外贸物流社区', { body: `${sender} 给您发了一条消息` });
+              } else {
+                try { new Notification('📬 123共享外贸物流社区', { body: `${sender} 给您发了一条消息` }); } catch {}
+              }
+            };
+            show();
           }
           // 提示音
           try {

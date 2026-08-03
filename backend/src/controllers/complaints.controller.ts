@@ -160,6 +160,115 @@ export const complaintsController = {
     }
   },
 
+  /** 提交申诉（被投诉公司要求删除不实吐槽） */
+  async appeal(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { contact_info, appeal_reason, evidence } = req.body;
+      if (!contact_info || !appeal_reason) {
+        return res.status(400).json({ error: '请填写联系方式和申诉理由', code: 'MISSING_FIELDS' });
+      }
+
+      const complaint = await db('complaints').where({ id }).first() as any;
+      if (!complaint) return res.status(404).json({ error: '吐槽不存在' });
+
+      // 检查是否已提交过申诉
+      const existing = await db('complaint_appeals').where({ complaint_id: id, status: 'pending' }).first();
+      if (existing) return res.status(400).json({ error: '该吐槽已有待处理的申诉，请耐心等待', code: 'DUPLICATE_APPEAL' });
+
+      await db('complaint_appeals').insert({
+        id: uuidv4(),
+        complaint_id: id,
+        target_company: complaint.target_company,
+        contact_info,
+        appeal_reason,
+        evidence: evidence || null,
+        status: 'pending',
+        created_by: req.user!.id,
+      });
+
+      // 通知管理员
+      const submitter = await db('users').where({ id: req.user!.id }).first() as any;
+      const admins = await db('users').where({ role: 'admin' }).select('id');
+      for (const admin of admins) {
+        await db('messages').insert({
+          id: uuidv4(),
+          sender_id: req.user!.id,
+          receiver_id: admin.id,
+          content: `📋 申诉请求：${complaint.target_company}\n\n${submitter?.company_name || ''} ${submitter?.display_name || ''} 提交了对该公司的申诉，请登录后台审核。`,
+          is_read: false,
+          created_at: new Date().toISOString(),
+        });
+      }
+
+      res.status(201).json({ message: '申诉已提交，等待管理员审核' });
+    } catch (err) { next(err); }
+  },
+
+  /** 管理员获取申诉列表 */
+  async listAppeals(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { status: filterStatus } = req.query;
+      let query = db('complaint_appeals')
+        .leftJoin('users', 'complaint_appeals.created_by', 'users.id')
+        .select(
+          'complaint_appeals.*',
+          'users.display_name as submitter_name',
+          'users.company_name as submitter_company',
+        )
+        .orderBy('complaint_appeals.created_at', 'desc');
+      if (filterStatus && typeof filterStatus === 'string') {
+        query = query.where('complaint_appeals.status', filterStatus);
+      }
+      const data = await query.limit(100);
+      res.json({ data });
+    } catch (err) { next(err); }
+  },
+
+  /** 管理员审核申诉 */
+  async reviewAppeal(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { action, review_note } = req.body;
+      if (!['approved', 'rejected'].includes(action)) {
+        return res.status(400).json({ error: '参数不完整', code: 'INVALID_ACTION' });
+      }
+
+      const appeal = await db('complaint_appeals').where({ id }).first() as any;
+      if (!appeal) return res.status(404).json({ error: '申诉不存在' });
+      if (appeal.status !== 'pending') return res.status(400).json({ error: '该申诉已处理' });
+
+      await db('complaint_appeals').where({ id }).update({
+        status: action,
+        reviewed_by: req.user!.id,
+        reviewed_at: db.fn.now(),
+        review_note: review_note || null,
+      });
+
+      if (action === 'approved' && appeal.complaint_id) {
+        // 申诉通过 → 删除对应的投诉记录
+        await db('complaints').where({ id: appeal.complaint_id }).delete();
+      }
+
+      // 通知申诉人
+      if (appeal.created_by) {
+        const adminUser = await db('users').where({ id: req.user!.id }).first() as any;
+        await db('messages').insert({
+          id: uuidv4(),
+          sender_id: req.user!.id,
+          receiver_id: appeal.created_by,
+          content: action === 'approved'
+            ? `✅ 申诉已通过：您对 ${appeal.target_company} 的申诉已被管理员审核通过，相关吐槽已删除。${review_note ? `\n管理员备注：${review_note}` : ''}`
+            : `❌ 申诉未通过：您对 ${appeal.target_company} 的申诉已被管理员驳回。${review_note ? `\n管理员备注：${review_note}` : ''}`,
+          is_read: false,
+          created_at: new Date().toISOString(),
+        });
+      }
+
+      res.json({ message: action === 'approved' ? '申诉已通过，相关吐槽已删除' : '申诉已驳回' });
+    } catch (err) { next(err); }
+  },
+
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const complaint = await db('complaints').where({ id: req.params.id }).first() as any;

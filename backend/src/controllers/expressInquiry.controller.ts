@@ -16,33 +16,28 @@ export const expressInquiryController = {
       const senderName = (req.user as any)?.display_name || '';
       const kw = keyword.trim().substring(0, 200);
 
-      // 1. 发送站内信给 YXD
+      // 1. 发送站内信给管理员 + YXD
+      const admin = await db('users').where({ role: 'admin' }).first() as any;
       const yxd = await db('users').where({ username: 'YXD' }).first() as any;
-      if (yxd) {
+      const receivers = [admin, yxd].filter(Boolean);
+      for (const r of receivers) {
         await db('messages').insert({
           id: uuidv4(),
           sender_id: senderId || 'system',
-          receiver_id: yxd.id,
+          receiver_id: r.id,
           content: `📦 香港快递出口实时询价（DHL/FEDEX/UPS）：「${kw}」—— 客户 ${senderName} 已通过香港快递账户发起询价，请及时回复报价。`,
           is_read: false,
         });
-        logger.info(`快递询价已推送站内信给 YXD: "${kw.substring(0, 30)}..."`);
       }
+      logger.info(`快递询价已推送站内信给 ${receivers.length} 人: "${kw.substring(0, 30)}..."`);
 
-      // 2. 发送邮件给两个指定邮箱
-      const emailTargets = ['190749693@qq.com', 'alex19870110@126.com'];
+      // 2. 发送邮件给指定邮箱
+      const emailTargets = ['190749693@qq.com', 'express@tiangaocargo.com'];
       for (const email of emailTargets) {
         try {
-          await sendInquiryNotification(
-            email,
-            '管理员',
-            senderName || '查询者',
-            kw
-          );
+          await sendInquiryNotification(email, '管理员', senderName || '查询者', kw);
           logger.info(`快递询价已发送邮件至 ${email}`);
-        } catch (err) {
-          logger.error(`发送邮件至 ${email} 失败:`, err);
-        }
+        } catch (err) { logger.error(`发送邮件至 ${email} 失败:`, err); }
       }
 
       res.json({

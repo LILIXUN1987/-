@@ -9,10 +9,13 @@ import AdminLayout from './components/layout/AdminLayout';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import { usePushNotifications } from './hooks/usePushNotifications';
+import { useBrowserNotifications } from './hooks/useBrowserNotifications';
 
 // Pages — 懒加载，按需下载
+const LandingPage = lazy(() => import('./pages/public/LandingPage'));
 const RegisterPage = lazy(() => import('./pages/public/RegisterPage'));
 const LoginPage = lazy(() => import('./pages/public/LoginPage'));
+const CompanyPublicPage = lazy(() => import('./pages/public/CompanyPublicPage'));
 const FileUploadPage = lazy(() => import('./pages/admin/FileUploadPage'));
 const RawRecordsPage = lazy(() => import('./pages/admin/RawRecordsPage'));
 const LawyersPage = lazy(() => import('./pages/admin/LawyersPage'));
@@ -27,8 +30,12 @@ const AdminRenewPage = lazy(() => import('./pages/admin/AdminRenewPage'));
 const AdminImportPage = lazy(() => import('./pages/admin/AdminImportPage'));
 const CompanyVerificationPage = lazy(() => import('./pages/admin/CompanyVerificationPage'));
 const PriceTablePage = lazy(() => import('./pages/admin/PriceTablePage'));
-const DangerousGoodsPage = lazy(() => import('./pages/admin/DangerousGoodsPage'));
+const DgAgentDirectoryPage = lazy(() => import('./pages/admin/DgAgentDirectoryPage'));
+const DgBecomeAgentPage = lazy(() => import('./pages/admin/DgBecomeAgentPage'));
+const InspectorDirectoryPage = lazy(() => import('./pages/admin/InspectorDirectoryPage'));
+const InsurerDirectoryPage = lazy(() => import('./pages/admin/InsurerDirectoryPage'));
 const DgReviewPage = lazy(() => import('./pages/admin/DgReviewPage'));
+const ComplaintAppealPage = lazy(() => import('./pages/admin/ComplaintAppealPage'));
 const AuditLogPage = lazy(() => import('./pages/admin/AuditLogPage'));
 const ChatPage = lazy(() => import('./pages/public/ChatPage'));
 const ToolsPage = lazy(() => import('./pages/admin/ToolsPage'));
@@ -38,16 +45,23 @@ const AdminCenter = lazy(() => import('./pages/admin/AdminCenter'));
 const QuotePage = lazy(() => import('./pages/admin/QuotePage'));
 const DDPPage = lazy(() => import('./pages/admin/DDPPage'));
 const OverseasPartnersPage = lazy(() => import('./pages/admin/OverseasPartnersPage'));
-const RecommendPage = lazy(() => import('./pages/admin/RecommendPage'));
 const PortServicesPage = lazy(() => import('./pages/admin/PortServicesPage'));
 const CouponPage = lazy(() => import('./pages/admin/CouponPage'));
 const MyCouponWalletPage = lazy(() => import('./pages/admin/MyCouponWalletPage'));
-const OverseasAgentCenter = lazy(() => import('./pages/admin/OverseasAgentCenter'));
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 const BrokerManagementPage = lazy(() => import('./pages/admin/BrokerManagementPage'));
 const ApiKeysPage = lazy(() => import('./pages/admin/ApiKeysPage'));
-const AiAskPage = lazy(() => import('./pages/admin/AiAskPage'));
 const SubscribePage = lazy(() => import('./pages/admin/SubscribePage'));
+const BrokerConsolePage = lazy(() => import('./pages/admin/BrokerConsolePage'));
+const CouponPoolPage = lazy(() => import('./pages/admin/CouponPoolPage'));
+const BrokerDirectoryPage = lazy(() => import('./pages/admin/BrokerDirectoryPage'));
+const InquiriesPage = lazy(() => import('./pages/admin/InquiriesPage'));
+const CustomerRelationsPage = lazy(() => import('./pages/admin/CustomerRelationsPage'));
+const MyPostsPage = lazy(() => import('./pages/admin/MyPostsPage'));
+const FrequentPartnersPage = lazy(() => import('./pages/admin/FrequentPartnersPage'));
+const AdminCompanyProfilePage = lazy(() => import('./pages/admin/AdminCompanyProfilePage'));
+const LawyerConsultPage = lazy(() => import('./pages/admin/LawyerConsultPage'));
+const ServiceConsultPage = lazy(() => import('./pages/admin/ServiceConsultPage'));
 
 function PageLoading() {
   return <div className="flex items-center justify-center py-20"><div className="w-6 h-6 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" /></div>;
@@ -56,8 +70,12 @@ function PageLoading() {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
+      retry: 3,
+      retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 10000),
+      refetchOnWindowFocus: true,
+      refetchOnMount: true,
+      staleTime: 60000,
+      gcTime: 5 * 60 * 1000,
     },
   },
 });
@@ -74,6 +92,7 @@ function AppInit() {
 
 function PushInit() {
   usePushNotifications();
+  useBrowserNotifications();
   return null;
 }
 
@@ -86,17 +105,20 @@ export default function App() {
           <PushInit />
           <Suspense fallback={<PageLoading />}>
           <Routes>
-          {/* Public routes */}
+          {/* Public routes — Landing page as homepage */}
+          <Route path="/" element={<LandingPage />} />
           <Route element={<PublicLayout />}>
-            <Route path="/" element={<Navigate to="/chat" replace />} />
             <Route path="/register" element={<RegisterPage />} />
           </Route>
 
           {/* Unified login (no layout) */}
           <Route path="/login" element={<LoginPage />} />
 
-          {/* Chat / Landing page */}
+          {/* Legacy chat page */}
           <Route path="/chat" element={<ChatPage />} />
+
+          {/* Public Company Profile */}
+          <Route path="/company/:id" element={<CompanyPublicPage />} />
 
           {/* Admin login → redirect to unified login */}
           <Route path="/admin/login" element={<Navigate to="/login" replace />} />
@@ -120,11 +142,15 @@ export default function App() {
             <Route path="/admin/suggestions" element={<SuggestionPage />} />
             <Route path="/admin/inbox" element={<InboxPage />} />
             <Route path="/admin/price-tables" element={<PriceTablePage />} />
-            <Route path="/admin/dangerous-goods" element={<DangerousGoodsPage />} />
+            <Route path="/admin/dg-agent-directory" element={<DgAgentDirectoryPage />} />
+            <Route path="/admin/dg-become-agent" element={<DgBecomeAgentPage />} />
+            <Route path="/admin/inspector-directory" element={<InspectorDirectoryPage />} />
+            <Route path="/admin/insurer-directory" element={<InsurerDirectoryPage />} />
             <Route path="/admin/dg-review" element={<ProtectedRoute requiredRole="admin"><DgReviewPage /></ProtectedRoute>} />
             <Route path="/admin/favorites" element={<FavoritesPage />} />
             {/* 仅管理员可访问的页面 */}
             <Route path="/admin/risk-center" element={<ProtectedRoute requiredRole="admin"><RiskCenterPage /></ProtectedRoute>} />
+            <Route path="/admin/complaint-appeals" element={<ProtectedRoute requiredRole="admin"><ComplaintAppealPage /></ProtectedRoute>} />
             <Route path="/admin/stats" element={<ProtectedRoute requiredRole="admin"><AdminStatsPage /></ProtectedRoute>} />
             <Route path="/admin/renew" element={<ProtectedRoute><AdminRenewPage /></ProtectedRoute>} />
             <Route path="/admin/tools" element={<ProtectedRoute><ToolsPage /></ProtectedRoute>} />
@@ -134,8 +160,6 @@ export default function App() {
             <Route path="/admin/quote" element={<ProtectedRoute><QuotePage /></ProtectedRoute>} />
             <Route path="/admin/ddp" element={<ProtectedRoute><DDPPage /></ProtectedRoute>} />
             <Route path="/admin/overseas-partners" element={<ProtectedRoute><OverseasPartnersPage /></ProtectedRoute>} />
-            <Route path="/admin/overseas-center" element={<ProtectedRoute><OverseasAgentCenter /></ProtectedRoute>} />
-            <Route path="/admin/recommend" element={<ProtectedRoute><RecommendPage /></ProtectedRoute>} />
             <Route path="/admin/card-directory" element={<ProtectedRoute><CardDirectoryPage /></ProtectedRoute>} />
             <Route path="/admin/expo-quick" element={<ProtectedRoute requiredRole="admin"><ExpoQuickEntry /></ProtectedRoute>} />
             <Route path="/admin/admin-center" element={<ProtectedRoute requiredRole="admin"><AdminCenter /></ProtectedRoute>} />
@@ -145,7 +169,16 @@ export default function App() {
             <Route path="/admin/broker-management" element={<ProtectedRoute requiredRole="admin"><BrokerManagementPage /></ProtectedRoute>} />
             <Route path="/admin/api-keys" element={<ProtectedRoute><ApiKeysPage /></ProtectedRoute>} />
             <Route path="/admin/subscribe" element={<ProtectedRoute><SubscribePage /></ProtectedRoute>} />
-            <Route path="/admin/ai-ask" element={<ProtectedRoute><AiAskPage /></ProtectedRoute>} />
+            <Route path="/admin/broker-console" element={<ProtectedRoute><BrokerConsolePage /></ProtectedRoute>} />
+            <Route path="/admin/coupon-pool" element={<ProtectedRoute><CouponPoolPage /></ProtectedRoute>} />
+            <Route path="/admin/broker-directory" element={<ProtectedRoute><BrokerDirectoryPage /></ProtectedRoute>} />
+            <Route path="/admin/inquiries" element={<ProtectedRoute><InquiriesPage /></ProtectedRoute>} />
+            <Route path="/admin/customer-relations" element={<ProtectedRoute><CustomerRelationsPage /></ProtectedRoute>} />
+            <Route path="/admin/my-posts" element={<ProtectedRoute><MyPostsPage /></ProtectedRoute>} />
+            <Route path="/admin/frequent-partners" element={<ProtectedRoute><FrequentPartnersPage /></ProtectedRoute>} />
+            <Route path="/admin/company-profile" element={<ProtectedRoute><AdminCompanyProfilePage /></ProtectedRoute>} />
+            <Route path="/admin/lawyer-consults" element={<ProtectedRoute><LawyerConsultPage /></ProtectedRoute>} />
+            <Route path="/admin/service-consults" element={<ProtectedRoute><ServiceConsultPage /></ProtectedRoute>} />
           </Route>
 
           {/* 404 */}

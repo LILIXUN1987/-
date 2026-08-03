@@ -1,0 +1,1362 @@
+货代服务商|https://www.forwarderspn.com/|货代服务商 Forwarder SPN
+货代知识库|https://get.huodaiagent.com/|货代知识库
+货代地图|https://map.huodaiagent.com/|货代地图 国际机场 港口 海外仓
+56calls|https://56calls.com/|货代电话销售系统
+代付税金 50一票|https://payduty.huodaiagent.com/|DHL UPS代付税金
+货币汇率兑换|https://currency-exchange.huodaiagent.com/|货币兑换计算 实时汇率
+货代群|https://forwarder-group.huodaiagent.com/|货代群 无广告社群
+MID生成器|http://mid.huodaiagent.com/|制造商识别码MID生成器
+DO生成系统|https://do.huodaiagent.com/|提单转Delivery Order在线生成
+空运 快递 专线|https://www.17track.net/en|17Track 聚合追踪
+Track-trace|https://www.track-trace.com/aircargo|追踪航空轨迹
+Air cargo tracking|https://www.utopiax.org/|空运追踪聚合网站
+51Tracking|https://www.51tracking.com/aircargo/cn/|51tracking 空运追踪
+Alltrack|https://alltrack.org/|聚合追踪Alltrack
+FlightStates|https://www.flightstats.com/v2/|航班状态查询
+flightaware|https://flightaware.com/|航班状态查询
+Flightradar24|https://www.flightradar24.com/42.62,25.52/6|航班状态查询
+Planefinder|https://planefinder.net/|航班状态查询
+Radarbox|https://www.radarbox.com/|航班状态查询
+IATA Airline|https://www.iata.org/en/about/members/airline-list/|IATA航司查询
+航司代码查询|http://www.likecha.com/tools/globalAirlines.html|全球航空公司查询
+国际机场|https://www.5688.com.cn/airport/|机场三字代码
+西岸三字代码|https://www.seabay.cn/cn/code/|机场三字代码
+World Airport Codes|https://www.world-airport-codes.com/|世界机场三字代码
+机型库|http://data.carnoc.com/aircraft/type/index.html|各飞机机型
+飞行线路制图|http://gc.kls2.com/|飞行线路制图
+Planespotters|https://www.planespotters.net/airlines/country|全球国家航司运力
+管制代理人登記册RAcode|https://www.cad.gov.hk/chinese/newrar_rareg.html|香港空运管制代理人登記册
+香港货运燃油附加费|https://www.cad.gov.hk/sc/previous_surcharge.html|香港行政区民航处
+深圳货站|https://www.iccs.com.cn/|深圳机场货站
+深圳机场航空物流|https://saictl.szairport.com/portal/|深圳机场物流综合信息
+深圳机场航空物流|https://logistics.szairport.com/#/home|深圳机场航空物流
+香港货站|https://www.hactl.com/zh-hk|香港机场货站
+香港AAT Asia Airfreight Terminal|https://www.aat.com.hk/zh-hans|亚洲空运中心
+香港机场客运|https://www.hongkongairport.com/sc/flights/departures/cargo.page|香港国际机场客运
+上海货站|https://www.pactl.com.cn/cn/index.html|浦东机场货站
+北京空港BGS|http://chaxun.bgscargo.com.cn/int/openShipmentStatusForSingleAWB|北京空港 国航站不能查
+首都机场货站|http://cargo.bdia.com.cn/portal/infoCenter/index|首都机场货站 货运发展办公室
+广州货站|https://www.byact.net/canPortal/portal/home|白云机场货站
+郑州货站|https://www.zzcargo.com/query/1|河南郑州机场货站
+元翔厦门空港|http://www.xiamenairport.com.cn/hkhy/hkhy.aspx|厦门机场货站
+四川成都双流机场|http://222.209.86.130:8082/#/search|成都双流机场货站 国际出港
+鄂州顺嘉货站|https://ehu.inn.sf-express.com/cn/index.html|湖北鄂州顺嘉国际货站
+栎社国际机场|https://www.nbairport.com/articles/55226075197739040|宁波栎社国际机场
+CZ 784|https://tang.csair.com/WebFace/Tang.WebFace.Cargo/AgentAwbBrower.aspx?menuID=1|中国南方航空
+CA 999|https://www.airchinacargo.com/cargo_en/gzcx/hkyd/list/index_pc.html|中国国际航空公司
+O3 921|https://fenghuang.sf-airlines.com/#/CargoTracking.html|顺丰航空
+顺丰航空|https://www.sf-airlines.com/sfa/zh/index.html|顺丰航空官网
+MU 781|http://cargo2.ceair.com/mu/|东方航空货物业务系统
+MU 781|https://www.eal-ceair.com/|东航物流
+CK 112|https://www.ckair.com/index.html|中国货运航空
+YG 860 无法追踪|https://www.ytoglobal.com/service/flight|圆通航空
+3U 876|https://cargonest.sal-sichuanair.com/processTracking|四川航空
+SC 324|https://www.sda.cn/transport/specialGoods/|山东航空 可能没有外网
+EK 176|https://eskycargo.emirates.com/app/offerandorder/#/home/find-offer|阿联酋航空
+EY 607|https://www.etihadcargo.com/en|阿提哈德/水晶航空
+CX 160|https://www.cathaycargo.com/en-us/track-and-trace.html?cxsource=TOP-NAV_1_1_1|香港国泰航空
+国泰货站入库查询|https://wosext.cpsl.com.hk/EXTWOSWEB/ac/external/imp/ShipmentTrackingSearch|国泰航空货站入库数据
+CV 172|https://www.cargolux.com/|卢森堡航空
+HU 880  JD 898|https://www.hnacargo.com/Portal2/Index.aspx|海南航空货运  首都航空JD
+JG 619|https://www.jdairlines.com/|京东航空
+ZH 479|https://cargo.shenzhenair.com/Query/AwbSearch.aspx|深圳航空货运
+CI 297|https://cargo.china-airlines.com/ccnetv2/content/home/index.aspx|中华航空
+UL 603|https://srilankancargo.ibsplc.aero/icargoneoportal/app/main/#/app|斯里兰卡航空
+GA 126|https://cargo.garuda-indonesia.com/Content-Detail/127|印度尼西亚鹰航空
+NH 205|https://www.anacargo.jp/en/int/|日本全日空航空
+JL 131|https://www.jal.co.jp/en/jalcargo/inter/awb/|日本航空
+KZ 933|https://www.nca.aero/e/index.html|日本货物航空
+SQ 618|https://www.siacargo.com/|新加坡航空
+DL 006|https://www.deltacargo.com/Cargo/trackShipment|美国达美航空
+5Y 369|https://www.atlasair.com/cargo-services/track-and-trace/|美国亚特拉斯航空
+AA 001|https://www.aacargo.com/AACargo/tracking|美国航空
+PO 403|https://www.polaraircargo.com/|美国博立航空
+5X 406|https://www.aircargo.ups.com/en-us/tracking|UPS货运航空
+HA 173|https://www.hawaiianaircargo.com/|夏威夷航空货运
+7L 501|https://www.silkwaywest.com/|阿塞拜疆丝绸之路西部航空
+TK 235|https://www.turkishcargo.com/en/online-services/shipment-tracking|土耳其航空
+HX 851|https://www.hongkongairlines.com/en_HK/hx/homepage|香港航空 客运
+RH 828|https://www.hkaircargo.com/|香港货运航空
+BR 695|https://www.brcargo.com/NEC_WEB/Tracking/QuickTracking/Index|台湾长荣航空
+MH 232|https://www.maskargo.com/|马来西亚航空
+MB 716|https://www.mngairlines.com/|土耳其美尼哥货运航空
+LO 080|https://cargo-tracking.lot.com/|波兰航空
+QR 157|https://www.qrcargo.com/s/track-your-shipment|卡塔尔航空公司
+QT 729|https://www.aviancacargo.com/index.aspx|哥伦比亚坦帕航空货运公司
+NZ 086|https://www.airnewzealandcargo.com/cargo-track-and-trace|新西兰航空
+FJ 260 聚合追踪|https://track.champ.aero/fj|斐济航空
+5C 700|https://www.challenge-group.com/tracking/|以色列伊利诺州挑战航空
+OZ 988|https://www.asianacargo.com/tracking/viewTraceAirWaybill.do?lang=en|韩国韩亚航空
+TG 217|https://chorus.thaicargo.com/skychain/app?service=page/nwp:Trackshipmt|泰国航空货运
+BA 125|https://www.iagcargo.com/en/home/|国际航空集团货运公司IAG
+KQ 706|https://www.kqcargo.com/#1|肯尼亚航空
+SA 083|https://www.flysaa.com/about-us/leading-carrier/saa-cargo/track-a-shipment|南非航空
+ET 071|https://cargo.ethiopianairlines.com/index|埃塞俄比亚航空公司
+ET 071 等39家航司追踪|https://www.freight.aero/index.asp|39家航司追踪
+AY 105|https://cargo.finnair.com/en|芬兰航空公司
+OK 064|https://www.csa.cz/cz-en/cargo/#current_ti-tab-15471|捷克航空
+FI 108|https://www.icelandaircargo.is/en/|冰岛航空货运
+UC 145|https://www.latamcargo.com/en/|智利南美货运航空
+6R 134|https://www.aerounion.com.mx/icargoauportal/portal/loginFlow|墨西哥联盟货运航空AeroUnion
+PR 079|https://www.philippineairlines.com/en/cargo|菲律宾航空 官网追踪
+PR 079|https://cargo.pal.com.ph/Tracking/AWB|菲律宾航空 货站追踪
+W8 489|https://km.cargojet.com/ords/f?p=102:857|加拿大喷气货运航空公司
+LH 020|https://www.lufthansa-cargo.com/eservices/etracking|德国汉莎航空
+UA 016|https://www.unitedcargo.com/en/us/#|美国联合航空公司
+GF 072|https://www.gulfair.com/cargo|巴林海湾航空公司 官网跳转
+SV 065|https://saudiacargo.com/e-services/track-shipment|沙特阿拉伯航空公司
+D7 843|https://airasia.smartkargo.com/|亚航长途X AirAsia X 亚航X
+AK 807|https://airasia.smartkargo.com/|亚洲航空 AirAsia 亚航
+TP 047|https://www.tapcargo.com/en|葡萄牙航空
+D0 936|https://aviationcargo.dhl.com/|DHL Air 敦豪航空 英国
+W5 537|https://ic.saman-cargo.net/tracking|伊朗马汉航空
+6E 312|https://uat6ecargo.goindigo.in/|印度靛蓝航空公司
+T5 542|https://tua-cargo.crane.aero/cargo-tracking|土库曼斯坦航空
+SG 775|https://www.spicexpress.com/|SpiceJet 香料航空 印度
+A9 606|https://georgiancargo.co.uk/home#tracking|格鲁吉亚航空 Georgian
+3V 756|https://www.aslairlines.be/|ASL比利时航空 前TNT航空
+M6 810|https://mycargo.amerijet.com/tracking|美国国际喷气机公司
+AM 139|https://amcargo.aeromexico.com/track|墨西哥航空
+KE 180|https://cargo.koreanair.com/en/tracking|大韩航空  Korean Air
+IA 073|https://www.ia-cargo.com/products|伊拉克航空公司 IRAQI AIRWAYS
+JU 115|https://cargo.airserbia.com/en/Track%20your%20shipment|塞尔维亚航空 Air Serbia
+AI 098|https://cargo.airindia.com/in/en/track-shipment.html|印度航空 Air INDIA CARGO
+K4 272|https://www.kalittaair.com/utilities/track-cargo|美国卡利塔航空 Kalitta Air
+QF 081|https://freight.qantas.com/us-en.html?tabId=track-freight|澳洲航空 Qantas Airways
+KJ 994|https://cargoportal.airincheon.co.kr/tracking/viewTraceAirWaybill.do?lang=en|仁川航空 Air Incheon
+PX 656|https://www.airniugini.com.pg/cargo/|Air Niugini 尼乌吉尼航空
+Y8 871|https://www.hnacargo.com/Portal2/AwbSearch.aspx|金鹏航空 Suparna Airlines 海航集团
+WY 910|https://cargo.omanair.com/|Oman Air 阿曼航空
+DE 881|https://www.condor.com/us/flight-preparation/baggage-and-animals/cargo-general-schedule.jsp#c154674|Condor 德国神鹰航空
+40航司聚合查询 小众|https://pathfinder.digitalfactory.aero/881|Pathfinder 聚合查询
+51航司聚合追踪|https://specificfreight.com.au/awb-tracking/|Specific Freight
+全球空运货代TOP 100|https://www.ttnews.com/logistics/airfreight/2024|Transport Topics
+Any Finder|https://www.acronymfinder.com/|任意词汇首字母缩写查询
+M3 549|https://www.latamcargo.com/|拉美货运 ABSA Cargo / LATAM Cargo Brasil
+GB 832|https://www.stratair.net/#!/tracking/|ABX航空 ABX Air
+A3 390|https://en.aegeanair.com/travel-information/cargo-services/|爱琴海航空 Aegean Airlines
+EI 053 / 125|https://www.iagcargo.com/en/home|爱尔兰航空货运 Aer Lingus Cargo
+SU 555|https://www.skyteam.com/en/cargo/track-shipment/|俄罗斯航空 Aeroflot
+JK 543|https://pathfinder.digitalfactory.aero/#/|加勒比货运 Aerolinea Del Caribe / Aercaribe
+AR 044|http://cargo.aerolineas.com.ar/en-us|阿根廷航空 Aerolineas Argentinas
+6R 873|https://www.aviancacargomexico.com/icargoauportal/portal/loginFlow|墨航联盟货运 AeroUnion
+ZI 439|http://www.network-airline.com/|蓝鹰航空 Aigle Azur
+AH 124|https://www.freight.aero/tracking.asp|阿尔及利亚航空 Air Algerie
+G9 514|https://airarabia-g9.ibsplc.aero/icargoneoportal/app/main/#/app|阿拉伯航空 Air Arabia
+I5 091|https://airasiaindia.cargoflash.com/Tracking/AWB|印度亚洲航空 AirAsia India
+KC 465|https://www.freight.aero/tracking.asp|阿斯塔纳航空 Air Astana
+BT 657|https://www.airbaltic.com/en/cargo/online-services|波罗的海航空 Air Baltic
+KF 142|https://pathfinder.digitalfactory.aero/|比利时航空 Air Belgium
+BP 636|https://www.freight.aero/tracking.asp|博茨瓦纳航空 Air Botswana
+RU 580|https://www.airbridgecargo.com/en|空桥货运 AirBridge Cargo
+AC 014|https://www.aircanada.com/cargo/tracking|加拿大航空 Air Canada
+VZ 510|https://www.freight.aero/tracking.asp|西班牙货运航空 Airclass Lineas Aereas
+UX 996|https://www.uxtracking.com/tracking.asp|欧罗巴货运 Air Europa Cargo
+AF 057|https://www.afklcargo.com/mycargo/shipment/singlesearch|法国航空 Air France
+GL 631|https://www.airgreenland.com/cargo/tracking-awb/|格陵兰航空 Air Greenland
+LD 288|http://www.hactl.com/en-US/Home.aspx|香港航空货运 Air Hong Kong
+NX 675|https://www.infoccsp.com/iportal/DefaultEN.aspx|澳门航空 Air Macau
+MD 258|http://195.64.139.84/datacair.com/track-trace/index.php|马达加斯加航空 Air Madagascar
+KM 643|https://www.freight.aero/tracking.asp|马耳他航空 Air Malta
+MK 239|https://www.airmauritius.com/cargo/track-shipment|毛里求斯航空 Air Mauritius
+X8 658|http://www.airmaxcargo.com.pe/AirsisWeb/tracking.xhtml|秘鲁货运 Airmax Cargo
+9U 572|http://www.airmoldova.md/cargo-check-en/|摩尔多瓦航空 Air Moldova
+SW 186|https://www.strike.aero/|纳米比亚航空 Air Namibia
+YP 350|https://pathfinder.digitalfactory.aero/#/|普瑞米亚航空 Air Premia
+HC 490|https://airsenegal.smartkargo.com/Login.aspx|塞内加尔航空 Air Senegal
+HM 061|https://www.airseychelles.com/portals/cargotracker/|塞舌尔航空 Air Seychelles
+TN 244|https://www.airtahitinui.com/nz-en/online-cargo-tracking|大溪地航空 Air Tahiti Nui
+TS 649|https://pathfinder.digitalfactory.aero/|越洋航空 Air Transat
+AS 027|https://cargo.alaskaair.com/Content/Tracking|阿拉斯加航空 Alaska Airlines
+AZ 055|https://booking.ita-airways-cargo.com/#/trackAndTrace|ITA航空货运 ITA Airways Cargo (Alitalia)
+4W 574|https://nastracking.awery.com/|联合货运航空 Allied Air
+KH 687|http://www.alohaaircargo.com/shipment-tracking/|阿罗哈货运 Aloha Air Cargo
+8V 485|https://network-airline.com/|阿斯特拉尔航空 Astral Aviation
+AV 134|https://www.aviancacargo.com/|哥伦比亚航空货运 Avianca Cargo
+J2 771|https://www.azal.az/en/information/cargo/|阿塞拜疆航空 Azerbaijan Airlines
+AD 577|https://azulcargoexpress.smartkargo.com/|蓝色航空货运 Azul Cargo
+PG 829|https://icargonet.ibsplc.aero/pgportal/portal/trackshipments?&amp;trkTxnValue=829-|曼谷航空 Bangkok Airways
+B2 628|https://en.belavia.by/carriage_of_cargo/tracking/|白俄罗斯航空 Belavia
+BG 997|https://www.freight.aero/tracking.asp|孟加拉比曼航空 Biman Bangladesh
+E6 417|http://www.bringeraircargo.com/tracking/|Bringer Air Cargo
+SN 082|https://www.freight.aero/tracking.asp|布鲁塞尔航空 Brussels Airlines
+FB 623|http://195.64.139.84/datacair.com/track-trace/index.php|保加利亚航空 Bulgaria Air
+MO 622|https://cargo.calmair.com/WebContent/EN/CargoTracking|Calm Air
+P3 560|http://www.cargologicair.com/cargo-tracking/|Cargologicair
+C8 356|https://www.cargolux.com/track-and-Trace|卢森堡意大利货运 Cargolux Italia
+BW 106|https://cargo.caribbean-airlines.com/#/track|加勒比航空 Caribbean Airlines
+KX 378|http://www.newcaymancargo.com/|开曼航空 Cayman Airways
+5J 203|https://cebu.smartkargo.com/|宿务航空 Cebu Air
+X7 744|https://www.challenge-group.com/tracking/|挑战航空比利时 Challenge Airlines BE
+X6 752|https://www.challenge-group.com/tracking/|挑战航空马耳他 Challenge Airlines MT
+2C 003|https://pathfinder.digitalfactory.aero/#/|达飞航空货运 CMA CGM Air Cargo
+CO 354|http://www.aiacargo.com/|Cobaltair
+CM 230|http://www.copacargo.com/|巴拿马航空货运 Copa Airlines Cargo
+CD 503|https://pathfinder.digitalfactory.aero/|Corendon Airlines
+SS 923|https://pathfinder.digitalfactory.aero/|科西嘉航空 Corsair
+7C 575|http://www.coyneair.com/|科因航空 Coyne Airways
+OU 831|https://www.freight.aero/tracking.asp|克罗地亚航空 Croatia Airlines
+D5 992|https://aviationcargo.dhl.com/|DHL艾罗速递航空 DHL Aero Expreso
+ER 423|https://aviationcargo.dhl.com/|DHL敦豪航空 DHL Aviation / DHL Airways
+ES 155|https://aviationcargo.dhl.com/|DHL航空 DHL Aviation
+QY 615|https://aviationcargo.dhl.com/|DHL欧航 European Air Transport
+KA 043|https://www.cathaypacificcargo.com/en-us/manageyourshipment/trackyourshipment.aspx|港龙航空 Dragonair
+MS 077|http://egyptair-cargo.com/home.htm|埃及航空 Egyptair
+LY 114|https://www.elal.com/en/Cargo/Pages/Online-Tracking.aspx|以色列航空 EL AL
+E7 355|http://www.estafeta.com/services/cargo/air-cargo/tracking.aspx|Estafeta Carga Aerea
+OV 960|http://www.sychene.com/Tracking.aspx|爱沙尼亚航空 Estonian Air
+FX 023|https://www.fedex.com/apps/fedextrack/|联邦航空 FedEx
+FZ 141|http://prdcgofz.mercator.com/skychain/app?service=page/nwp:Trackshipmt|迪拜飞航货运 flydubai cargo
+5F 130|https://pathfinder.digitalfactory.aero/|Fly One
+GY 013|http://195.64.139.84/datacair.com/track-trace/index.php|加蓬航空 Gabon Airlines
+5S 301|https://globalairt.com/cargo/|Global Aviation and Services
+G3 127|https://servicos.gollog.com.br/Home/Inicio|巴西GOL航空 Gol Airlines
+IB 075|https://www.iagcargo.com/|伊比利亚航空 Iberia
+E9 783|https://pathfinder.digitalfactory.aero/|Iberojet / Evelop Airlines
+7I 958|http://www.inselaircargo.com/Tracking.2561|Insel Air Cargo
+IR 096|https://www.freight.aero/tracking.asp|伊朗航空 Iran Air
+7C 806|https://cargo.jejuair.net/cargo/main.do|济州航空 Jeju Air
+9W 589|http://cargo.jetairways.com/cargoview/|捷特航空 Jet Airways
+QJ 508|http://www.jet-airways.com/|Jet Airways Inc. (US)
+TB 754|http://web.ana-aviation.com/|Jetairfly
+0J 254|http://www.strike.aero/|Jet Club
+3K 375|http://jetstar.cargovision.ca/|捷星亚洲航空 Jetstar Asia Airways
+HO 018|http://cargo.juneyaoair.com/Index_en.aspx|吉祥航空 Juneyao Air
+KL 074|https://www.afklcargo.com/mycargo/shipment/singlesearch|荷兰皇家货运 KLM Cargo
+KU 229|https://www.kuwaitairways.com/en/cargo/tracking|科威特航空 Kuwait Airways
+LR 133|http://www.aviancacargo.com/|哥斯达黎加LACSA LACSA Airlines
+LA 045|http://www.lancargo.com/|南美航空 LAN Airlines (LATAM)
+XL 462|http://www.lancargo.com/|厄瓜多尔LAN LAN Ecuador
+LQ 961|https://corp.cambodia-airports.aero/en/cargo/phnom-penh-cargo-tracking|澜湄航空 Lanmei Airlines
+4L 174|https://lascargo.com/en/tracking-en/|LAS Cargo
+JJ 957|https://www.latamcargo.com/en/trackshipment|巴西南美航空 LATAM Brasil / TAM
+L7 976|https://www.latamcargo.com/en/trackshipment|南美货运哥伦比亚 LATAM Cargo Colombia
+L7 985|https://www.latamcargo.com/en/trackshipment|南美货运哥伦比亚 LATAM Cargo Colombia
+LI 140|http://www.liat.com/navSource.html?page_id=159|背风群岛航空 LIAT Airlines
+ME 076|https://www.mea.com.lb/english/Plan-and-Book/Cargo|中东航空 Middle East Airlines
+OD 816|http://cargo.malindoair.com/AWBTracking.aspx|马印航空 Malindo Airways
+AE 803|http://www.mandarin-airlines.com/cargo%5Fnew/index.htm|华信航空 Mandarin Airlines
+MP 129|https://www.afklcargo.com/mycargo/shipment/singlesearch|马丁货运 Martinair Cargo
+M7 865|https://masair.smartkargo.com/Login.aspx|墨西哥 MASAir
+T8 137|http://www.mcs-aerocarga.com/trackingMam.php?Idioma=Ing|MCS Aerocarga de Mexico
+4X 805|https://www.mercuryamericas.com/tracking.html|Mercury Americas
+CP 233|https://www.mscaircargo.com/en/tracking|MSC Air Cargo
+2Y 585|https://www.myindoairlines.com/|My Indo Airlines
+N8 416|https://www.nationalaircargo.com/track/|National Air Cargo
+NO 703|https://world-cs.de/|Neos SPA
+DD 596|https://pathfinder.digitalfactory.aero/|皇雀航空 Nok Air
+N0 506|https://norsetracking.awery.com/|北大西洋航空 Norse Atlantic Airways
+Z0 536|https://norsetracking.awery.com/|Norse Atlantic UK
+NC 345|https://www.stratair.net/shipment-tracking/|北方货运/Stratair Northern Air Cargo / Stratair
+DY 328|https://www.norwegiancargo.com/|挪威航空 Norwegian Air Shuttle
+DI 762|https://www.norwegiancargo.com/|挪威航空英国 Norwegian Air UK
+OA 050|https://www.olympicair.com/en/Info/Cargo|奥林匹克航空 Olympic Airways
+PK 214|https://www.freight.aero/tracking.asp|巴基斯坦国际航空 Pakistan Int&#x27;l Airlines
+PC 624|http://www.pegasuscargo.com/en/default.aspx|飞马货运 Pegasus Cargo
+TH 539|https://cargo.rayaairways.com/Tracking/AWB/|拉亚航空 Raya Airways
+AT 147|https://www.freight.aero/tracking.asp|摩洛哥皇家航空 Royal Air Maroc
+BI 672|https://www.flyroyalbrunei.com/rba/cargospot/|文莱皇家航空 Royal Brunei Airlines
+RJ 512|http://rj-cargo.com/track-and-trace|约旦皇家航空 Royal Jordanian
+R4 827|http://www.rusaviation.com/#e&amp;tracking&amp;|RUS Aviation
+WB 459|https://www.rwandair.com/business-solutions/cargo-tracking/|卢旺达航空 RwandAir
+S6 817|http://www.southamericanairways.com/tracking_summary.asp|南美航空 SAC South American Airways
+SK 117|https://www.sascargo.com/en/Booking/Track-Shipment|北欧航空 SAS
+SP 737|http://www.sata.pt/en/other-services/cargo-tracking|SATA亚速尔 SATA Air Acores
+S4 331|http://www.sata.pt/en/other-services/cargo-tracking|SATA International
+FM 774|http://cargo2.ceair.com/mu/|上海航空 Shanghai Airlines
+S7 421|https://www.freight.aero/tracking.asp|西伯利亚航空 Siberia Airlines
+MI 629|http://www.siacargo.com/|胜安航空 Silk Air
+ZP 463|https://www.freight.aero/tracking.asp|丝绸之路航空 Silk Way Airlines
+KY 576|http://www.skyleasecargo.com/|Skylease Cargo
+OO 302|https://www.deltacargo.com/Cargo/|美西航空 Sky West Airlines
+4S 644|http://solarcargo.cargolink.aero/tracking/|Solar Cargo
+WN 526|https://www.swacargo.com/swacargo_com_ui/manage/tracking|西南航空 Southwest Airlines
+4E 242|https://www.freight.aero/tracking.asp|Stabo Air
+QP 321|http://www.starlightairline.com/track_shipment.aspx|星光航空 Starlight Airlines
+JX 189|https://www.starluxcargo.com/|星宇货运 Starlux Cargo
+DK 630|https://pathfinder.digitalfactory.aero/|Sunclass Airlines
+LX 724|https://tools.swissworldcargo.com/en/track_n_trace|瑞士国际航空 Swiss
+DT 118|https://www.freight.aero/tracking.asp|安哥拉航空 TAAG
+B1 901|https://www.tabairlines.com/|玻利维亚TAB航空 TAB
+TA 202|http://www.aviancacargo.com|中美洲航空 TACA
+RO 281|https://www.freight.aero/tracking.asp|罗马尼亚航空 Tarom
+UK 228|https://www.airvistara.com/trip/cargo-services|维斯塔拉货运 Vistara Cargo
+GS 826|https://www.hnacargo.com/Portal2/AwbSearch.aspx|天津航空 TianJin Airlines
+T0 530|http://www.aviancacargo.com/|TACA秘鲁 Trans American Airways
+CB 456|https://www.tccargo.us/en/tracking-2/|TransCaribbean Cargo
+TB 612|https://pathfinder.digitalfactory.aero/|途易航空 TUI Airlines
+TU 199|http://prdcgotu.mercator.com/skychain/app?service=page/nwp:Trackshipmt|突尼斯航空 Tunisair
+PS 566|https://www.freight.aero/tracking.asp|乌克兰国际航空 Ukraine Int&#x27;l Airlines
+B7 525|http://www.brcargo.com/ec_web/Default.aspx|立荣航空 Uni Airways
+UW 699|http://www.uni-top.com:8081/CargoTracking/queryWaybill.aspx|友和道通航空 Uni-Top Airlines
+U6 262|https://cargo.uralairlines.ru/en/services/tracking/|乌拉尔货运 Ural Airlines Cargo
+HY 250|https://ebooking.champ.aero/trace/HY/trace.asp|乌兹别克斯坦航空 Uzbekistan Airways
+RG 042 / 183|http://apps.traxon.com/rg042.htm|巴西航空 VARIG
+VJ 978|https://cargo.vietjetair.com/|越捷航空 Vietjet
+VN 738|https://track.champ.aero/vn|越南航空 Vietnam Airlines
+V4 946|https://aviationcargo.dhl.com/aviationcargo/|Vensecar Internacional
+VS 932|https://www.virginatlanticcargo.com/gb/en.html|维珍货运 Virgin Atlantic
+WS 838|https://cargo.westjet.com/Tracking.aspx?Culture=EN|西捷货运 Westjet Cargo
+W6 284|http://www.utl-log.com/waybill|威兹航空 Wizz Air
+WW 377|http://tracecargo.info/track.php|WOW Air
+MF 731|https://cargo.xiamenair.com/Cargo/English/Search.html?status=1|厦门航空 XiamenAir
+SE 473|https://www.wfs.aero/tracking-page/|XL Airways France
+IY 635|https://yemenia.com/cargo|也门航空 Yemenia Yemen Airways
+I9 959|https://www.centralairlines.com/zh/|中州航空 Central Airlines
+9C 089|https://www.ch.com/|春秋航空 Spring Airlines
+QS 797|https://cargo.smartwings.com/en/cargo-tracking-en?view=tracking|斯马特货运 Smartwings Cargo
+8D 319|https://fitscargo.com/|斐济货运 Fits Cargo
+5T 518|https://cargo.canadiannorth.com/TrackAndTrace.html|加拿大北方货运 Canadian North Cargo
+F5 227|https://www.aerotransscargo.md/en|摩尔多瓦货运 Aerotranscargo
+CF 804|https://www.cnpostair.com/|中国邮政航空 China Postal Airlines
+PN 847|https://www.westair.cn/|西部航空 West Air
+8L 859|https://www.luckyair.net/|祥鹏航空 Lucky Air
+HT 877|https://www.ctac.net.cn/|天津货运航空 Tianjin Air Cargo
+FU 666|http://www.fuzhiair.com/|福州航空 Fuzhou Airlines
+JT 990|https://cargo.lionair.com/Tracking/AWB|印尼狮航货运 Lion Air Cargo
+QZ 975|https://airasia.smartkargo.com/|印尼亚航 Indonesia AirAsia
+FD 900|https://airasia.smartkargo.com/|泰国亚航 Thai AirAsia
+XJ 940|https://airasia.smartkargo.com/|泰国亚航X Thai AirAsia X
+SL 310|https://cargo.lionairthai.com/|泰狮航空 Thai Lion Mentari
+LJ 718|https://www.jinair.com/eng/information/cargo|金航 Jin Air
+UO 128|https://www.hkexpress.com/zh-hk/plan/cargo/|香港快运 HK Express
+DJ 763|https://www.maersk.com/tracking/air/|马士基空运 Maersk Air Cargo
+KD 904|https://www.westernglobalairlines.com/|西方全球航空 Western Global Airlines
+JD 898|https://www.jdairlines.com/|首都航空 Beijing Capital Airlines
+DHL|https://mydhl.express.dhl/gb/en/tracking.html#/track-by-number|DHL
+DHL|https://www.5idhl.com|中外运敦豪 DHL
+DHL航班|https://apps.dhl.com.hk/big5_fi/|香港DHL航班
+DHL DCT|https://dct.dhl.com/|DHL快件公布价 转运查询
+世界各国DHL|https://mydhl.express.dhl/us/en/home.html#/createNewShipmentTab|世界各国DHL网站切换
+DHL 目的地服务提示|https://www.5idhl.com/#/createExpress/ServiceTip|世界各国目的地服务提示
+UPS|https://www.ups.com/cn/zh/Home.page?|UPS
+UPS航班|http://upsfd.ecfreight.net/|香港UPS航班查询
+FEDEX|https://www.fedex.com/en-us/home.html|FEDEX
+FEDEX航班|https://wap-asia.fedex.com/hkodds/en-hk/|香港Fedex航班查询
+17Track|https://www.17track.net/zh-cn|追踪网站
+Track718|https://www.track718.us/en/|Track718全球物流轨迹查询
+查偏远|https://www.51tracking.com/remote_area|偏远大全51tracking
+DHL燃油|https://mydhlplus.dhl.com/cn/zh/ship/surcharges.html#/fuel_surcharge|燃油附加费
+UPS燃油|https://www.ups.com/cn/zh/support/shipping-support/shipping-costs-rates/fuel-surcharges.page|燃油附加费
+FEDEX燃油|https://www.fedex.com/zh-cn/shipping/surcharges.html|燃油附加费
+DHL 偏远|https://www.5idhl.com/#/createExpress/ServiceArea|国家城市偏远邮编对应
+Fedex 偏远|https://cnwcweb.fedex.com.cn/pages/ServiceChecker/index?code=061IDvll2f8f184PGhol2n3xrE4IDvlf&amp;amp;state=STATE|国家城市偏远邮编对应
+UPS 偏远|https://www.ups.com/cn/zh/support/shipping-support/shipping-costs-rates.page|国家城市偏远
+UPS城市邮编|https://wwwapps.ups.com/ctc/request?loc=en_CN|国家城市邮编对应
+DHL服务网点查询|https://locator.dhl.com/|全球DHL服务网点地址
+美国UPS服务网点查询|https://locations.ups.com/us/en/|美国UPS服务网点地址
+UPS服务网点查询|https://www.ups.com/dropoff?loc=en_US|全球UPS服务网点地址
+FEDEX服务网点查询|https://local.fedex.com/en|全球FEDEX服务网点地址
+DHL在线支付税金|https://delivery.dhl.com/|DHL Payment Online
+DHL 美国支付税金|https://ebilling.dhl.com/gpp/lookup/item_input/us/|DHL US Pay Duty
+Customs Duty Invoice|https://mybill.dhl.com/pp/|DHL Payment Online
+DHL 支付码支付|https://www.5idhl.com/#/queryService/payImportTaxes|DHL Payment Online
+DHL 印度支付税金|https://paydutytaxes.india.express.dhl.com/|DHL India Pay Duty
+DHL 爱尔兰支付税金|https://www.dhlpayments.ie/|DHL Ireland Pay Duty
+DHL 英国支付税金|https://epayments.dhl.co.uk/|DHL GB Pay Duty
+DHL 德国支付税金|https://www.dhl.de/express/MyBillQRCodePayment|DHL Germany Pay Duty
+UPS 在线支付税金|https://www.ups.com/vn/en/business-solutions/ups-billing.page|UPS Payment Online
+FEDEX 在线支付税金|https://www.fedex.com/payment/|Fedex Payment Online
+Fedex Payment Online|https://www.fedex.com/paynow/payment|Fedex Payment Online
+Fedex Payment Online|https://fit.clearance.fedex.com/#/en-us|Fedex Payment Online
+美国地址|https://ziplucas.com/index.html|商业私人地址查询
+美国地址|https://www.smarty.com/products/single-address|商业私人地址查询
+美国城市邮编|https://www.unitedstateszipcodes.org/|美国城市邮编查询
+US ZIP Code Lookup|https://www.zip-codes.com/city/sc-north-charleston.asp|美国城市邮编查询
+加拿大邮编|https://www.canadapost-postescanada.ca/cpc/en/tools/find-a-postal-code.page|加拿大邮编查询
+世界邮编|https://worldpostalcode.com/|世界邮编查询World Postal Code
+各国邮编|https://www.nowmsg.com/|各国邮编查询
+邮编库|https://www.youbianku.com/%E5%9B%BD%E9%99%85%E9%82%AE%E7%BC%96|各国邮编详情
+南美国家邮编|https://codigo-postal.co/en-us/|南美国家邮编
+美国邮政USPS|https://www.usps.com/|US USPS
+DPD GB|https://www.dpd.co.uk/index.jsp|DPD英国
+DPD|https://www.dpd.com/en/|DPD全球国家
+Aramex|https://www.aramex.com/cn/en|中东专线
+GLS Group|https://gls-group.eu/EU/en/parcel-tracking|GLS 欧洲快递追踪
+SF Express|https://intl.sf-express.com/|顺丰速运
+DPEX|http://www.dpex.com/|DPEX
+Asendia USA|http://www.asendiausa.com/|Asendia USA
+Yodel|https://www.yodel.net.cn/|Yodel
+Hermes|https://www.hermesworld.com/|Hermes
+SDA|http://www.sda.it/|SDA
+Landmark Global|https://landmarkglobal.com/|Landmark Global
+Meest|http://meest-group.com/|Meest
+GLS (IT)|https://www.gls-italy.com/|GLS (IT)
+Skynet|http://www.skynet.net/|Skynet
+BRT Bartolini(DPD)|http://www.brt.it/|BRT Bartolini(DPD)
+Asendia|http://www.asendia.com/|Asendia
+CDEK|http://www.cdek.ru/|CDEK
+Hermes (DE)|https://www.myhermes.de/|Hermes (DE)
+SMSA Express (سمسا)|https://www.smsaexpress.com/|SMSA Express (سمسا)
+Nova Poshta|http://novaposhta.ua/|Nova Poshta
+Pitney Bowes|https://www.pitneybowes.com/|Pitney Bowes
+Sagawa (佐川急便)|http://www.sagawa-exp.co.jp/|Sagawa (佐川急便)
+SGHグローバル (Sagawa Global)|http://www.sgh-globalj.com/|SGHグローバル (Sagawa Global)
+Purolator|https://www.purolator.com/|Purolator
+Aramex AU (formerly Fastway AU)|https://www.aramex.com.au/|Aramex AU (formerly Fastway AU)
+DHL Parcel (NL)|https://www.dhlparcel.nl/|DHL Parcel (NL)
+Correos Express|https://www.correosexpress.com/|Correos Express
+OnTrac|https://www.ontrac.com/|OnTrac
+LaserShip|https://www.lasership.com/|LaserShip
+Blue Dart Express|https://bluedart.com/|Blue Dart Express
+Delhivery|https://www.delhivery.com/|Delhivery
+Yamato (ヤマト運輸)|http://www.kuronekoyamato.co.jp/|Yamato (ヤマト運輸)
+KEX Express (ABX Express)|https://my.kex-express.com/|KEX Express (ABX Express)
+TNT (IT)|https://www.tnt.it/|TNT (IT)
+Fastway (ZA)|http://www.fastway.co.za/|Fastway (ZA)
+Aramex NZ (formerly Fastway NZ)|https://www.aramex.co.nz/|Aramex NZ (formerly Fastway NZ)
+DTDC|https://www.dtdc.com/|DTDC
+DPD (RU)|https://www.dpd.ru/|DPD (RU)
+J&amp;T Express (ID)|https://www.jet.co.id/|J&amp;T Express (ID)
+J&amp;T Express (MY)|https://jtexpress.my/|J&amp;T Express (MY)
+Nexive|https://www.nexive.it/|Nexive
+Naqel|https://www.naqelexpress.com/|Naqel
+Hermes Borderguru|https://hermesborderguru.io/|Hermes Borderguru
+Ecom Express|https://ecomexpress.in/|Ecom Express
+Xpressbees|http://www.xpressbees.com/|Xpressbees
+DPD (PL)|https://www.dpd.com.pl/|DPD (PL)
+CouriersPlease|https://www.couriersplease.com.au/|CouriersPlease
+Sendle|https://www.sendle.com/|Sendle
+Chronopost Morocco|https://chronopost.ma/|Chronopost Morocco
+DPD (IE)|https://dpd.ie/|DPD (IE)
+GD Express|https://www.gdexpress.com/|GD Express
+Nova Poshta Global|https://novaposhtaglobal.ua/en/|Nova Poshta Global
+MRW|https://www.mrw.es/|MRW
+ELTA Courier|https://www.elta-courier.gr/|ELTA Courier
+GLS Spain (National)|https://www.gls-spain.es/en/|GLS Spain (National)
+Skynet (MY)|https://www.skynet.com.my/|Skynet (MY)
+Speedy (DPD)|https://www.speedy.bg/en/|Speedy (DPD)
+TNT (AU)|https://www.tntexpress.com.au/|TNT (AU)
+DPD (PT)|https://dpd.pt/|DPD (PT)
+GLS Canada (Dicom)|https://gls-canada.com/|GLS Canada (Dicom)
+DHL ACTIVETRACING|https://activetracing.dhl.com/|DHL ACTIVETRACING
+FedEx® International Connect (FIC)|https://fictracking.fedex.com/|FedEx® International Connect (FIC)
+DHL Parcel (PL)|http://www.dhl.com.pl/|DHL Parcel (PL)
+J&amp;T Express (SG)|https://www.jtexpress.sg/|J&amp;T Express (SG)
+Flash Express (TH)|https://www.flashexpress.co.th/|Flash Express (TH)
+J&amp;T Express (PH)|https://www.jtexpress.ph/|J&amp;T Express (PH)
+TNT (FR)|http://www.tnt.fr/|TNT (FR)
+J&amp;T Express (TH)|https://www.jtexpress.co.th/|J&amp;T Express (TH)
+Dawn Wing (DPD Laser)|http://www.dawnwing.co.za/|Dawn Wing (DPD Laser)
+J&amp;T International|https://www.jet-logistics.com/?from=17track|极兔国际
+Mondial Relay|https://www.mondialrelay.fr/|Mondial Relay
+GLS (US)|https://www.gls-us.com/|GLS (US)
+GLS (PT)|https://www.gls-portugal.pt/|GLS (PT)
+EVRi|https://www.evri.com/|EVRi
+StarTrack|http://startrack.com.au/|StarTrack
+GLS (NL)|https://www.gls-info.nl/|GLS (NL)
+J&amp;T Express (MX)|https://www.jtexpress.mx/|J&amp;T Express (MX)
+UPS Mail Innovations|https://www.upsmailinnovations.com/|UPS Mail Innovations
+J&amp;T Express (SA)|https://www.jtexpress-sa.com/|J&amp;T Express (SA)
+DPD (GR)|https://dpd.gr/en/|DPD (GR)
+envialia|https://www.envialia.com/|envialia
+J&amp;T Express (VN)|https://jtexpress.vn/|J&amp;T Express (VN)
+InPost (UK)|https://inpost.co.uk/|InPost (UK)
+InPost (IT)|https://inpost.it/|InPost (IT)
+Flash Express (PH)|https://www.flashexpress.ph/|Flash Express (PH)
+Flash Express (MY)|https://www.flashexpress.my/|Flash Express (MY)
+Flash Express (LA)|https://www.flashexpress.la/|Flash Express (LA)
+CJ Logistics (SG)|https://www.cjlogistics.com/en/network/en-sg|CJ Logistics (SG)
+DPD (AT)|https://www.mydpd.at/|DPD (AT)
+InPost (ES)|https://www.inpost.es/|InPost (ES)
+Ninja Van (International Tracking)|https://www.ninjavan.co/en-sg/tracking|Ninja Van (International Tracking)
+InPost (PT)|https://www.inpost.pt/|InPost (PT)
+DHL eCommerce (MNG Kargo)|https://www.mngkargo.com.tr/|DHL eCommerce (MNG Kargo)
+J&amp;T Express (EG)|https://www.jtexpress-eg.com/|J&amp;T Express (EG)
+KINTETSU LOGISTICS SYSTEMS (近鉄ロジスティクス)|https://www.kintetsu-ls.co.jp/|KINTETSU LOGISTICS SYSTEMS (近鉄ロジスティクス)
+Kerry Express|http://www.kerryexpress.com.tw/|嘉里快递
+EMS (Express Mail Service)|https://www.ems.post/|EMS (Express Mail Service)
+Kerry TJ|http://www.kerrytj.com/|嘉里大荣
+DPD Local|https://www.dpdlocal.co.uk/|DPD Local
+Yamato Logistics (HK)|https://www.yamatohk.com.hk/|雅玛多运输（香港）
+SkyNet Worldwide Express|https://www.skynetworldwide.net/|SkyNet Worldwide Express
+J&amp;T Cargo (ID)|https://www.jtcargo.id/|J&amp;T Cargo (ID)
+J&amp;T Express (BR)|https://www.jtexpress.com.br/|J&amp;T Express (BR)
+Estafeta USA|https://estafetausa.com/|Estafeta USA
+Skynet (ZA)|https://www.skynet.co.za/|Skynet (ZA)
+FedEx® Cross Border (UK)|https://crossborder.fedex.com/|FedEx® Cross Border (UK)
+DHL Supply Chain APAC|https://mysctrackandtrace.dhl.com/|DHL Supply Chain APAC
+J&amp;T Express (AE)|https://www.jtexpress.ae/|J&amp;T Express (AE)
+Lenton Group (DPD)|https://www.lentongrp.com/|Lenton Group (DPD)
+Yamato Transport Singapore|https://www.yamatosingapore.com/|Yamato Transport Singapore
+Purolator Shipping|https://tracking.purolatorshipping.com/|Purolator Shipping
+Purolator International|https://www.purolatorinternational.com/|Purolator International
+J&amp;T Cargo (MY)|https://www.jtcargo.my/|J&amp;T Cargo (MY)
+GLS (DE)|https://www.gls-pakete.de/|GLS (DE)
+Hermes Einrichtungs Service|https://myhes.de/|Hermes Einrichtungs Service
+DPD (KZ)|https://www.dpd.kz/|DPD (KZ)
+DPD Group|https://www.dpdgroup.com/|DPD Group
+Fastway Logistics|https://fastway.co/|Fastway Logistics
+SF Express Indonesia|https://id.kex-express.com/|SF Express Indonesia
+GeodisPL|https://strefaklienta.pekaes.geodis.pl/|GeodisPL
+Meest Group|https://t.meest-group.com/int|Meest Group
+Asendia France|https://asendiafrance.com/|Asendia France
+Dtdc Australia|https://www.dtdcaustralia.com.au/|Dtdc Australia
+Purolator Freight|https://freight.purolator.com/|Purolator Freight
+MyDTDC|https://web.mydtdc.in/|MyDTDC
+J&amp;T EXPRESS COLOMBIA|https://www.jtexpress.co/|J&amp;T EXPRESS COLOMBIA
+Colis Prive(Colis Privé)|http://www.colisprive.com/|Colis Prive(Colis Privé)
+UK Mail|https://www.ukmail.com/|UK Mail
+Ekart|https://ekartlogistics.com/|Ekart
+TForce Final Mile|https://www.tforcelogistics.com/|TForce Final Mile
+ACS|https://www.acscourier.net/|ACS
+Zajil Express|https://zajil-express.com/|Zajil Express
+JNE Express|https://www.jne.co.id/|JNE Express
+BlueEx|https://www.blue-ex.com/|BlueEx
+Shadowfax|https://shadowfax.in/|Shadowfax
+CTT Express|https://www.cttexpress.com/|CTT Express
+CourierPlus Nigeria|http://www.courierplus-ng.com/|CourierPlus Nigeria
+Packeta|https://www.packeta.com/|Packeta
+UniUni|https://uniuni.com/|UniUni
+Redpack|https://www.redpack.com.mx/|Redpack
+Canpar Express|https://www.canpar.com/|Canpar Express
+Paquetexpress|https://www.paquetexpress.com.mx/|Paquetexpress
+Boxberry|https://boxberry.ru/|Boxberry
+Matkahuolto|https://www.matkahuolto.fi/|Matkahuolto
+Tonami|http://www.tonami.co.jp/|Tonami
+Kuehne Nagel|https://home.kuehne-nagel.com/|Kuehne Nagel
+SAEE|https://www.saee.sa/en/|SAEE
+Seino (西濃運輸)|http://www.seino.co.jp/en/|Seino (西濃運輸)
+Cargus|https://www.cargus.ro/|Cargus
+PPL CZ|https://www.ppl.cz/|PPL CZ
+Trackon|https://trackon.in/|Trackon
+The Courier Guy|https://www.thecourierguy.co.za/|The Courier Guy
+DSV|https://www.dsv.com/|DSV
+EURODIS|https://eurodis.com/|EURODIS
+OCA|http://www.oca.com.ar/|OCA
+Loomis Express|https://www.loomisexpress.com/|Loomis Express
+DB Schenker|https://www.dbschenker.com/|DB Schenker
+Spring GDS|https://www.spring-gds.com/|Spring GDS
+Venipak|https://venipak.lt/en/|Venipak
+JDL Express|https://www.jdlexpress.co.id/|JDL Express
+Hunter Express|https://www.hunterexpress.com.au/|Hunter Express
+Starken|https://www.starken.cl/|Starken
+Blue Express|https://www.blue.cl/|Blue Express
+Agility|https://www.agility.com/|Agility
+XPO|https://www.xpo.com/|XPO
+TCS|https://www.tcsexpress.com/|TCS
+LBC Express|https://www.lbcexpress.com/|LBC Express
+Express One|https://expressone.hu/|Express One
+Hanjin|https://www.hanjin.co.kr/|Hanjin
+Expeditors|https://www.expeditors.com/|Expeditors
+Chilexpress|https://chilexpress.cl/|Chilexpress
+The Professional Couriers|https://www.tpcglobe.com/|The Professional Couriers
+AJEX|https://aj-ex.com/|AJEX
+Speedaf|https://speedaf.com/|Speedaf
+SPEEDEX|http://www.speedex.gr/|SPEEDEX
+Sameday (RO)|https://sameday.ro/|Sameday (RO)
+SEKO Logistics|https://www.sekologistics.com|SEKO Logistics
+LSO(Lone Star Overnight)|https://www.lso.com/|LSO(Lone Star Overnight)
+DACHSER|https://www.dachser.com/|DACHSER
+SAP EXPRESS|https://www.sap-express.id/|SAP EXPRESS
+Yurtici Kargo|https://www.yurticikargo.com/|Yurtici Kargo
+2GO|http://supplychain.2go.com.ph/|2GO
+GEODIS|http://www.geodis.com/|GEODIS
+LCS-Leopards Courier Service|http://leopardscourier.com/pk/|LCS-Leopards Courier Service
+BEST EXPRESS|https://www.best-inc.co.th/|BEST EXPRESS
+Day &amp; Ross|https://dayross.com/|Day &amp; Ross
+Zasilkovna(Zásilkovna)|https://www.zasilkovna.cz/|Zasilkovna(Zásilkovna)
+Bring|https://www.bring.com/|Bring
+Nacex|https://www.nacex.com/|Nacex
+Seur|https://www.seur.com/|Seur
+Spee-Dee Delivery|https://speedeedelivery.com/|Spee-Dee Delivery
+Loggi Express BR|https://www.loggi.com/|Loggi Express BR
+RelaisColis|https://www.relaiscolis.com/|RelaisColis
+99Minutos|https://tracking.99minutos.com/|99Minutos
+DX|https://my.dxdelivery.com/|DX
+Inter Rapidisimo (INTER RAPIDÍSIMO)|https://www.interrapidisimo.com/|Inter Rapidisimo (INTER RAPIDÍSIMO)
+Coordinadora|https://www.coordinadora.com/|Coordinadora
+servientrega|https://www.servientrega.com/|servientrega
+Andreani|https://www.andreani.com/|Andreani
+Trax|https://trax.pk/|Trax
+Lotte Global Logistics|https://www.lotteglogis.com/english/reservation/track/|Lotte Global Logistics
+Mainfreight|https://www.mainfreight.com/track/|Mainfreight
+IDexpressIndonesia|https://idexpress.com/|IDexpressIndonesia
+Hellmann|https://www.hellmann.com/en/|Hellmann
+Intelcom (CA)|https://intelcom.ca/|Intelcom (CA)
+Еконт (Econt)|https://www.econt.com/|Еконт (Econt)
+Lion parcel|https://www.lionparcel.com/|Lion parcel
+TIKI|https://www.tiki.id/|TIKI
+Anteraja|https://anteraja.id/|Anteraja
+SiCepat|https://www.sicepat.com/|SiCepat
+New Zealand Couriers|https://www.nzcouriers.co.nz/|New Zealand Couriers
+GHN (Giao Hàng Nhanh)|https://ghn.vn/|GHN (Giao Hàng Nhanh)
+Fukuyama Transporting (福山通運)|https://corp.fukutsu.co.jp/|福山通运
+Nippon Express (日本通運)|https://www.nittsu.co.jp/|日本通运
+Aras Kargo|https://www.araskargo.com.tr/tr/#|Aras Kargo
+Budbee|https://budbee.com/|Budbee
+Viettel Post|https://en.viettelpost.com.vn/|Viettel Post
+FAN Courier|https://www.fancourier.ro/|FAN Courier
+HepsiJET|https://www.hepsijet.com/|HepsiJET
+Shiprocket|https://www.shiprocket.in/|Shiprocket
+Safexpress|http://www.safexpress.com/|Safexpress
+Yusen Logistics|https://www.yusen-logistics.com/|Yusen Logistics
+Gati|https://www.gati.com/|Gati
+Kintetsu World Express (近鉄エクスプレス [KWE])|https://www.kwe.com/|Kintetsu World Express (近鉄エクスプレス [KWE])
+Track-trace|https://www.track-trace.com/container|集装箱轨迹追踪
+Tracecontainer|https://www.tracecontainer.com/|Tracecontainer集装箱追踪
+Searates|https://www.searates.com/container/tracking/|集装箱轨迹追踪
+BIC CODE查询|https://www.bic-code.org/bic-codes/|全球集装箱数据库BIC
+Textainer集装箱租赁|https://tex.textainer.com/Equipment/StatusAndSpecificationsInquiry.aspx|集装箱所有权营运权查询
+3D货柜装载|https://www.pier2pier.com/loadcalc/|装柜大师
+装箱大师|https://www.zhuangxiang.com/|装箱大师
+Vesselfinder|https://www.vesselfinder.com/|全球船舶位置动态追踪
+Myshiptracking|https://www.myshiptracking.com/|全球船舶位置动态追踪
+Marinetraffic|https://www.marinetraffic.com/en/ais/home/centerx:-178.2/centery:36.0/zoom:3|全球船舶位置动态追踪
+船位 船队在线|https://hifleet.com/|全球船舶位置动态追踪
+维运网|https://www.weiyun001.com/|全球船舶位置动态追踪
+船讯网|https://www.shipxy.com/|全球船舶位置动态追踪
+飞驼可视|https://www.freightower.com/#/vessel|全球船舶位置动态追踪
+港口码头|https://www.5688.com.cn/ports/|海运港口码头
+货代企业信息备案表|https://gjhy.mofcom.gov.cn/#:~:text=%E5%A4%87%E6%A1%88%E7%A8%8B%E5%BA%8F%5B%E6%9F%A5%E7%9C%8B%E5%8A%9E%E7%90%86%E6%B5%81%E7%A8%8B%E5%9B%BE%5D&amp;amp;text=%EF%BC%88%E4%B8%80%EF%BC%89%E5%9B%BD%E9%99%85%E8%B4%A7%E4%BB%A3%E4%BC%81%E4%B8%9A%E5%AE%8C%E6%88%90,%E5%90%8E%E5%8F%91%E6%94%BE%E4%BC%81%E4%B8%9A%E5%A4%87%E6%A1%88%E8%AF%81%E6%98%8E%E3%80%82&amp;amp;text=%EF%BC%88%E4%B8%80%EF%BC%89%E5%AE%8C%E6%88%90%E4%BC%81%E4%B8%9A%E5%A4%87%E6%A1%88%E7%9A%84,%E5%8F%91%E6%94%BE%E4%BC%81%E4%B8%9A%E4%B8%9A%E5%8A%A1%E5%A4%87%E6%A1%88%E8%AF%81%E6%98%8E%E3%80%82|国际货运代理企业信息备案
+NOVCC无船承运人申请查询|https://mwtis.mot.gov.cn/syportal/login/1|水路运输建设综合管理信息系统
+美国FMC|https://www2.fmc.gov/oti/FF.aspx|FEDERAL MARITIME COMMISSION
+上海航运交易所|https://www.sse.net.cn/home|上海航运交易所
+港航纵横|https://www.hb56.com/Main.aspx|上海港海运数据 需注册
+海管家|https://supertrack.hgj.com/recycle|海管家货代服务平台
+云当网|https://www.yundangnet.com/web/html/index.php|云当网海运追踪
+明日数航|https://www.hangyun365.com/|船期查询船舶定位
+通关宝|https://www.tongguanbao.net/?pagenum=1|上海港海运报关查询
+集运宝典|https://www.fob001.cn/index.php|上海宁波全国港区集合
+易港通|http://www.eporthub.com/|宁波舟山港海运数据 需注册
+宁波港口EDI|https://www.npedi.com/index|海港EDI
+宁波二期 北一集司|https://cx.nbct.com.cn:7002/|宁波北仑国际集装箱码头
+宁波三期 北二集司|https://www.nbport.com.cn/NBPort_Search/public/search/cqxx|宁波北仑第二集装箱码头
+宁波四期 北三集司|http://csct.nbport.com.cn/system/test/cqcx|宁波北仑第三集装箱码头
+大榭招商码头|http://willport.nbdxct.com/Pages/default.aspx|宁波大榭码头海运数据
+梅山即时港|http://msict.nbport.com.cn/mall-portal/index.html|宁波梅山即时港海运数据
+甬舟码头|https://yzct.nbport.com.cn/report/|宁波舟山甬舟码头
+江苏太仓正和码头|https://www.3tcport.com/Home/ContGoodsInfoView|太仓正和码头
+波特云|https://www.eportyun.com/|宁波波特云
+易物流盐田|https://www.156yt.cn/publicInfoService/index.action|深圳盐田码头 需注册
+招商ePort|https://eport.cmp1872.com/|深圳蛇口赤湾码头
+大铲湾码头|http://www.dcblink.com/web/dcblink/container-info-public|深圳大铲湾码头海运数据
+集装箱码头海关放行|https://www.gct.com.cn/seltype/Manage_yuyue2.asp|广州集装箱码头海关放行查询
+集装箱码头箱信息|https://www.gct.com.cn/share_query/query_share.htm|广州集装箱码头整箱散货箱动态查询
+南沙港务三期查询|http://eportal.goct.com.cn/Account/?ReturnUrl=%2f|广州南沙港箱信息查询
+厦门集装箱码头|https://www.jx-c.com.cn/xctgonline/login.html|厦门港集装箱码头
+厦门中远船舶动态|http://www.cosfrexm.com/chr/vsl.aspx|厦门中远海运船舶动态
+嵩屿码头|https://www.xsct.com.cn/new/(S(fizobucdy3wsnaww2bxkszkt))/CustomerQueryContainerTab.aspx|厦门港集装箱动态信息查询
+烟台港|https://www.ytedi.com/index/xinxifuwu|山东烟台港海运信息查询
+天津港电子商务网|https://www.tjgportnet.com/index.html#/home-page|天津港码头
+COSCO天津区块链换单|https://cargorelease.lines.coscoshipping.com/login|天津区块链换单 需登录
+OOCL天津区块链换单|https://exiamfw.home.oocl.com/auth/realms/oocl-prd/protocol/openid-connect/auth?client_id=5c787141-ccde-484f-9625-eaa34f56657f&amp;amp;response_type=code&amp;amp;redirect_uri=https%3A%2F%2Fcargo-release.digital.oocl.com%2Fhome%2Fauth%2Fcallback&amp;amp;response_mode=form_post&amp;amp;scope=gbcr.basicAccess%20openid&amp;amp;state=541b2a00-ff43-4470-929a-b99eb19abdff&amp;amp;nonce=8d67b7a6-2b87-41d4-85cc-b79eaedb844e|天津区块链换单 需换单
+口岸物流网|https://www.dpn.com.cn/|大连DPN
+连云港电子口岸|https://www.lygedi.com/|连云港集装箱船舶信息
+Alphaliner TOP 100|https://alphaliner.axsmarine.com/PublicTop100/|全球船司100排名
+Matson 美森轮船|https://www.matson.com.cn/|Matson Inc 中国官网
+Matson 美森轮船|https://www.matson.com/|Matson Inc 美国官网
+Matson Ports|https://www.matson.com/matnav/ports/index.html|美森轮船码头地图
+MSC 地中海航运|https://www.msccargo.cn/|Mediterranean Shipping 瑞士
+MSK 马士基|https://www.maersk.com/|Maersk Shipping 丹麦
+CMA CGM 法国达飞|https://www.cma-cgm.com/|CMA CGM Shipping
+COSCO 中远海运|https://elines.coscoshipping.com/ebusiness/cargoTracking/|China Ocean Shipping(Group) Company
+HPL 赫伯罗特|https://www.hapag-lloyd.com/en/home.html|Hapag-Lloyd AG 德国
+ONE  日本海洋网联船务|https://www.one-line.com/en|Ocean Network Express Holdings
+EMC 长荣海运|https://www.evergreen-marine.com/|Evergreen Marine Corp 台湾
+HMM 韩新海运|https://www.hmm21.com/company.do|HMM Company Limited 韩国
+ZIM 以星航运|https://www.zim.com/|Zim Integrated Shipping 以色列
+YML 阳明海运|https://www.yangming.com/|Yang Ming Marine 台湾
+WHL 万海航运|https://www.wanhai.com/views/Main.xhtml|WAN HAI LINES 台湾
+PIL 太平船务|https://www.pilship.com/|Pacific International 新加坡
+SITC 海丰国际|https://www.sitc.com/|SITC International 中国
+X-Press|https://www.x-pressfeeders.com/|X-Press Feeders Group 新加坡
+SLS 海领船务|https://www.sea-lead.com/|SeaLead Shipping Pte 新加坡
+KMTC 高丽海运|https://www.ekmtc.com/index.html#/main|Korea Marine Transport Co 韩国
+UniFeeder|https://www.unifeeder.com/|Unifeeder A/S 丹麦
+SKR 长锦商船|http://www.sinokor.co.kr/cn/index.html|Sinokor Merchant Marine 韩国
+ZHONGGU 上海中谷物流|https://www.zhonggu56.com/index.jsp|Zhonggu Logistics Co 中国
+T.S.LINES 德翔航运|https://www.tslines.com/tw|TS LINES LTD 台湾
+ESL 阿联酋航运|https://www.emiratesline.com/|Emirates Shipping Line 阿联酋
+ANTONG 安通控股|https://www.antong56.com|Antong Holdings (QASC) 中国
+RCL 宏海箱运|https://www.rclgroup.com/|Regional Container Lines 泰国
+NBOS 宁波远洋|http://www.nbosco.com/|Ningbo Ocean Shipping 中国
+GFS|https://www.globalfeeders.com/|Global Feeder Shipping 阿联酋
+SML 森罗商船|https://www.smlines.com/en/|SM LINE Corp 韩国
+SWIRE 太古船务|https://www.swireshipping.com/|SWIRE SHIPPING 新加坡
+ARKAS /EMES 阿尔卡斯|https://www.arkasline.com.tr/en/|Arkas Container Trans 土耳其
+HeDe 合德海运|http://en.hedehk.com/index.php?m=content&amp;amp;c=index&amp;amp;a=lists&amp;amp;catid=86|Tangshan Port Hede 中国
+Grimaldi Group 格里马尔迪集团|https://www.grimaldi.napoli.it/en/index.html|Grimaldi Napoil 意大利那不勒斯
+JJ 锦江航运|https://ejj.jjshipping.cn/index|Shanghai Jin Jiang 中国
+IAL 运达航运|https://www.interasia.cc/|Interasia Line 日本
+Sinotrans 中国外运|https://www.sinotrans.com/|Sinotrans Limited 中国
+Tailwind 泰赢航运|https://tailwind-shipping.com/en|Tailwind Shipping  德国
+FESCO 俄远东|https://www.fesco.com/en/|FESCO 俄罗斯
+Seaboard Marine 海湾海运|https://www.seaboardmarine.com/|Seaboard Marine 美国
+Samudera 萨姆达拉|https://www.samudera.id/|Samudera Shipping 印尼
+Tanto 印尼坦托航运|https://www.tantonet.com/|Tanto Intim line 印尼
+Namsung 南星海运|https://www.namsung.co.kr/|Namsung Shipping 韩国
+Meratus 梅拉图斯航运|https://www.meratus.com/|Meratus Line 印尼
+CULines 中联航运|https://www.culines.com/en/|China United Lines CULines 中国
+Akkon 艾柯恩航运|https://akkonlines.com/|Akkon Lines 土耳其
+OOCL|https://www.oocl.com/schi/Pages/default.aspx|东方海外
+APL CMA CGM子公司|https://www.apl.com/ebusiness/tracking|美国总统轮船公司 APL
+ANL CMA CGM子公司|https://www.anl.com.au/|澳洲国际海运ANL 大洋洲
+CNC CMA CGM子公司|https://www.cnc-line.cn/|正利航业股份CNC 亚洲市场
+Containerships Oy 子公司|http://www.containerships.eu/|货柜船 欧洲 CMA CGM
+Mercosul  CMA CGM子公司|https://www.mercosul-line.com.br/|巴西集装箱Mercosul 南美洲
+CEVA CMA CGM子公司|https://www.cevalogistics.com/en|基华物流 CEVA Logistics
+Comanav CMA CGM子公司|https://cmaships.com/en/agency/morocco|摩洛哥航运Comanav 北美洲
+CMA Ships CMA CGM子公司|https://cmaships.com/en|CMA Ships 船舶船员管理
+Transfar Shipping|https://www.transfarshipping.com/home|致远航运 中国
+ASEAN SEAS LINE|https://www.line-asl.com/|亚海航运 中国
+ACL Atlantic Container Line|http://www.aclcargo.com/trackCargo.php|大西洋集装箱航运 北美/欧洲
+Alianca Navegaceo e Logistica Ltda.|https://www.alianca.com.br/alianca/en/alianca/ecommerce_alianca/track_trace_alianca/index.html|Alianca 巴西
+Bahri (NSCSA)|https://www.bahri.sa/en/logistic-services/|巴赫里航运 沙特 仅提单追踪
+CNC LINE Cheng Lie Navigation|http://www.cnc-ebusiness.com/ebusiness/tracking|正利航业 CNC 亚洲
+CONTAINER tracking|http://www.seacargotracking.net/|集装箱聚合追踪
+CROWLEY|https://www.crowley.com/liner-shipment-tracking/|克劳利海运 美国
+DHL Global Forwarding|https://www.dhl.com/en/logistics/customer_resource_area/freight_tracking_and_applications/ocean_freight_tracking.html|DHL全球货运 海运追踪
+EIMSKIP|https://www.eimskip.com/customer-portal/|Eimskip 北欧
+Emirates Shipping Line|https://www.emiratesline.com/track/|阿联酋航运 中东
+Ethiopian Shipping|https://www.eslse.et/|埃塞俄比亚航运 非洲
+Evergreen Lines|http://www.shipmentlink.com/servlet/TDB1_CargoTracking.do|长荣海运货运追踪 ShipmentLink
+FESCO|https://www.fesco.ru/en/clients/tracking/|俄远东船务 俄罗斯
+Gold Star Line|https://www.gslltd.com.hk/#/track_shipment|金星航运 香港
+Grieg Star Shipping (G2 Ocean)|https://www.g2ocean.com/lookup-and-searches/#BoL|G2 Ocean 件杂货/集装箱
+Grimaldi Lines|https://www.gnet.grimaldi-eservice.com/GNET/Pages_GAtlas/WFContainerTracking|Grimaldi 欧洲/滚装
+Hamburg-Sued (Columbus Line)|https://www.hamburgsud.com/en/ecommerce/visibility/track-and-trace/|汉堡南美 德国
+HEUNG A Shipping|https://ebiz.heungaline.com/Tracking|兴亚海运 韩国
+HUGO STINNES|https://www.stinnes-linien.de/TOOLS/Tracking-And-Tracing|Stinnes Linien 德国
+Ignazio Messina Line|https://www.messinaline.it/wps/wcm/connect/internet/messina_en/operativo/cntr_tracking/#tf-cntr_tracking|Messina 意大利
+CARU containers|https://portal.carucontainers.com/|CARU 租箱 CARU/LCRU
+SEACO containers|https://newseaweb.seacoglobal.com/sap/bc/ui5_ui5/sap/zseaco_ue15/index.html|SEACO 租箱
+TRITON containers|https://www.trtn.com/tritoncontainer/unitStatus/list|TRITON 租箱 TRLU等
+UES containers|http://www.ueshk.com/inquiries.aspx?classid=3&amp;aid=5&amp;leftid=18|UES 租箱 UESU/GVDU
+Container info (generic)|http://shipping-container-info.com/container-info/|集装箱知识查询
+Kambara Kisen|http://esvc.kambara-kisen.co.jp/clt/CUP_HOM_3301.do?sessLocale=en|神原汽船 日本
+Kestrel Liner|https://www.kestrel.com/uk/fcl-lcl|Kestrel Liner 英国
+MACS Shipping|https://www.macship.com/E-BUSINESS/TrackingAndTracing.aspx|MACS 非洲 需箱号+提单
+MARFRET Compagnie Maritime|http://www.marfret.fr/en/container-tracking/|MARFRET 法国
+Medkon Lines|https://tracking.medkonlines.com/|Medkon 地中海
+NAMSUNG Shipping|https://ebiz.namsung.co.kr/|南星海运 韩国
+NileDutch|https://www.niledutch.com/en/schedules-tracking/track-your-container/|尼罗河荷兰 非洲
+OT Africa Line|http://www.cma-cgm.com/ebusiness/tracking|非洲线 OTAL 达飞体系追踪
+PanOcean|http://container.panocean.com/HP2401/hp2401.stx|汎洋商船 韩国
+PASHA HAWAII|https://www.pashahawaiishipping.com/public/track.htm|Pasha Hawaii 美西
+PDL Pacific Direct Line|http://www.pdl123.co.nz/track-and-trace/|PDL 新西兰
+Royal Arctic Lines|http://www.royalarcticline.com/|皇家北极航运 格陵兰
+Safmarine|https://www.safmarine.com/how-to-ship/tracking|南非海运 Safmarine
+SCI Shipping Corporation of India|http://www.shipindia.com/frontcontroller/track_trace|印度航运公司
+Sealand Maersk|https://www.sealandmaersk.com/welcome/tracking|Sealand 马士基旗下
+SM Line|https://esvc.smlines.com/smline/CUP_HOM_3301.do|森罗商船 SM Line
+Swire Shipping|https://www.swireshipping.com/trackShipment|太古轮船 亚洲
+Tarros|http://www.tarros.it/traccia-container-en/|Tarros 意大利
+TOTE Maritime|https://portal.totemaritime.com/Account/Login?ReturnUrl=%2f|TOTE Maritime 美国
+Trans Asia Lines|http://www.tassgroup.com/|泛亚航运 TASS
+Tropical Shipping|https://www.tropical.com/track-shipments|热带航运 加勒比
+Turkon Line|https://myturkonline.turkon.com/tracking|Turkon 土耳其/美国
+UAFL United Africa Feeder Line|https://www.uaflshipping.com/home/tracking|联合非洲支线
+Wallenius Wilhelmsen Logistics|https://www.walleniuswilhelmsen.com/track-trace|华轮威尔森 滚装/物流
+W.E.C. Lines|https://weclines.com/track-and-trace/|WEC Lines 欧洲
+Log-In Logistica|https://logai.loginlogistica.com.br/|MSC旗下 巴西综合物流 Log-Aí
+Finnlines|https://www.finnlines.com/|Grimaldi旗下 北欧客滚/货运
+Samskip|https://www.samskip.com/en/track-and-trace/|多式联运 北欧
+Mariana Express Lines (MELL)|https://www.mellship.com/|PIL旗下 区域支线
+Westwood Shipping Lines|https://www.westwoodshipping.com/|Swire旗下 美加航线
+BG Freight Line|https://www.bgfreightline.com/|Peel Ports旗下 欧洲近洋
+Shreyas Shipping|https://www.shreyasshipping.com/|Unifeeder旗下 印度沿海
+Transworld Feeders|https://www.transworldfeeders.com.sg/|Unifeeder旗下 新加坡支线
+Coheung Shipping|https://www.coheung.net/|COSCO集团 京汉海运 中韩
+Shanghai Pan Asia Shipping|https://www.panasiashipping.com/|COSCO集团 上海泛亚航运
+New Golden Sea Shipping|https://www.cosconsea.com.sg/|COSCO集团 新金洋 新加坡
+Pacifica Shipping|https://www.pacificashipping.co.nz/|Swire旗下 南太平洋
+Nor Lines|https://www.nor-lines.com/|Samskip旗下 挪威近海
+CBP官网报关行|https://www.cbp.gov/about/contact/brokers-listing|Permitted Customs Brokers Listing
+Filer Code list|https://www.cbp.gov/document/report/filer-code-list|Filer Code list
+NCBFAA 会员报关行|https://members.ncbfaa.org/4DCGI/directory/Member/index.html?MenuKey=members|NCBFAA 会员报关行
+CBP Form 7501|https://www.cbp.gov/trade/programs-administration/entry-summary/cbp-form-7501|CBP Form 7501
+SCAC 标准承运人代码|https://scac.nmfta.org/|SCAC标准承运人字母代码查询与申请
+eModal 美国码头滞期费|https://www.emodal.com/?rf=sp#|eModal 美国码头滞期费
+WBCT YML ZIM/COSCO|https://tosportal.portsamerica.com/?_=638453029054535664#/Home/TerminalInfo|洛杉矶港码头 三船司两区域
+Trapac CMA EXX 美森加班|https://losangeles.trapac.com/quick-check/?terminal=LAX&amp;amp;transaction=availability|洛杉矶港码头 自动化最高
+YTI THE联盟|https://lynx.yti.com/|洛杉矶港码头 无铁路接驳
+ETS EMC HTW快线 TPA|https://www.etslink.com/|洛杉矶港码头 长荣自有
+FMS LP1 LP3 EX1 EXX|https://fenixmarineservices.com/hc/|洛杉矶港码头 达飞收购码头
+APM 400 LA TP6 CPS|https://www.apmterminals.com/en/los-angeles/online-services/container-tracking|洛杉矶码头 2M联盟 EMC
+PIER A MSC ZIM 美森加班|https://piera.tideworks.com/fc-PA/default.do|长滩港码头 公共码头
+C60/Pier C 美森正班|https://m60.tideworks.com/fc-C60/default.do|长滩港码头 美森专用
+TTI/Pier T TP8 TP2 PS8|https://www.totalterminals.com/portal/import-inquiry|长滩港码头 2M/THE 联盟
+LBCT/Pier E SEA SEAX PCC1|https://portal.lbct.com/CargoSearch|长滩港码头 OOCL COSCO
+ITS/Pier G ONE YML|https://www.itslb.com|长滩港码头 ONE THE联盟
+PCT/Pier J Cen Aaci Aa3/5|https://pct.tideworks.com/fc-PCT/default.do|长滩港码头 COSCO控股
+洛杉矶港码头地图|https://www.portoflosangeles.org/business/terminals/terminal-map|洛杉矶港码头Port Of LA
+长滩港码头地图|https://polb.com/port-info/map/|长滩港码头Port Of LB
+美国加拿大码头汇总|https://www.visiwise.co/terminals/|US Canada Terminals
+Red Hook Container|https://www.redhookterminals.com/|纽约新泽西港码头 市中心小
+Port Liberty Bayonne/GCT|https://portlibertybayonne.com/|纽约新泽西港码头 CMA所有
+Port Newark Container|https://pnct.net/|纽约新泽西港码头 Msk Msc
+Maher 最多船司挂靠|https://www.maherterminals.com/|纽约新泽西港码头 最大码头
+APM Terminals Elizabeth|https://www.apmterminals.com/en/tools/track-and-trace|纽约新泽西港码头 Msk Msc
+Port Liberty New York/GCT|https://portlibertynewyork.com/|纽约新泽西港码头 CMA CGM
+纽约新泽西港码头地图|https://www.panynj.gov/port/en/our-port/container-terminals.html|纽约新泽西港码头 NY/NJ
+Terminal 5|https://t5s.tideworks.com/fc-T5S/default.do|西雅图港码头 MSC
+Terminal 18|https://t18.tideworks.com/fc-T18/default.do|西雅图港码头 ANL CMA CGM
+Terminal 30|https://t30.tideworks.com/fc-T30/default.do|西雅图港码头 CMA CGM COSCO
+Terminal 46 非集装箱码头|https://www.nwseaportalliance.com/|西雅图港码头 Breakbulk Autos
+Terminal 115|https://www.lynden.com/aml/|西雅图港码头 Alaska Marine
+West Sitcum Terminal|https://tam.tideworks.com/fc-TAM/default.do|塔科马港口码头 Matson
+Husky Terminal|https://huskyterminal.com/terminal|塔科马港口码头 HMM ONE
+East Sitcum Terminal 备选|https://www.nwseaportalliance.com/cargo-operations/terminals/east-sitcum-terminal|塔科马港口码头 Alternative maritime
+Pierce County Terminal|https://www.etslink.com/|塔科马港口码头 CMA COSCO
+Washington United Terminal|http://tns.uswut.com/main/index.do|塔科马港口码头 HMM ONE
+Tote Maritime Alaska Terminal|https://portal.totemaritime.com/|塔科马港口码头 Tote Maritime Alaska
+Nwseaportalliance Ports Map|https://www.nwseaportalliance.com/cargo-operations/terminals|西雅图塔科马港码头地图 美国西北海港联盟
+Bayport Terminal 选码头|https://mca.porthouston.com/container-availability|休斯顿港码头 CMA CGM
+Barbours Cut Terminal 选码头|https://mca.porthouston.com/container-availability|休斯敦港码头 ZIM
+Lynx Portal 信息门户|https://csp.porthouston.com/lynx/|休斯敦港两码头 Customer Portal
+Houston Port Map|https://porthouston.com/infrastructure/facilities-capabilities/map/|休斯顿港码头地图
+Norfolk International Terminals|https://www.portofvirginia.com/gateway/capabilities/|弗吉尼亚港码头 NIT
+Virginia International Gateway|https://www.portofvirginia.com/gateway/capabilities/|弗吉尼亚港码头 VIG
+Portsmouth Marine Terminal|https://www.portofvirginia.com/gateway/capabilities/|弗吉尼亚港码头 PMT
+Newport News Marine Terminal|https://www.portofvirginia.com/gateway/capabilities/|弗吉尼亚港码头 NNMT
+Richmond Marine Terminal|https://www.portofvirginia.com/gateway/capabilities/|弗吉尼亚港码头 RMT
+Virginia Inland Port|https://www.portofvirginia.com/gateway/capabilities/|弗吉尼亚港码头 VIP
+Virginia Port Map|https://operations.portofvirginia.com/maps-directions/|弗吉尼亚港码头地图
+Lynx Port Virginia|https://lynx.portofvirginia.com/Login.aspx|弗吉尼亚港码头 门户信息
+Ocean Terminal|https://gaports.com/facilities/port-of-savannah/ocean-terminal/|萨凡纳港码头 CMA
+Garden City Terminal|https://gaports.com/facilities/port-of-savannah/garden-city-terminal/|萨凡纳港码头 2M OA THE
+PCC Logistics 三地可选|https://pcclogistics.com/freight-availability/|美国奥克兰港CES
+萨凡纳港集装箱状态查询|https://gaports.com/webaccess-registration-form/|佐治亚港务局 需注册
+Trapac Terminal|https://oakland.trapac.com/|奥克兰港码头 COSCO Evergreen
+Oakland International Container Terminal|https://b58.tideworks.com/fc-OICT/default.do|奥克兰港码头  OICT
+Everport Terminal|https://www.etslink.com/|奥克兰港码头 Evergreen APL
+Matson Terminal|https://www.matson.com/matnav/ports/oakland.html|奥克兰港码头 Matson
+Oakland Seaport Map|https://www.oaklandseaport.com/facilities/seaport-facilities|奥克兰港码头地图
+Port Of Oakland|https://www.portofoakland.com/|Port Of Oakland 综合信息
+Custom Goods|https://sbweb.customspecializedservices.com/WebForms/Login.aspx|美国奥克兰港CES
+Price Transfer|https://new-webportal.pricetransfer.com/WebForms/Login.aspx|美国洛杉矶长滩港CES
+FCL Logistics|https://new-webportal.fcllogistics.com/WebForms/Login.aspx|美国洛杉矶长滩港CES
+Califotnia NFI Cal Cartage|https://cestracking.calcartage.com/WebForms/Login.aspx|美国洛杉矶长滩港CES
+East Coast Warehouse ECW|https://ces.myecw.com/containerLookup|美国纽约新泽西港CES
+Port Liberty CES|https://ces.portlibertynewyork.com/|美国纽约港CES
+H&amp;M International|https://tools.hmiw.net/cargo-availability/|美国纽约新泽西港CES
+STG Logistics|https://cwportal.stgusa.com/warehousingSTG/ces/ces?event=CES_TRACK_STATUS|美国多港CES 全国网络
+Mercer Distribution|https://portal.cargomanager.com/warehousingPEAK/availability/index.jsp?app=CES|美国西雅图塔科马港CES
+World Trade Distribution|http://www.ethosting.com/wt/asp/Search.htm|美国休斯顿港CES
+CIPS Miami|https://cipsmiami.com/examstatus.htm|美国迈阿密港CES
+HREW Hampton Roads|https://www.hrew-ces.com/AppsBtnContent.aspx|美国诺福克港CES
+Amazon Warehouses Address|https://fba-finder.com/|美国亚马逊仓库地址查询
+Amazon Warehouses Address|https://www.seabaycargo.com/amazon-warehouse/|亚马逊仓库地址查询
+亚马逊仓库分布图|http://www.jiufanglogistics.cn/channel/1/fbackfbt|亚马逊仓库分布图 具体点详情
+FBA Near Me|https://www.fbanearme.com/|亚马逊仓库地址查询
+ESTES LTL Freight|https://www.estes-express.com/|美国卡车公司
+Rlcarriers LTL Service|https://www.rlcarriers.com/|美国卡车公司
+Roadrunner Freight|https://freight.rrts.com/Pages/Home.aspx|美国长途零担卡车RRTS
+Tforce Freight|https://www.tforcefreight.com/ltl/apps/Tracking|美国卡车公司
+南航美国卡转ORD|https://one.allianceground.com/#/cargo/awb-tracking|空运南航美国卡转车行
+南航美国卡转LAX|https://jet-airways.com/|空运南航美国卡转车行
+欧洲卡转|https://j-connect.janderijk.com/|空运欧洲卡转查询
+CN Rail|https://www.cn.ca/en/|加拿大国家铁路公司
+CP铁路|https://www.cpkcr.com/|CP铁路的 查柜子上火车
+加拿大CPKC 查柜子上火车|https://www.cpr.ca/en/|CP把KS收购了 CP网站也会提示转去CPKC
+中欧班列轨迹追踪|http://gps.jagich.com/#/|中欧班列轨迹追踪
+欧洲16国铁路运踪|https://www.wcw56.com/h-col-176.html|物畅网 需扫码小程序 付费
+Toll Group|https://www.tollgroup.com/|澳大利亚 Toll Group
+MyTeamGE|https://www.myteamge.com/|澳大利亚MyTeamGE
+Alliede|https://www.alliedexpress.com.au/|澳大利亚Alliede
+Border Express|https://www.borderexpress.com.au/|澳大利亚Border
+Australia Post|https://auspost.com.au/|澳大利亚邮政
+PBT Express|https://www.pbt.nz/|澳大利亚PBT
+ABF Freight|https://www.abfs.com/|美国LTL零担卡车 ABF
+Old Dominion Freight Line|https://www.odfl.com/|美国LTL零担 ODFL
+Southeastern Freight Lines|https://www.sefl.com/|美国LTL零担 东南区域
+YRC Freight|https://yrc.com/|美国LTL零担卡车 YRC
+Dayton Freight|https://www.daytonfreight.com/|美国LTL零担 中西部
+CrossCountry Freight|https://ccfs.com/|美国LTL跨区域货运
+Oak Harbor Freight Lines|https://oakh.com/|美国LTL零担 西北区域
+AM Trucking|http://www.amtrucking.com/|美国卡车运输 AM
+Pilot Freight Services|https://www.pilotdelivers.com/|美国货运 Maersk旗下
+Freightquote (C.H. Robinson)|https://www.freightquote.com/|美国货运报价平台 CH Robinson
+Frontline Freight|http://frontlinefreightinc.com/|美国货运 Frontline
+Best Yet Express|https://www.bestyetexpresstrucking.com/|美国卡车运输
+US Cargo|https://www.us-cargo.com/|美国货运 US Cargo
+Hercules Freight|https://www.herculesfreight.com/|美国货运 Hercules
+Performance Freight|https://performancefreight.com/|美国货运 Performance
+Maroon Freight|https://www.maroonfreight.com/|美国货运 Maroon
+TIG Freight|https://www.tigfreight.com/|美国货运 TIG
+Alliance Air Freight|https://shipalliance.com/|美国空运货代 Alliance
+Cargo Partner|https://www.cargo-partner.com/|全球综合货运 奥地利 Cargo Partner
+Cargo International|https://www.cargointernational.de/|德国货运 Cargo International
+Rhenus Logistics|https://freightportal.rhenus.cloud/tnt/login/auth|德国物流巨头 Rhenus
+Cargoboard|https://cargoboard.com/|欧洲数字化货运平台
+Direct Freight Express|https://www.directfreight.com.au/|澳大利亚货运 Direct Freight
+COPE Sensitive Freight|https://www.cope.com.au/|澳大利亚精密货运 COPE
+Manga Freight|https://mangafreight.co.nz/|新西兰货运 Manga
+TRANSource Freightways|https://transourcefreightways.com/|新西兰货运 TRANSource
+Matson|https://www.cargo.chinamatson.com/|太平洋海运/货运 Matson
+Via Cargo|https://viacargo.com.ar/|阿根廷货运 Via Cargo
+Pullman Cargo|https://www.pullmango.cl/|智利货运 Pullman
+A Tiempo Cargo|https://atiempocargo.com/|拉美货运 A Tiempo
+Chunil Cargo|https://www.chunil.co.kr/|韩国货运 天一 Chunil
+PLUS Cargo Service|https://www.plus-cs.co.jp/|日本货运 プラスカーゴ
+AP Cargo|https://apcargo.com.ph/|菲律宾货运 AP Cargo
+Sentral Cargo|https://sentralcargo.co.id/|印尼货运 Sentral
+PostNL|https://www.postnl.nl/|荷兰邮政
+Bosnia And Herzegovina Post|https://www.posta.ba/|波黑邮政
+Bpost|https://www.bpost.be/|比利时邮政
+Post Haste|https://www.posthaste.co.nz/default.html|新西兰快递 Post Haste
+PostaPlus|https://www.postaplus.com/|中东快递 PostaPlus
+Turkish Post (PTT)|https://www.ptt.gov.tr/|土耳其邮政
+Latvia Post|https://www.pasts.lv/|拉脱维亚邮政
+Belarus Post|https://belpost.by/|白俄罗斯邮政
+PostNL International|https://postnl.post/|荷兰邮政国际
+Swiss Post|https://www.post.ch/|瑞士邮政
+Posten Norge|https://www.posten.no/|挪威邮政
+PostNord|https://www.postnord.se/en|北欧邮政 瑞典/丹麦
+Estonia Post (Omniva)|https://www.omniva.ee/|爱沙尼亚邮政
+Malta Post|https://www.maltapost.com/|马耳他邮政
+Chronopost|https://www.chronopost.fr/|法国快递 Chronopost
+Montenegro Post|https://www.postacg.me/|黑山邮政
+APC Postal Logistics|https://www.apc-pli.com/|美国邮政物流 APC
+Poste Italiane|https://www.poste.it/|意大利邮政
+Sailpost|https://www.sailpost.it/traccia-il-pacco/|意大利快递 Sailpost
+Gibraltar Post|https://www.post.gi/|直布罗陀邮政
+Iceland Post|https://www.postur.is/|冰岛邮政
+Denmark Post|https://www.postdanmark.dk/|丹麦邮政
+ELTA Hellenic Post|https://www.elta.gr/en/|希腊邮政
+Monaco Post|https://www.lapostemonaco.mc/|摩纳哥邮政
+Deutsche Post|https://www.deutschepost.de/|德国邮政
+Magyar Posta|https://posta.hu/|匈牙利邮政
+Romania Post|https://www.posta-romana.ro/|罗马尼亚邮政
+Moldova Post|https://www.posta.md/|摩尔多瓦邮政
+Lithuania Post|https://www.post.lt/|立陶宛邮政
+Liechtenstein Post|https://www.post.li/|列支敦士登邮政
+Chronopost Portugal (DPD)|https://chronopost.pt/|葡萄牙快递 DPD
+Austrian Post|https://www.post.at/|奥地利邮政
+Georgia Post|https://www.gpost.ge/|格鲁吉亚邮政
+Jersey Post|https://www.jerseypost.com/track/|泽西岛邮政
+Posta Bez Hranic|https://www.postabezhranic.cz/|捷克跨境邮政
+San Marino Post|https://www.poste.sm/on-line/home.html|圣马力诺邮政
+Serbia Post|https://www.posta.rs/|塞尔维亚邮政
+A1 Post|https://a1post.bg/track.php|保加利亚快递 A1
+Russian Post|https://pochta.ru/|俄罗斯邮政
+Post One|https://postone.eu/|保加利亚快递 Post One
+Czech Post|https://www.ceskaposta.cz/|捷克邮政
+La Poste|https://www.laposte.fr/|法国邮政
+InPost|https://inpost.pl/|波兰智能快递柜 InPost
+Poland Post|https://www.poczta-polska.pl/|波兰邮政
+Faroe Islands Post|https://www.posta.fo/|法罗群岛邮政
+Netherlands Post (TNT)|https://www.tnt.com/|荷兰TNT快递
+Afghan Post|http://afghanpost.gov.af/|阿富汗邮政
+Finland Post (Posti)|https://www.posti.fi/|芬兰邮政
+Algeria Post|https://www.poste.dz/|阿尔及利亚邮政
+Guernsey Post|https://www.guernseypost.com/|根西岛邮政
+Algeria EMS|http://www.ems.dz/|阿尔及利亚邮政
+Cyprus Post|https://www.cypruspost.post/|塞浦路斯邮政
+Correo Argentino|https://www.correoargentino.com.ar/|阿根廷邮政
+Hispapost|https://www.hispapost.es/|西班牙快递 Hispapost
+Haypost|http://www.haypost.am/|Haypost
+Slovakia Post|https://www.posta.sk/|斯洛伐克邮政
+Azer Express Post|http://www.azems.az/|Azer Express Post
+Bulgaria Post|https://www.bgpost.bg/|保加利亚邮政
+Bangladesh Post|https://bdpost.gov.bd/|孟加拉邮政
+Slovenia Post|https://www.posta.si/|斯洛文尼亚邮政
+Barbados Post|http://www.bps.gov.bb/|巴巴多斯邮政
+Luxembourg Post|https://www.post.lu/|卢森堡邮政
+Bpost|https://track.bpost.cloud/|Bpost
+An Post|https://www.anpost.ie/|爱尔兰邮政
+Bpost International|http://www.bpost2.be/bpostinternational/track_trace/find.php|Bpost International
+Albania Post|https://www.postashqiptare.al/|阿尔巴尼亚邮政
+Belize Post|http://www.belizepostalservice.gov.bz/|伯利兹邮政
+Ukraine Post|https://www.ukrposhta.ua/|乌克兰邮政
+La Poste De Benin|http://www.laposte.bj/|贝宁邮政
+Bhutan Post|http://www.bhutanpost.bt/|不丹邮政
+Pošta Srpske|https://www.postesrpske.com/|波黑塞族邮政
+Hrvatska pošta Mostar|https://www.post.ba/|波黑克族邮政
+Botswana Post|http://www.botspost.co.bw/|博茨瓦纳邮政
+Correios Brazil|http://www.correios.com.br/|巴西邮政
+Brunei Post|http://www.post.gov.bn/|文莱邮政
+Sonapost|https://laposte.bf/|Sonapost
+Burundi Post|http://www.poste.bi/|布隆迪邮政
+China Post|https://www.ems.com.cn/qps/yjcx/|中国邮政
+China EMS|https://www.11183.com.cn/|中国邮政
+Campost|https://www.campost.cm/|Campost
+Canada Post|https://www.canadapost.ca/|加拿大邮政
+Correios Cabo Verde|http://www.correios.cv/|佛得角邮政
+Correos Chile|http://www.correos.cl/|智利邮政
+4-72|https://www.4-72.com.co/|4-72
+Correos Costa Rica|http://www.correos.go.cr/|哥斯达黎加邮政
+Croatian Post|http://www.posta.hr/|克罗地亚邮政
+Correos de Cuba|http://www.correos.cu/|古巴邮政
+PostNord Danmark|https://www.postnord.dk/|丹麦邮政
+Inposdom|http://www.inposdom.gob.do/|Inposdom
+Egypt Post|https://egyptpost.gov.eg/ar-eg/home/|埃及邮政
+Emirates Post|https://emiratespost.ae/|阿联酋邮政
+Ethiopian Post|http://www.ethiopostal.com/|埃塞俄比亚邮政
+Fiji Post|http://www.postfiji.com.fj/|斐济邮政
+DHL Paket|https://www.dhl.de/en/privatkunden/pakete-empfangen/verfolgen.html|DHL Paket
+DHL eCommerce Asia|https://ecommerceportal.dhl.com/|DHL eCommerce Asia
+Ghana Post|http://www.ghanapost.com.gh/|加纳邮政
+Correo de Guatemala|https://correosytelegrafos.civ.gob.gt/|危地马拉邮政
+Guyana Post|http://guypost.gy/|圭亚那邮政
+HongKong Post|http://www.hongkongpost.hk/|中国香港邮政
+Correos de Honduras|http://www.honducor.gob.hn/|洪都拉斯邮政
+India Post|https://app.indiapost.gov.in/|印度邮政
+Pos Indonesia|https://www.posindonesia.co.id/|印尼邮政
+An Post|https://www.anpost.com/|An Post
+Israel Post|http://www.israelpost.co.il/|以色列邮政
+Iraq Post (البريد العراقي)|https://post.iq/en/|伊拉克邮政
+Jamaica Post|http://www.jamaicapost.gov.jm/|牙买加邮政
+Japan Post|https://www.japanpost.jp/|日本邮政
+Jordan Post|http://www.jordanpost.com.jo/|约旦邮政
+Kaz Post|https://post.kz/|Kaz Post
+Kenya Post|http://www.posta.co.ke/|肯尼亚邮政
+Royal Mail|https://www.royalmail.com/|英国皇家邮政（Royal Mail）
+Parcelforce|https://www.parcelforce.com/|Parcelforce
+ePOST (인터넷우체국)|http://www.epost.go.kr/|ePOST (인터넷우체국)
+ePOST (인터넷우체국)(Domestic)|https://service.epost.go.kr/iservice/usr/trace/usrtrc001k01.jsp|ePOST (인터넷우체국)(Domestic)
+Posta e Kosovës|http://postakosoves.com/|Posta e Kosovës
+Kuwait Post|https://moc.gov.kw/|科威特邮政
+Kyrgyz Express Post(KEP)|https://www.kep.kg/|吉尔吉斯斯坦邮政
+Enterprise des Poste Lao|http://www.laopost.com.la/|老挝邮政
+Enterprise des Poste Lao (APL)|http://www.laopostapl.com/|老挝邮政
+Liban Post|http://www.libanpost.com/|Liban Post
+Lesotho Post|http://lesothopost.org.ls/|莱索托邮政
+Libya Post|http://libyapost.ly/|利比亚邮政
+PostPlus|http://www.post-plus.net/|PostPlus
+Saint Lucia Post|http://www.stluciapostal.com/|圣卢西亚邮政
+Macau Post|http://www.macaupost.gov.mo/|中国澳门邮政
+Macedonia Post|https://www.posta.com.mk/|北马其顿邮政
+Paositra Malagasy|https://paositramalagasy.mg/|Paositra Malagasy
+Pos Malaysia|http://www.pos.com.my/|马来西亚邮政
+Maldives Post|https://www.maldivespost.com/|马尔代夫邮政
+La poste du Mali|http://www.laposte.ml/|马里邮政
+Mauritius Post|http://www.mauritiuspost.mu/|毛里求斯邮政
+MailAmericas|http://mailamericas.com/|MailAmericas
+Mexico Post|https://www.correosdemexico.gob.mx/|墨西哥邮政
+Mongol Post|http://www.mongolpost.mn/|Mongol Post
+Correios de Moçambique|http://www.correios.co.mz/|莫桑比克邮政
+Myanmar Post|https://www.myanmarpost.com.mm/|缅甸邮政
+Namibia Post|http://www.nampost.com.na/|纳米比亚邮政
+Nepal Post|http://www.gpo.gov.np/|尼泊尔邮政
+NZ Post (New Zealand Post)|http://www.nzpost.co.nz/|新西兰邮政
+Nicaragua Post|https://www.correos.gob.ni/|尼加拉瓜邮政
+Nigerian Post|https://www.nipost.gov.ng/|尼日利亚邮政
+Oman Post|https://omanpost.om/|阿曼邮政
+Pakistan Post|http://www.pakpost.gov.pk/|巴基斯坦邮政
+Palestine Post|http://www.palpost.ps/|巴勒斯坦邮政
+Correos Panama|https://www.correospanama.gob.pa/|巴拿马邮政
+Correo Paraguayo|http://www.correoparaguayo.gov.py/|巴拉圭邮政
+Serpost|https://www.serpost.com.pe/Cliente/Home/Paginacomercial|Serpost
+Philippine Post|https://www.phlpost.gov.ph/|菲律宾邮政
+CTT|http://www.ctt.pt/|CTT
+Q-Post|https://qatarpost.qa/|Q-Post
+Rwanda Post|http://www.i-posita.rw/|卢旺达邮政
+SVG Post|http://www.svgpost.gov.vc/|SVG Post
+Correo El Salvador|http://www.correos.gob.sv/|萨尔瓦多邮政
+Saudi Post|https://splonline.com.sa/ar/|沙特邮政
+La Poste De Senegal|http://www.laposte.sn/|塞内加尔邮政
+Seychelles Post|http://www.seychelles-post.com/|塞舌尔邮政
+Singapore Post|http://www.singpost.com/|新加坡邮政
+Solomon Post|http://www.solomonpost.com.sb/|所罗门群岛邮政
+South Africa Post|https://www.postoffice.co.za/|南非邮政
+Correos Spain|https://www.correos.es/|西班牙邮政
+Sudan Post|http://sudapost.sd/|苏丹邮政
+Direct Link|http://www.directlink.com/|Direct Link
+Samoa Post|https://www.samoapost.ws/|萨摩亚邮政
+Chunghwa Post|https://ipost.post.gov.tw/|中国台湾邮政
+Tanzania Post|http://www.posta.co.tz/|坦桑尼亚邮政
+Thailand Post|https://www.thailandpost.co.th/|泰国邮政
+La Poste De Togo|http://www.laposte.tg/|多哥邮政
+Trinidad and Tobago Postal Corporation|http://www.ttpost.net/|特立尼达邮政
+Uganda Post|http://www.ugapost.co.ug/|乌干达邮政
+Uzbekistan Post|https://uz.post/|乌兹别克斯坦邮政
+Correo Uruguayo|http://www.correo.com.uy/|乌拉圭邮政
+Vanuatu Post|http://www.vanuatupost.vu/|瓦努阿图邮政
+Ipostel|https://www.ipostel.gob.ve/|Ipostel
+VietNam Post|http://www.vnpost.vn/|越南邮政
+VietNam EMS|https://ems.com.vn/|越南邮政
+Yemen Post|http://www.post.ye/|也门邮政
+Zambia Post|http://www.zampost.com.zm/|赞比亚邮政
+Zimbabwe Post|http://www.zimpost.co.zw/|津巴布韦邮政
+General Post Office|http://www.aps.ai/|General Post Office
+Aland Post|http://www.alandpost.ax/|奥兰群岛邮政
+Aruba Post|http://www.postaruba.com/|阿鲁巴邮政
+OPT-NC|http://www.opt.nc/|OPT-NC
+海关知识产权|http://202.127.48.145:8888/zscq/search/jsp/vBrandSearchIndex.jsp|中国海关知识产权
+IPRS 美国知识产权|https://iprs.cbp.gov/s/|美国知识产权查询
+国家税务总局|https://www.chinatax.gov.cn/|国家税务总局
+中国国际贸易单一窗口查询统计|https://swapp.singlewindow.cn/qspserver/sw/qsp/query/view/major|中国国际贸易单一窗口查询统计
+通关全流程状态查询|https://swapp.singlewindow.cn/qspserver/sw/qsp/query/view/import?title=%E9%80%9A%E5%85%B3%E5%85%A8%E6%B5%81%E7%A8%8B%E7%8A%B6%E6%80%81%E6%9F%A5%E8%AF%A2|中国国际贸易单一窗口
+通关状态|http://online.customs.gov.cn/static/pages/mySearch.html|海关通关状态查询
+舱单信息查询|http://query.customs.gov.cn/MNFTQ/MQuery.aspx|海关总署海空公路舱单信息查询
+报关归类查询|https://hscode.macld.com/|报关归类辅助查询系统
+贸易单证指南|http://tradedoc.mofcom.gov.cn/TradeDoc/do/dz/tradedoc~1000_1000~0.html|中国商务部贸易单证
+业务系统|https://e.chinaport.gov.cn/|中国电子口岸
+UL认证查询|https://productiq.ulprospector.com/zh-cn/search?term|UL认证查询
+归类通|https://hs.e-to-china.com.cn/?type=ks|中国海关编码
+HS编码查询|https://www.i5a6.com/|海关编码查询
+海关编码查询|https://www.5688.cn/hscode/|海关编码查询
+通关网|https://www.hscode.net/IntegrateQueries/QueryYS|通关网
+关务小二|https://www.guanwuxiaoer.com/|关务小二
+中国海关编码|http://online.customs.gov.cn/ociswebserver/pages/jckspsl/index.html|海关编码查询
+世界HS编码表|https://www.tradeatlas.com/cn|世界HS编码表
+香港海关编码|https://www.censtatd.gov.hk/tc/index_hs_code.html|海关编码查询
+香港海关|https://www.customs.gov.hk/sc/home/index.html|香港海关
+澳门海关|https://www.customs.gov.mo/gb/index.html|澳门海关
+澳门海关编码|https://www.dsec.gov.mo/EMTS.aspx?lang=zh-MO|海关编码查询
+美国海关编码|https://rulings.cbp.gov/home|海关编码查询
+美国关税|https://hts.usitc.gov/|美国关税查询
+CROSS Customs Rulings Online Search System|https://rulings.cbp.gov/home|海关裁定在线搜索系统
+美国关税Schedule B Search|https://uscensus.prod.3ceonline.com/|美国关税查询
+美国贸易数据查询DataWeb|https://dataweb.usitc.gov/|美国国际贸易委员会月季年数据
+Federal Register|https://www.federalregister.gov/|Federal Register 美国联邦公报
+Cargo Systems Messaging Service|https://www.cbp.gov/trade/automated/cargo-systems-messaging-service|美国海关政策更新
+USTR|https://ustr.gov/|美国贸易代表办公室
+US Firms Code List|https://www.cbp.gov/sites/default/files/assets/documents/2023-Jan/FIRMS30%20.TXT|FIRMS CODE 美国仓库代码
+CBP|https://www.cbp.gov/|美国海关及边境保护局
+OFAC 实体清单 金融制裁|https://ofac.treasury.gov/|美国财政部 制裁查询
+DOC 管理反倾销 反补贴税|https://www.commerce.gov/|美国商务部 Department of Commerce
+USITC|https://www.usitc.gov/|美国国际贸易委员会
+White House|https://www.whitehouse.gov/|美国白宫
+EveryCRSReport|https://www.everycrsreport.com/|美国国会研究服务CRS报告
+美国海关数据|https://www.importyeti.com/|美国海关数据查询
+查询需提供制造商识别码MID|https://www.trade.gov/data-visualization/us-textile-and-apparel-correlation|MID代码信息纺织品服装产品的HS编码
+中国关税|http://wmsw.mofcom.gov.cn/wmsw/|86国进出口关税查询
+世界关税|https://web.wtocenter.org.tw/tariff/search_byProducts.aspx|各国关税查询
+欧盟关税|https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp?MeasText=&amp;amp;Lang=en&amp;amp;StartPub=&amp;amp;|欧盟国家税费
+VIES VAT Number Validation|https://ec.europa.eu/taxation_customs/vies/#/vat-validation|VAT号码验证
+EORI号有效验证|https://ec.europa.eu/taxation_customs/dds2/eos/eori_validation.jsp?Lang=en|EORI number validation
+公司EORI号码查询|https://eori-search.com/search/de/+MERCEDES+BENZ+AG+|公司EORI号码查询
+公司EORI号码查询|https://vat-lookup.co.uk/verify/vat_check.php/VATNumber/GB473538916/CompanyName/CC+ELECTRONICS+EUROPE+LIMITED|欧盟英国公司EORI号码查询
+英国关税|https://www.trade-tariff.service.gov.uk/find_commodity|英国关税查询
+加拿大关税|http://www.cbsa-asfc.gc.ca/trade-commerce/tariff-tarif/|加拿大关税查询
+CARM Client Portal|https://ccp-pcc.cbsa-asfc.cloud-nuage.canada.ca/en/homepage|加拿大关税税务处理系统
+印度关税1-2|https://www.zauba.com/hs_code_search|1.先查编码
+印度关税2-2|https://www.cybex.in/indian-custom-duty/#|2.再查税金
+印度海关|https://www.commerce.gov.in/|印度海关
+印度贸易门户|https://indiantradeportal.in/index.jsp?lang=0|印度贸易门户
+俄罗斯海关法规|https://www.alta.ru/|俄罗斯海关与外贸信息门户
+罗马尼亚海关|https://www.anaf.ro|罗马尼亚海关法规 UIT申请
+澳大利亚海关|https://www.abf.gov.au/importing-exporting-and-manufacturing/tariff-classification/current-tariff/schedule-3|澳大利亚关税查询
+日本海关|https://www.kanzei.or.jp/statistical/tariff/headline/hs1dig/e/1|日本关税查询
+挪威海关|https://www.toll.no/en/|挪威海关 点MENU
+巴西海关|https://www.gov.br/receitafederal/pt-br|巴西海关 点Mais Assuntos
+巴西 NCM code|https://www.exportgenius.in/hs-code/brazil/and|Brazil NCM code
+迪拜海关|https://www.dubai.ae/|迪拜海关 DuBai AE
+泰国海关|https://www.customs.go.th/|泰国海关
+越南海关|https://www.customs.gov.vn/|越南海关
+沙特税务VAT验证|https://zatca.gov.sa/en/eServices/Pages/TaxpayerLookup.aspx|沙特税务VAT验证
+刚果金海关|https://douane.gouv.cd/|刚果金海关
+韩国海关|https://www.customs.go.kr/english/main.do|韩国海关 Korea Customs
+中国台湾海关|https://web.customs.gov.tw/en/|中国台湾关务署 MOF
+新加坡海关|https://www.customs.gov.sg/|新加坡海关 Singapore Customs
+马来西亚海关|https://www.customs.gov.my/en/|马来西亚海关 JKDM
+印尼海关|https://www.beacukai.go.id/?lang=en|印度尼西亚海关 Bea Cukai
+菲律宾海关|https://customs.gov.ph/|菲律宾海关 BOC
+德国海关|https://www.zoll.de/EN/Home/home_node.html|德国海关 Zoll
+法国海关|https://www.douane.gouv.fr/|法国海关 Douane
+荷兰海关|https://www.douane.nl/en/|荷兰海关 Douane
+意大利海关|https://www.adm.gov.it/portale/en/web/guest/home-english|意大利海关 ADM
+西班牙海关|https://sede.agenciatributaria.gob.es/Sede/en_gb/aduanas_.html|西班牙海关 AEAT
+波兰海关|https://www.gov.pl/web/national-revenue-administration|波兰海关 KAS
+瑞士海关|https://www.bazg.admin.ch/en|瑞士海关 BAZG
+土耳其海关|https://trade.gov.tr/|土耳其海关 贸易部
+埃及海关|https://customs.gov.eg/|埃及海关 Egyptian Customs
+南非海关|https://www.sars.gov.za/customs-and-excise/|南非海关 SARS
+尼日利亚海关|https://customs.gov.ng/|尼日利亚海关 NCS
+肯尼亚海关|https://www.kra.go.ke/|肯尼亚海关 KRA
+摩洛哥海关|https://www.douane.gov.ma/web/guest|摩洛哥海关 ADII
+以色列海关|https://www.gov.il/en/departments/topics/customs_israel_tax_authority|以色列海关 ITA
+墨西哥海关|https://www.anam.gob.mx/|墨西哥海关 ANAM
+阿根廷海关|https://www.argentina.gob.ar/arca/aduana|阿根廷海关 ARCA
+智利海关|https://www.aduana.cl/|智利海关 Aduana
+哥伦比亚海关|https://www.dian.gov.co/|哥伦比亚海关 DIAN
+秘鲁海关|https://www.sunat.gob.pe/aduanas.html|秘鲁海关 SUNAT
+巴基斯坦海关|https://www.fbr.gov.pk/customs/131167/131271|巴基斯坦海关 FBR
+孟加拉海关|https://bangladeshcustoms.gov.bd/|孟加拉国海关 NBR
+新西兰海关|https://www.customs.govt.nz/|新西兰海关 NZ Customs
+中国商标局|https://sbj.cnipa.gov.cn/sbj/index.html|国家知识产权局商标局
+USPTO 专利商标|https://tmsearch.uspto.gov/search/search-information|美国专利和商标查询
+WIPO商标查询|https://branddb.wipo.int/zh/|WIPO全球品牌数据库
+欧盟商标局EUIPO|https://www.euipo.europa.eu/|欧盟知识产权局商标查询
+英国知识产权局|https://www.gov.uk/government/organisations/intellectual-property-office|英国商标专利查询
+日本特许厅|https://www.jpo.go.jp/|日本商标专利官方机构
+中国专利检索|https://pss-system.cponline.cnipa.gov.cn/conventionalSearch|国家知识产权局专利检索
+美国专利局|https://ppubs.uspto.gov/pubwebapp/static/pages/landing.html|USPTO专利检索系统
+谷歌专利|https://patents.google.com/|Google Patents全球专利搜索
+欧洲专利局|https://www.epo.org/en/searching-for-patents|EPO欧洲专利查询
+Espacenet专利检索|https://worldwide.espacenet.com/|EPO全球专利检索系统
+日本J-PlatPat|https://www.j-platpat.inpit.go.jp/|日本专利商标检索平台
+WIPO外观设计库|https://designdb.wipo.int/|WIPO全球外观设计数据库
+美国版权局|https://www.copyright.gov/|美国版权注册与查询
+世界知识产权组织|https://www.wipo.int/portal/zh/|WIPO官网
+新工商名录|https://gongshang.mingluji.com/|中国工商企业信息
+全国各行业产业园区库|https://y.qianzhan.com/system/index/|前瞻产业园区库
+香港注册公司查询|https://www.e-services.cr.gov.hk/ICRIS3EP/system/dashboard/e-search.do|香港注册公司查询
+香港公司名单|https://hkg.databasesets.com/zh-hant|香港公司名单数据集
+香港春季电子产品展|https://www.hktdc.com/event/hkelectronicsfairse/tc|香港电子展HKTDC
+WCA|https://www.wcaworld.com/Home|世界各国货代 需付费
+Google Trends|https://trends.google.com/trends?geo=US&amp;amp;hl=en-US|Google Trends
+360趋势|https://trends.so.com/|360趋势
+百度指数|https://index.baidu.com/v2/index.html#/|百度指数
+谷歌地图|https://www.google.com/maps|谷歌地图 翻墙
+谷歌地球|https://www.google.com/maps/d/|谷歌地图个人数据导入
+全球机场港口距离|https://www.searates.com/cn/services/distances-time|Searates Distances Time全球距离
+骆驼地图|https://www.logsoso.com/mapIndex|骆驼地图 不翻墙
+必应地图|https://www.bing.com/maps|必应地图 无需VPN
+世界地图|http://www.ugucci.com/|看世界地图 免翻墙
+谷歌翻译|https://translate.google.com/|谷歌翻译
+Deepl翻译|https://www.deepl.com/zh/translator|Deepl翻译
+PDF文件翻译|https://app.immersivetranslate.com/|PDF文件翻译 不变格式
+PDF功能|https://smallpdf.com/|PDF功能相关
+美国地址生成器|https://www.meiguodizhi.com/|多国随机地址格式参考 学习各国地址格式
+印章|https://33tool.com/seal/|印章生成 刻章
+印章后图片变透明|https://www.aigei.com/bgremover|在线图片去底
+数字大写转换|http://daxie.00cha.net/9000.html|数字转币种
+手写字体|https://www.qqxiuzi.cn/zh/shouxie-shufa/|手写体在线转换
+实时汇率查询|https://www.boc.cn/sourcedb/whpj/|中银外汇牌价实时汇率
+人民币汇率中间价|http://www.safe.gov.cn/safe/rmbhlzjj/index.html|国家外汇管理局
+图小小|https://www.simpleimageresizer.com/|图片压缩 修改尺寸
+Kingsway外贸企业视频|https://cn.kingswayvideo.com/|Kingsway外贸企业视频
+美剧窝|https://www.meijuwo.cc/|美剧 英文学习
+爱美剧天堂|https://www.imjtt.com/|美剧 英文学习
+91美剧|https://91mjw.tv|美剧 英文学习
+美剧迷|https://www.meijumi.net/|美剧 英文学习
+TED|https://www.ted.com/|TED
+TED Radio Hour|https://www.npr.org/podcasts/510298/ted-radio-hour|National Public Radio NPR
+Planet Money|https://www.npr.org/podcasts/510289/planet-money|National Public Radio NPR
+学英语不求人|https://www.englearner.site/cn/index.html|学英语不求人
+人人电影|https://www.rrdynb.com/index.html|国内外影视资源站
+中国哲学书电子化计划|https://ctext.org/zhs|纯精神追求内容
+抖音快手去水印|https://dy.kukutool.com/|去水印下载视频
+Adobe 全家桶|https://www.superso.top/Adobe/|Adobe 全家桶 破解版下载
+脑袋瓜子|https://www.naodai.org/|各种软件下载
+图片处理|https://arc.tencent.com/zh/ai-demos/faceRestoration|腾讯ARC 修复 抠图 增强
+剪映学习|https://www.capcut.cn/learning|剪映创作课堂
+巨潮资讯|http://www.cninfo.com.cn/new/index|上市公司财报查询
+Remove Paywalls|https://paywallbuster.com/|移除付费链接网站
+ChatPDF|https://www.chatpdf.com/|对话PDF文档
+双语对照网页翻译插件|https://immersivetranslate.com/zh-Hans/|沉浸式翻译
+AI 通识学习|https://www.datawhale.cn/home|AI 通识学习
+ChatGPT|https://chatgpt.com/|AI  ChatGPT
+Grok|https://grok.com/|AI Grok
+Gemini|https://gemini.google.com/|AI  Gemini
+Cladue Code|https://claude.ai/|AI Cladue Code
+Cursor|https://cursor.com|AI Cursor
+Perplexity|https://www.perplexity.ai/|AI Perplexity
+Deepseek|https://chat.deepseek.com/|AI Deepseek
+MD2Card|https://md2card.com/zh|Markdown转知识卡片
+EpubKit|https://epubkit.app/zh/collections/|网页打包成电子书
+Pagespeed Insights|https://pagespeed.web.dev/|网站网速检测
+人民法院案例库|https://rmfyalk.court.gov.cn/home.html|人民法院案例库
+裁判文书网|https://wenshu.court.gov.cn/|中国裁判文书网
+中国审判流程信息|https://splcgk.court.gov.cn/gzfwww/|中国审判流程信息公开网
+老赖查询|http://zxgk.court.gov.cn/shixin/|失信执行人查询
+企业信用网|https://www.gsxt.gov.cn/index.html|国家企业信用网
+信用广东网|https://credit.gd.gov.cn/|广东企业信用网
+信用深圳网|https://www.szcredit.org.cn/#/index|深圳企业信用网
+中国海关企业查询|http://credit.customs.gov.cn/ccppwebserver/pages/ccpp/html/ccppindex.html|中国海关企业查询
+深圳公司查询|https://amr.sz.gov.cn/outer/entSelect/gs.html|深圳市监局商事登记簿查询
+跨境小白网|https://kjrate.com/|跨境电商职场社区
+货代如何打官司|https://mp.weixin.qq.com/s/uo3OFGBXzlSnUaGLWCe5Zg|货代打官司操作步骤
+货代黑名单|http://www.siffa.org.cn/search.php?keyword=%E9%BB%91%E5%90%8D%E5%8D%95|深货协货代黑名单
+广州互联网法院|https://ols.gzinternetcourt.gov.cn/|广州互联网法院诉讼平台
+货代说|https://lawnwing.com/|货代说Paul
+货代QA社|https://www.freightqa.com/|货代QA社
+百晓网|https://www.kjwlbxs.com/|跨境电商产业服务平台
+Supply Chain Dive|https://www.supplychaindive.com/|全球供应链新闻 趋势 分析
+Reuters|https://www.reuters.com/|路透社 Reuters
+CNBC|https://www.cnbc.com/|美国消费者新闻与商业频道CNBC
+Freightwaves|https://www.freightwaves.com/|供应链 物流 卡车 新闻媒体
+ACW air cargo week|https://www.aircargoweek.com/|空运每周新闻资讯
+国际物流新闻|https://theloadstar.com/|THE LOAD STAT
+The New York Times|https://www.nytimes.com/|纽约时报 需要付费
+The New York Times Tariffs|https://www.nytimes.com/article/trump-tariffs-canada-mexico-china.html|纽约时报 关税章节 需要付费
+财富中文网|https://www.fortunechina.com/|财富中文网
+CNN|https://www.cnn.com/business|CNN Business
+Reddit|https://www.reddit.com/r/popular/|美国知乎
+X|https://twitter.com/home|美国微博
+Newsweek|https://www.newsweek.com/|Newsweek新闻 分析 政治 商业 科技
+ABD post|https://www.abdpost.com/|ABD POST 美国新闻
+NY Post|https://nypost.com/|New York Post 纽约新闻
+KTLA 5|https://ktla.com/|KTLA 5 美国新闻
+百运网|https://www.by56.com/|百运网
+百宸达国际|https://www.pst56.com/|进出口双向物流服务商
+米课|https://ask.imiker.com/|米问社区
+米课老华|https://www.mrhua.net/|米课老华的历史
+料神|https://www.liaosam.com/|sam
+顾小北|https://guxiaobei.com/|和他的朋友们
+外贸云课堂|https://waimaoquan.alibaba.com/px|阿里巴巴外贸云课堂
+福步论坛|https://bbs.fobshanghai.com/|福步论坛
+邦阅网|https://www.52by.com/|邦阅网
+龙之向导|https://www.dragon-guide.net/|龙之向导外贸导航
+表姐物语|https://www.sohodiary.com/|表姐说外贸
+建站笔记|https://www.kiwimore.com/|Kiwi建站笔记
+奶爸建站笔记|https://blog.naibabiji.com/|奶爸建站笔记
+回响建站|https://huixiangseo.com/|回响建站
+SEO博客|https://www.seozac.com/|Zac的SEO博客
+One小白|https://www.onexiaobai.com/|外贸独立站建站
+全球开店|https://gs.amazon.cn|亚马逊全球开店
+卖家大学|https://sell.amazon.com/|亚马逊卖家大学
+卖家论坛|https://sellercentral.amazon.com/seller-forums|亚马逊卖家论坛Amazon Seller Central
+亚马逊SPN|https://dev.spn.globalsellingcommunity.cn/discover|亚马逊SPN服务商
+亿恩网|https://www.ennews.com/|跨境电商新媒体资讯平台
+AMZ123|https://www.amz123.com/|亚马逊卖家导航
+大数跨境|https://www.10100.com/|大数跨境 跨境电商导航
+M123|https://www.m123.com/|全跨境导航
+创蓝论坛|https://bbs.ichuanglan.com/forum.php|创蓝论坛
+雨果跨境|https://www.cifnews.com/|雨果跨境
+知无不言|https://wearesellers.com/#|知无不言跨境电商社区
+万花筒跨境|https://www.wahuto.com/|品牌出海流量服务平台
+店雷达|https://www.dianleida.net/#/?a=e4bcfb70|1688跨境选品数据分析工具
+欧洲开店知识库|https://01234567.feishu.cn/wiki/AjBqwyp5yisP60kvNGAchQtSn7b|开启欧洲跨境之路
+Shopify|https://www.shopify.com/zh|全球领先独立站建站平台
+店匠Shoplazza|https://www.shoplazza.cn/|跨境电商独立站建站平台
+SHOPYY|https://www.shopyy.com/|跨境电商独立站建站系统
+卖家精灵|https://www.sellersprite.com/|亚马逊选品与关键词工具
+Helium 10|https://www.helium10.com/|亚马逊卖家运营工具套件
+Keyword Tool|https://keywordtool.io/|关键词挖掘工具
+MerchantWords|https://www.merchantwords.com/|亚马逊关键词搜索量工具
+紫鸟浏览器|https://www.ziniao.com/|跨境电商店铺安全管理浏览器
+谷歌商机洞察|https://marketfinder.thinkwithgoogle.com/|Google Market Finder市场分析
+Kickstarter|https://www.kickstarter.com/|全球知名众筹平台，新品趋势
+Indiegogo|https://www.indiegogo.com/|国际众筹平台，选品灵感
+亚马逊美国站|https://www.amazon.com/|全球最大电商平台，北美主力站点
+亚马逊英国站|https://www.amazon.co.uk/|亚马逊欧洲核心站点
+亚马逊德国站|https://www.amazon.de/|亚马逊欧洲最大站点
+亚马逊法国站|https://www.amazon.fr/|亚马逊法国站点
+亚马逊意大利站|https://www.amazon.it/|亚马逊意大利站点
+亚马逊西班牙站|https://www.amazon.es/|亚马逊西班牙站点
+亚马逊日本站|https://www.amazon.co.jp/|亚马逊日本站点
+亚马逊加拿大站|https://www.amazon.ca/|亚马逊加拿大站点
+亚马逊澳洲站|https://www.amazon.com.au/|亚马逊澳大利亚站点
+亚马逊中东站|https://www.amazon.ae/|亚马逊阿联酋站点
+eBay|https://www.ebay.com/|全球知名在线拍卖及购物平台
+沃尔玛Walmart|https://www.walmart.com/|美国最大零售商电商平台
+Etsy|https://www.etsy.com/|手工艺品与创意商品平台
+Temu|https://www.temu.com/|拼多多旗下跨境电商平台
+SHEIN希音|https://www.shein.com/|全球快时尚跨境电商平台
+速卖通AliExpress|https://www.aliexpress.com/|阿里巴巴旗下跨境零售平台
+阿里巴巴国际站|https://www.alibaba.com/|全球领先的B2B跨境贸易平台
+敦煌网DHgate|https://www.dhgate.com/|跨境电商B2B小额批发平台
+Wayfair|https://www.wayfair.com/|美国最大家居电商平台
+Shopee虾皮|https://shopee.com/|东南亚领先电商平台
+Lazada来赞达|https://www.lazada.com/|阿里旗下东南亚电商平台
+Coupang酷澎|https://www.coupang.com/|韩国最大电商平台
+Ozon|https://www.ozon.ru/|俄罗斯知名电商平台
+Wildberries|https://www.wildberries.ru/|俄罗斯最大电商平台
+Allegro|https://allegro.pl/|波兰最大电商平台
+OTTO|https://www.otto.de/|德国本土最大电商平台之一
+Cdiscount|https://www.cdiscount.com/|法国本土知名电商平台
+Noon|https://www.noon.com/|中东本土电商平台
+美客多MercadoLibre|https://www.mercadolibre.com/|拉美最大电商平台
+Jumia|https://www.jumia.com.ng/|非洲领先电商平台
+新蛋Newegg|https://www.newegg.com/|美国知名3C数码电商平台
+bol|https://www.bol.com/|荷兰最大电商平台
+eMAG|https://www.emag.ro/|罗马尼亚最大电商平台
+Hepsiburada|https://www.hepsiburada.com/|土耳其最大电商平台之一
+ManoMano|https://www.manomano.fr/|法国家居建材电商平台
+Miravia|https://www.miravia.es/|阿里旗下西班牙电商平台
+Tokopedia|https://www.tokopedia.com/|印尼最大电商平台
+Mercari煤炉|https://jp.mercari.com/|日本知名二手交易平台
+寻汇SUNRATE|https://pro.sunrate.com/#/register?inviteCode=VIP66666|全球支付与财资管理平台
+CoGoLinks结行国际|https://cn.cogolinks.com/register?from=crm&amp;invitateCode=SXF7543|全球化跨境支付收款平台
+万里汇WorldFirst|https://www.worldfirst.com.cn/|蚂蚁集团旗下跨境收款平台
+PingPong|https://www.pingpongx.com/|跨境电商收款服务平台
+Payoneer派安盈|https://www.payoneer.com/zh/|全球知名跨境收款平台
+Airwallex空中云汇|https://www.airwallex.com/cn|全球金融科技跨境收付平台
+连连国际|https://global.lianlianpay.com/|连连数字旗下跨境支付平台
+PayPal|https://www.paypal.com/|全球通用在线支付平台
+Stripe|https://stripe.com/|独立站主流在线收单平台

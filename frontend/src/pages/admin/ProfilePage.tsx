@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { authApi } from '../../api/auth.api';
 import { FEATURES } from '../../config/features';
@@ -6,7 +6,7 @@ import { getRoleChecks } from '../../types';
 import {
   User, Camera, Save, Loader2, CheckCircle, AlertCircle,
   Building2, Phone, UserCircle, Image, Bell, FileText, Shield, Scale,
-  Award, Trash2,
+  Award, Trash2, FileImage,
 } from 'lucide-react';
 import client from '../../api/client';
 import RatingSection from '../../components/common/RatingSection';
@@ -36,15 +36,15 @@ export default function ProfilePage() {
     );
   }
 
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const jcRef = useRef<HTMLInputElement>(null);
+  const wcaRef = useRef<HTMLInputElement>(null);
+  const bioRef = useRef<HTMLTextAreaElement>(null);
+  const companyRef = useRef<HTMLInputElement>(null);
   const [displayName, setDisplayName] = useState(user?.display_name || '');
-  const [phone, setPhone] = useState(user?.phone || '');
   const [gender, setGender] = useState(user?.gender || '');
-  const [companyName, setCompanyName] = useState(user?.company_name || '');
   const [cardFile, setCardFile] = useState<File | null>(null);
   const [cardPreview, setCardPreview] = useState<string | null>(null);
-  const [jcTransId, setJcTransId] = useState(user?.jc_trans_id || '');
-  const [wcaId, setWcaId] = useState(user?.wca_id || '');
-  const [bio, setBio] = useState(user?.bio || '');
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
@@ -59,6 +59,29 @@ export default function ProfilePage() {
   const [scoreLoading, setScoreLoading] = useState(false);
 
   const [notifySaving, setNotifySaving] = useState(false);
+
+  // ── 营业执照拖拽上传 ──
+  const [licenseUploading, setLicenseUploading] = useState(false);
+  const [licensePreview, setLicensePreview] = useState<string | null>(null);
+
+  const handleLicenseFile = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setLicenseUploading(true); setError(''); setSuccess('');
+    try {
+      const fd = new FormData(); fd.append('license', file);
+      const res = await client.post('/auth/upload-license', fd);
+      setSuccess(res.data?.message || '✅ 营业执照已上传，等待管理员审核');
+      await checkAuth();
+    } catch (err: unknown) {
+      setError((err as any)?.response?.data?.error || (err as any)?.message || '上传失败，请重试');
+    }
+    finally { setLicenseUploading(false); }
+    // 重置 input 以允许重复上传同一文件
+    if (licenseInputRef.current) licenseInputRef.current.value = '';
+  }, [checkAuth]);
+
+  const licenseInputRef = useRef<HTMLInputElement>(null);
 
   // ── 注销账号 ──
   const [deletePwd, setDeletePwd] = useState('');
@@ -77,17 +100,6 @@ export default function ProfilePage() {
     }
     setDeleteLoading(false);
   };
-
-  useEffect(() => {
-    checkAuth();
-    setDisplayName(user?.display_name || '');
-    setPhone(user?.phone || '');
-    setGender(user?.gender || '');
-    setJcTransId(user?.jc_trans_id || '');
-    setWcaId(user?.wca_id || '');
-    setBio(user?.bio || '');
-    setCompanyName(user?.company_name || '');
-  }, [user]);
 
   // 信用分
   useEffect(() => {
@@ -148,19 +160,20 @@ export default function ProfilePage() {
 
     try {
       const fd = new FormData();
-      fd.append('phone', phone);
-      fd.append('jc_trans_id', jcTransId);
-      fd.append('wca_id', wcaId);
-      fd.append('bio', bio);
+      fd.append('phone', phoneRef.current?.value || '');
+      fd.append('jc_trans_id', jcRef.current?.value || '');
+      fd.append('wca_id', wcaRef.current?.value || '');
+      fd.append('bio', bioRef.current?.value || '');
 
-      const companyChanged = companyName !== user?.company_name;
+      const newCompany = companyRef.current?.value || '';
+      const companyChanged = newCompany !== (user?.company_name || '');
       if (companyChanged) {
-        fd.append('company_name', companyName);
+        fd.append('company_name', newCompany);
         if (!cardFile) {
           const createdAt = user?.created_at ? new Date(user.created_at).getTime() : 0;
           const daysSinceReg = (Date.now() - createdAt) / 86400000;
-          if (daysSinceReg < 15) {
-            setError(`注册未满15天，修改公司名称需要先上传最新的公司名片（注册已 ${Math.floor(daysSinceReg)} 天）`);
+          if (daysSinceReg < 30) {
+            setError(`注册未满30天，修改公司名称需要先上传最新的公司名片（注册已 ${Math.floor(daysSinceReg)} 天）`);
             setLoading(false);
             return;
           }
@@ -196,7 +209,7 @@ export default function ProfilePage() {
     setNotifySaving(false);
   };
 
-  const isCompanyChanged = companyName !== (user?.company_name || '');
+  const isCompanyChanged = false; // 改用ref，不实时对比
 
   // ── 分组卡片样式 ──
   function SectionCard({ icon: Icon, title, desc, children }: { icon: any; title: string; desc?: string; children: React.ReactNode }) {
@@ -287,7 +300,7 @@ export default function ProfilePage() {
           </div>
           <div className="mt-4">
             <label className="block text-sm font-medium text-gray-700 mb-1"><Phone className="w-4 h-4 inline mr-1" />{t(ProfileT.phone, lang)}</label>
-            <input className="input-field" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <input className="input-field" ref={phoneRef} defaultValue={user?.phone || ''} />
           </div>
           <div className="mt-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">✉️ {t(ProfileT.email, lang)}</label>
@@ -330,7 +343,7 @@ export default function ProfilePage() {
                 <h3 className="text-sm font-medium text-gray-700">{t(ProfileT.lawyerBio, lang)}</h3>
               </div>
               <p className="text-xs text-gray-400 mb-2">{t(ProfileT.lawyerBioHint, lang)}</p>
-              <textarea className="input-field w-full min-h-[100px] text-sm resize-none" placeholder={t(ProfileT.lawyerBioPlaceholder, lang)} value={bio} onChange={e => setBio(e.target.value)} />
+              <textarea className="input-field w-full min-h-[100px] text-sm resize-none" placeholder={t(ProfileT.lawyerBioPlaceholder, lang)} ref={bioRef} defaultValue={user?.bio || ''} />
             </div>
           )}
 
@@ -353,23 +366,32 @@ export default function ProfilePage() {
                 ) : null}
               </div>
               <p className="text-xs text-gray-500 mb-3">{t(ProfileT.certDesc, lang)}</p>
-              <label className="flex items-center gap-2 cursor-pointer bg-gray-50 hover:bg-gray-100 border border-dashed border-gray-300 rounded-lg px-4 py-3 transition-colors">
-                <FileText className="w-5 h-5 text-gray-400" />
-                <span className="text-sm text-gray-600">{user?.company_license ? t(ProfileT.reuploadLicense, lang) : t(ProfileT.uploadLicense, lang)}</span>
-                <input type="file" accept="image/*,.pdf" className="hidden"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    try {
-                      setLoading(true); setError('');
-                      const fd = new FormData(); fd.append('license', file);
-                      await client.post('/auth/upload-license', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
-                      setSuccess('营业执照已上传，等待管理员审核');
-                      await checkAuth();
-                    } catch (err: unknown) { setError(extractError(err, '上传失败')); } finally { setLoading(false); }
-                  }}
+              {/* ── 营业执照上传 ── */}
+              <label className={`flex items-center gap-3 cursor-pointer border-2 border-dashed rounded-xl px-5 py-4 transition-all ${
+                licenseUploading
+                  ? 'bg-blue-50 border-blue-400'
+                  : 'bg-gray-50 border-gray-300 hover:bg-blue-50 hover:border-blue-400'
+              }`}>
+                <input
+                  ref={licenseInputRef}
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.gif,.webp,.pdf"
+                  className="hidden"
+                  onChange={handleLicenseFile}
+                  disabled={licenseUploading}
                 />
+                {licenseUploading ? (
+                  <><Loader2 className="w-5 h-5 text-blue-500 animate-spin" /><span className="text-sm text-blue-600 font-medium">上传中...</span></>
+                ) : (
+                  <><FileImage className="w-5 h-5 text-gray-400" /><span className="text-sm text-gray-600">{user?.company_license ? '重新上传营业执照' : '点击上传营业执照'}</span><span className="text-xs text-gray-400 ml-auto">JPG/PNG/PDF ≤10MB</span></>
+                )}
               </label>
+              {success && (
+                <p className="text-sm text-green-600 bg-green-50 border border-green-200 rounded-lg px-4 py-2 mt-2 font-medium">{success}</p>
+              )}
+              {error && (
+                <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2 mt-2">{error}</p>
+              )}
             </div>
           )}
 
@@ -377,11 +399,11 @@ export default function ProfilePage() {
           <div className="border-t border-gray-100 pt-4 mt-4 grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">{t(ProfileT.jcTrans, lang)}</label>
-              <input className="input-field" value={jcTransId} onChange={e => setJcTransId(e.target.value)} placeholder={t(ProfileT.optional, lang)} />
+              <input className="input-field" ref={jcRef} defaultValue={user?.jc_trans_id || ''} placeholder={t(ProfileT.optional, lang)} />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">{t(ProfileT.wca, lang)}</label>
-              <input className="input-field" value={wcaId} onChange={e => setWcaId(e.target.value)} placeholder={t(ProfileT.optional, lang)} />
+              <input className="input-field" ref={wcaRef} defaultValue={user?.wca_id || ''} placeholder={t(ProfileT.optional, lang)} />
             </div>
           </div>
         </SectionCard>
@@ -449,8 +471,7 @@ export default function ProfilePage() {
             <div className="flex items-start gap-4">
               <div className="flex-1">
                 <input className={`input-field ${isCompanyChanged ? 'border-yellow-400 bg-yellow-50' : ''}`}
-                  value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder={t(ProfileT.companyPlaceholder, lang)} />
-                {isCompanyChanged && <p className="text-xs text-amber-600 mt-1">{t(ProfileT.companyChanged(user?.company_name || '', companyName), lang)}</p>}
+                  ref={companyRef} defaultValue={user?.company_name || ''} placeholder={t(ProfileT.companyPlaceholder, lang)} />
               </div>
               <div className="flex-shrink-0">
                 {cardPreview ? (

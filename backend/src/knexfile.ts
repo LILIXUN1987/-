@@ -10,7 +10,7 @@ const knexConfig = useSqlite
       },
       useNullAsDefault: true,
       migrations: {
-        directory: path.resolve(__dirname, '../../database/migrations-sqlite'),
+        directory: path.resolve(__dirname, '../database/migrations-sqlite'),
         extension: 'ts',
       },
     }

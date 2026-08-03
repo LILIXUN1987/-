@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import db from '../config/database';
 import { authRequired } from '../middleware/auth.middleware';
+import { calculateCreditScore, computeScoreFromData } from '../services/creditScore.service';
 
 const router = Router();
 
@@ -16,8 +17,8 @@ router.get('/my-profile', async (req, res) => {
   try {
     const userId = req.user!.id;
     const agent = await db('ddp_agents').where({ created_by: userId }).first();
-    const creditScore = await calculateCreditScore(userId);
-    res.json({ profile: agent || null, credit_score: creditScore });
+    const creditResult = await calculateCreditScore(userId);
+    res.json({ profile: agent || null, credit_score: creditResult.score, credit_details: creditResult });
   } catch (err) {
     res.status(500).json({ error: '服务器错误' });
   }
@@ -78,7 +79,10 @@ router.get('/forwarders', async (req, res) => {
     if (q) {
       query = query.where(function () {
         this.where('company_name', 'like', `%${q}%`)
-          .orWhere('display_name', 'like', `%${q}%`);
+          .orWhere('display_name', 'like', `%${q}%`)
+          .orWhere('port_city', 'like', `%${q}%`)
+          .orWhere('port_code', 'like', `%${q}%`)
+          .orWhere('operable_ports', 'like', `%${q}%`);
       });
     }
 
@@ -127,17 +131,14 @@ router.get('/forwarders', async (req, res) => {
       const ratings = reviewMap[f.id] || [];
       const reviewCount = ratings.length;
       const avgRating = reviewCount > 0 ? ratings.reduce((a: number, b: number) => a + b, 0) / reviewCount : 0;
-      const totalCoops = coopMap[f.id] || 0;
-      const totalDisputes = disputeMap[f.id] || 0;
-
-      let score = 50;
-      if (reviewCount > 0) score += (avgRating / 5) * 30;
-      else score += 10;
-      score += Math.min(totalCoops, 50) * 0.5;
-      score -= totalDisputes * 15;
-      if (f.card_image) score += 10;
-      if (f.created_at && Math.floor((Date.now() - new Date(f.created_at).getTime()) / 86400000) >= 365) score += 5;
-      score = Math.max(0, Math.min(100, Math.round(score)));
+      const daysSinceReg = f.created_at ? Math.floor((Date.now() - new Date(f.created_at).getTime()) / 86400000) : 0;
+      const score = computeScoreFromData({
+        avgRating, reviewCount,
+        totalCoops: coopMap[f.id] || 0,
+        totalDisputes: disputeMap[f.id] || 0,
+        hasCard: !!f.card_image,
+        daysSinceReg,
+      });
 
       return { id: f.id, display_name: f.display_name, company_name: f.company_name, role: f.role, credit_score: score, cooperation_count: coopMap[f.id] || 0 };
     });
@@ -220,7 +221,7 @@ router.get('/my-stats', async (req, res) => {
 
 // ════════════════════════════════════════════════
 // GET /api/overseas/inquiries
-// 发给当前海外代理的 DDP 询价列表
+// 发给当前海外代理的 DDP 询价列表（软限制：免费版超5条后隐藏内容）
 // ════════════════════════════════════════════════
 router.get('/inquiries', async (req, res) => {
   try {
@@ -228,6 +229,8 @@ router.get('/inquiries', async (req, res) => {
     const page = Math.max(1, parseInt(req.query.page as string) || 1);
     const limit = Math.min(Math.max(1, parseInt(req.query.limit as string) || 20), 100);
     const offset = (page - 1) * limit;
+
+    // 免费版也可见全部询价内容（已取消软限制）
 
     const totalQuery = db('messages')
       .where({ receiver_id: userId })
@@ -268,82 +271,60 @@ router.get('/inquiries', async (req, res) => {
         sender_avatar: msg.sender_avatar,
         content: msg.content,
         is_read: !!msg.is_read,
+        is_obscured: false,
         has_replied: Number(replyRow?.total || 0) > 0,
         created_at: msg.created_at,
       });
     }
 
-    res.json({ data: result, total, page, limit });
+    res.json({ data: result, total, page, limit, is_over_limit: false });
   } catch (err) {
     res.status(500).json({ error: '服务器错误' });
   }
 });
 
 // ════════════════════════════════════════════════
-// Helper: 信用分计算 (0-100)
-// 公式与 /api/cooperations/credit-score/:userId 一致
+// GET /api/overseas/pending-quote-count
+// 海外代理：待报价的询价数量（已收到但未提交结构化报价）
 // ════════════════════════════════════════════════
-async function calculateCreditScore(userId: string): Promise<number> {
+router.get('/pending-quote-count', async (req, res) => {
   try {
-    // 1. 评价统计
-    let avgRating = 0;
-    let reviewCount = 0;
-    try {
-      const reviews = await db('reviews').where({ reviewee_id: userId }).select('rating');
-      reviewCount = reviews.length;
-      avgRating = reviewCount > 0
-        ? reviews.reduce((s: number, r: any) => s + r.rating, 0) / reviewCount
-        : 0;
-    } catch {
-      // reviews 表不存在时静默跳过
+    const userId = req.user!.id;
+
+    // 找出发给该代理的DDP询价消息
+    const ddpMessages = await db('messages')
+      .where({ receiver_id: userId })
+      .where('content', 'like', '%DDP%')
+      .where('content', 'like', '%Requirements%')
+      .select('sender_id', 'id', 'content', 'created_at');
+
+    let pendingCount = 0;
+    for (const msg of ddpMessages) {
+      // 检查是否已在 ddp_quotes 里报过价
+      const inquiry = await db('ddp_inquiries')
+        .where({ user_id: msg.sender_id })
+        .orderBy('created_at', 'desc')
+        .first() as any;
+
+      if (inquiry) {
+        const quoteExists = await db('ddp_quotes')
+          .where({ inquiry_id: inquiry.id, agent_user_id: userId })
+          .first();
+        if (!quoteExists) pendingCount++;
+      } else {
+        // 没有ddp_inquiries记录但收到了消息 → 检查是否有站内信回复
+        const replied = await db('messages')
+          .where({ sender_id: userId, receiver_id: msg.sender_id })
+          .where('created_at', '>', msg.created_at)
+          .first();
+        if (!replied) pendingCount++;
+      }
     }
 
-    // 2. 已确认的合作数
-    let totalCoops = 0;
-    try {
-      const coopRow = await db('cooperations')
-        .where(function () { this.where({ agent_user_id: userId }).orWhere({ forwarder_user_id: userId }); })
-        .where({ status: 'confirmed' })
-        .count('* as total').first() as any;
-      totalCoops = Number(coopRow?.total || 0);
-    } catch { /* ignore */ }
-
-    // 3. 争议数
-    let totalDisputes = 0;
-    try {
-      const disputeRow = await db('dispute_cases')
-        .where({ respondent_id: userId })
-        .count('* as total').first() as any;
-      totalDisputes = Number((disputeRow as any)?.total || 0);
-    } catch { /* ignore */ }
-
-    // 4. 名片认证 + 注册天数
-    let hasCard = false;
-    let daysSinceReg = 0;
-    try {
-      const user = await db('users').where({ id: userId }).first() as any;
-      hasCard = !!user?.card_image;
-      daysSinceReg = user?.created_at
-        ? Math.floor((Date.now() - new Date(user.created_at).getTime()) / 86400000)
-        : 0;
-    } catch { /* ignore */ }
-
-    // ── 公式 ──
-    let score = 50; // 基础分
-    if (reviewCount > 0) {
-      score += (avgRating / 5) * 30;
-    } else {
-      score += 10; // 暂无评价给基础分
-    }
-    score += Math.min(totalCoops, 50) * 0.5; // 合作数满分 25
-    score -= totalDisputes * 15;             // 每条争议扣 15
-    if (hasCard) score += 10;                // 名片认证
-    if (daysSinceReg >= 365) score += 5;     // 满一年
-
-    return Math.max(0, Math.min(100, Math.round(score)));
-  } catch {
-    return 50; // 任意异常返回基础分
+    res.json({ pending_quote_count: pendingCount });
+  } catch (err) {
+    res.status(500).json({ error: '服务器错误' });
   }
-}
+});
 
 export default router;

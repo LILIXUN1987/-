@@ -68,6 +68,22 @@ router.get('/my-inquiries', ddpController.myInquiries);
 // 需求热度统计
 router.get('/stats', ddpController.stats);
 
+// 结构化报价
+router.post('/quotes', ddpController.submitQuote);
+router.get('/quotes/my', ddpController.myQuotes);
+router.get('/quotes/:inquiryId', ddpController.getQuotes);
+router.post('/quotes/:id/respond', ddpController.respondQuote);
+
+// 入驻草稿
+router.post('/onboarding-draft', ddpController.saveOnboardingDraft);
+router.get('/onboarding-draft', ddpController.getOnboardingDraft);
+
+// 管理员：未完成入驻列表
+router.get('/pending-onboardings', requireAdmin, ddpController.pendingOnboardings);
+
+// 管理员：计算代理标签
+router.post('/compute-tags', requireAdmin, ddpController.computeAgentTags);
+
 
 // 获取DDP目的地数据（国家列表+港口）
 router.get('/destinations', async (req, res) => {

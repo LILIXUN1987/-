@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import client from '../../api/client';
 import {
-  Gift, Loader2, CheckCircle, Clock, Send, X,
+  Gift, Loader2, CheckCircle, Clock, Send, X, MessageSquare,
+  Wallet, TrendingUp,
 } from 'lucide-react';
 import { toast } from '../../components/common/Toast';
 
@@ -26,6 +27,23 @@ interface CouponItem {
   forwarderCompany?: string;
 }
 
+interface CouponStats {
+  totalIssued: number;
+  available: number;
+  sent: number;
+  used: number;
+  expired: number;
+  totalFaceValue: number;
+  usedFaceValue: number;
+  availableFaceValue: number;
+  currentMonth: string;
+  latestMonth: string;
+  hasCurrentMonthAvailable: boolean;
+  monthly: Array<{ month: string; issued: number; sent: number; used: number; expired: number; available: number }>;
+  byFaceValue: Array<{ faceValue: number; count: number; total: number }>;
+  expiryRange: { from: string; to: string } | null;
+}
+
 export default function MyCouponWalletPage() {
   const user = useAuthStore((s) => s.user);
   const lang = useAuthStore((s) => s.lang);
@@ -38,6 +56,21 @@ export default function MyCouponWalletPage() {
   const [usageHistory, setUsageHistory] = useState<any[]>([]);
   const [tab, setTab] = useState<'coupons' | 'history'>('coupons');
   const [brokers, setBrokers] = useState<Broker[]>([]);
+  const [contactTarget, setContactTarget] = useState<{ id: string; name: string; company: string } | null>(null);
+  const [contactText, setContactText] = useState('');
+  const [contactSending, setContactSending] = useState(false);
+  const [contactSent, setContactSent] = useState(false);
+  const [stats, setStats] = useState<CouponStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  const loadStats = async () => {
+    setStatsLoading(true);
+    try {
+      const res = await client.get('/customs-coupons/my-stats');
+      setStats(res.data.stats);
+    } catch {}
+    setStatsLoading(false);
+  };
 
   const fetchCoupons = async () => {
     setLoading(true);
@@ -56,9 +89,7 @@ export default function MyCouponWalletPage() {
   };
 
   useEffect(() => {
-    fetchCoupons();
-    fetchUsage();
-    // 加载报关行列表（用于口岸选择）
+    Promise.all([loadStats(), fetchCoupons(), fetchUsage()]).then(() => {});
     client.get('/customs-coupons/active-brokers').then(r => setBrokers(r.data.data || [])).catch(() => {});
   }, []);
 
@@ -79,14 +110,66 @@ export default function MyCouponWalletPage() {
       setDeclInfo({ goodsName: '', port: '广州白云机场', notes: '' });
       fetchCoupons();
       fetchUsage();
+      loadStats();
     } catch (err: any) {
       toast.error(err?.response?.data?.error || (lang === 'en' ? 'Failed' : '使用失败'));
     }
     setUsing(false);
   };
 
+  const handleContact = async () => {
+    if (!contactTarget || !contactText.trim()) return;
+    setContactSending(true);
+    try {
+      await client.post('/messages', {
+        receiver_id: contactTarget.id,
+        content: contactText.trim(),
+      });
+      setContactSent(true);
+      setContactText('');
+      setTimeout(() => { setContactTarget(null); setContactSent(false); }, 2000);
+    } catch (err: any) {
+      alert(err?.response?.data?.error || (lang === 'en' ? 'Failed to send' : '发送失败'));
+    }
+    setContactSending(false);
+  };
+
+  const handleContactForwarder = async (coupon: CouponItem) => {
+    if (!coupon.forwarderName && !coupon.forwarderCompany) {
+      alert(lang === 'en' ? 'Contact info unavailable' : '暂无送券人联系方式');
+      return;
+    }
+    try {
+      const lookup = await client.get('/auth/lookup-by-company', {
+        params: { company: coupon.forwarderCompany || coupon.forwarderName }
+      });
+      if (lookup.data?.id) {
+        setContactTarget({
+          id: lookup.data.id,
+          name: coupon.forwarderName || coupon.forwarderCompany || '',
+          company: coupon.forwarderCompany || '',
+        });
+        setContactSent(false);
+        setContactText('');
+      } else {
+        alert(lang === 'en' ? 'User not found' : '未找到该用户');
+      }
+    } catch {
+      alert(lang === 'en' ? 'Failed to find user' : '查找用户失败');
+    }
+  };
+
   const unused = coupons.filter(c => c.status === 'sent');
   const used = coupons.filter(c => c.status === 'used');
+
+  const fmtMonth = (m: string) => {
+    const [y, mon] = m.split('-');
+    return `${y}年${parseInt(mon)}月`;
+  };
+
+  const faceValueSummary = stats?.byFaceValue
+    ?.map(fv => `¥${fv.faceValue}×${fv.count}`)
+    .join(' + ') || '';
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -97,6 +180,107 @@ export default function MyCouponWalletPage() {
           <p className="text-sm text-gray-500">{lang === 'en' ? 'Customs declaration coupons from forwarders' : '货代赠送的报关券，可用于抵扣报关费'}</p>
         </div>
       </div>
+
+      {/* ═══════ 券状态概览卡片（外贸视角） ═══════ */}
+      {statsLoading ? (
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-4 flex justify-center">
+          <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+        </div>
+      ) : stats ? (
+        <div className="bg-gradient-to-br from-amber-50 via-white to-emerald-50 rounded-xl border border-amber-200 shadow-sm p-5 mb-4">
+          <div className="flex items-center gap-2 mb-4">
+            <Wallet className="w-5 h-5 text-amber-600" />
+            <h3 className="text-sm font-bold text-gray-700">
+              {lang === 'en' ? '📊 Coupon Overview' : '📊 报关券状态概览'}
+            </h3>
+            {stats.sent > 0 && (
+              <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium ml-auto">
+                {lang === 'en' ? '✅ Active' : '✅ 有可用券'}
+              </span>
+            )}
+          </div>
+
+          {/* 四项核心指标（外贸视角：累计收到 / 现存可用 / 已核销 / 已过期） */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+            {/* 累计收到 */}
+            <div className="bg-white rounded-lg border border-gray-100 p-3 text-center">
+              <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wide mb-1">
+                {lang === 'en' ? 'Total Received' : '累计收到'}
+              </p>
+              <p className="text-2xl font-bold text-amber-700">{stats.totalIssued}</p>
+              <p className="text-[10px] text-gray-400 mt-0.5">
+                {lang === 'en' ? 'coupons' : '张'}
+                {stats.totalFaceValue > 0 && ` · ¥${stats.totalFaceValue}`}
+              </p>
+            </div>
+
+            {/* 现存可用（sent = 已送给我 = 可使用） */}
+            <div className="bg-white rounded-lg border border-gray-100 p-3 text-center">
+              <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wide mb-1">
+                {lang === 'en' ? 'Available' : '现存可用'}
+              </p>
+              <p className={`text-2xl font-bold ${stats.sent > 0 ? 'text-emerald-600' : 'text-gray-400'}`}>
+                {stats.sent}
+              </p>
+              <p className="text-[10px] text-gray-400 mt-0.5">
+                {lang === 'en' ? 'ready to use' : '可立即使用'}
+              </p>
+            </div>
+
+            {/* 已核销 */}
+            <div className="bg-white rounded-lg border border-gray-100 p-3 text-center">
+              <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wide mb-1">
+                {lang === 'en' ? 'Used' : '已核销'}
+              </p>
+              <p className={`text-2xl font-bold ${stats.used > 0 ? 'text-green-600' : 'text-gray-400'}`}>
+                {stats.used}
+              </p>
+              <p className="text-[10px] text-gray-400 mt-0.5">
+                {stats.usedFaceValue > 0
+                  ? `¥${stats.usedFaceValue}`
+                  : (lang === 'en' ? 'used' : '已使用')}
+              </p>
+            </div>
+
+            {/* 已过期 */}
+            <div className="bg-white rounded-lg border border-gray-100 p-3 text-center">
+              <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wide mb-1">
+                {lang === 'en' ? 'Expired' : '已过期'}
+              </p>
+              <p className={`text-2xl font-bold ${stats.expired > 0 ? 'text-red-400' : 'text-gray-400'}`}>
+                {stats.expired}
+              </p>
+              <p className="text-[10px] text-gray-400 mt-0.5">
+                {lang === 'en' ? 'expired' : '已失效'}
+              </p>
+            </div>
+          </div>
+
+          {/* 有效期 + 面值明细 */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-gray-500 border-t border-gray-100 pt-3">
+            <div className="flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-gray-400" />
+              <span className="font-medium text-gray-600">
+                {lang === 'en' ? 'Validity' : '有效期'}
+              </span>
+              <span>
+                {stats.expiryRange
+                  ? `${fmtMonth(stats.expiryRange.from)} ~ ${fmtMonth(stats.expiryRange.to)}`
+                  : (lang === 'en' ? 'No coupons' : '暂无券')}
+              </span>
+            </div>
+            {faceValueSummary && (
+              <div className="flex items-center gap-1.5">
+                <TrendingUp className="w-3.5 h-3.5 text-gray-400" />
+                <span className="font-medium text-gray-600">
+                  {lang === 'en' ? 'Denominations' : '面值'}
+                </span>
+                <span>{faceValueSummary}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : null}
 
       {/* Tab */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-1 mb-4 flex">
@@ -142,11 +326,18 @@ export default function MyCouponWalletPage() {
                           </p>
                           {c.sentAt && <p className="text-[10px] text-gray-400 mt-0.5">📅 {c.sentAt.slice(0, 10)}</p>}
                         </div>
-                        <button className="flex items-center gap-1 text-xs font-medium text-white bg-amber-600 hover:bg-amber-700 rounded-lg px-3 py-1.5 transition-colors"
-                          onClick={() => { setUseModal(c); setDeclInfo({ goodsName: '', port: '广州白云机场', notes: '' }); }}>
-                          <Send className="w-3 h-3" />
-                          {lang === 'en' ? 'Use' : '使用'}
-                        </button>
+                        <div className="flex flex-col gap-1.5">
+                          <button className="flex items-center gap-1 text-xs font-medium text-white bg-amber-600 hover:bg-amber-700 rounded-lg px-3 py-1.5 transition-colors"
+                            onClick={() => { setUseModal(c); setDeclInfo({ goodsName: '', port: '广州白云机场', notes: '' }); }}>
+                            <Send className="w-3 h-3" />
+                            {lang === 'en' ? 'Use' : '使用'}
+                          </button>
+                          <button className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg px-3 py-1.5 transition-colors border border-blue-200"
+                            onClick={() => handleContactForwarder(c)}>
+                            <MessageSquare className="w-3 h-3" />
+                            {lang === 'en' ? 'Contact' : '联系TA'}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -212,6 +403,45 @@ export default function MyCouponWalletPage() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* ── 联系送券货代弹窗 ── */}
+      {contactTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => { if (!contactSending) setContactTarget(null); }}>
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md mx-4 border-t-4 border-blue-500" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-bold text-gray-900 text-base flex items-center gap-2">
+                <MessageSquare className="w-5 h-5 text-blue-500" />
+                {lang === 'en' ? `Contact ${contactTarget.name}` : `联系 ${contactTarget.name}`}
+              </h3>
+              <button onClick={() => setContactTarget(null)} className="text-gray-400 hover:text-gray-600"><X className="w-4 h-4" /></button>
+            </div>
+            {contactSent ? (
+              <div className="text-center py-6 text-green-600 text-sm font-medium">
+                <CheckCircle className="w-10 h-10 mx-auto mb-2 text-green-500" />
+                ✅ {lang === 'en' ? 'Message sent! Check inbox for reply.' : '消息已发送！请留意收件箱回复。'}
+              </div>
+            ) : (
+              <>
+                <p className="text-xs text-gray-500 mb-3">
+                  {lang === 'en'
+                    ? `Send a message to ${contactTarget.name} about the customs coupon.`
+                    : `向 ${contactTarget.name}（${contactTarget.company}）发送站内信，沟通报关券使用事宜。`}
+                </p>
+                <textarea className="input-field w-full min-h-[100px] text-sm resize-none mb-3"
+                  placeholder={lang === 'en' ? 'Enter your message...' : '请输入您要咨询的内容...'}
+                  value={contactText} onChange={e => setContactText(e.target.value)} disabled={contactSending} autoFocus />
+                <div className="flex gap-2">
+                  <button className="flex-1 btn-outline text-sm" onClick={() => setContactTarget(null)}>{lang === 'en' ? 'Cancel' : '取消'}</button>
+                  <button className="flex-1 btn-primary text-sm flex items-center justify-center gap-1" onClick={handleContact} disabled={contactSending || !contactText.trim()}>
+                    {contactSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                    {lang === 'en' ? 'Send' : '发送'}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )}
 

@@ -29,6 +29,7 @@ router.use(authRequired);
 
 // 危险品代理
 router.get('/agents', dgController.agents);
+router.get('/agents/directory', dgController.directory);
 router.post('/agents', dgController.addAgent);
 router.get('/agents/all', requireAdmin, dgController.allAgents);
 router.put('/agents/review', requireAdmin, dgController.reviewAgent);

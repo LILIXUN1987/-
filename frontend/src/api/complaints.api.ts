@@ -22,6 +22,7 @@ export interface ComplaintListResponse {
 
 export const complaintsApi = {
   list: (params?: { page?: number; limit?: number }) =>
+
     client.get<ComplaintListResponse>('/complaints', { params }).then((r) => r.data),
 
   create: (data: {
@@ -38,4 +39,14 @@ export const complaintsApi = {
 
   companyStats: (q?: string) =>
     client.get<any>('/complaints/company-stats', { params: { q } }).then((r) => r.data),
+
+  // ── 申诉 ──
+  appeal: (complaintId: string, data: { contact_info: string; appeal_reason: string; evidence?: string }) =>
+    client.post(`/complaints/${complaintId}/appeal`, data).then((r) => r.data),
+
+  listAppeals: (status?: string) =>
+    client.get<{ data: any[] }>('/complaints/appeals/list', { params: status ? { status } : {} }).then((r) => r.data),
+
+  reviewAppeal: (id: string, action: 'approved' | 'rejected', review_note?: string) =>
+    client.put(`/complaints/appeals/${id}/review`, { action, review_note }).then((r) => r.data),
 };

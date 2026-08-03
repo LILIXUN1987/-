@@ -30,6 +30,9 @@ function toPublicUser(user: User): UserPublic {
     avatar: (user as any).avatar || null,
     bio: (user as any).bio || null,
     is_newbie: (user as any).is_newbie ? 1 : 0,
+    port_city: (user as any).port_city || null,
+    port_code: (user as any).port_code || null,
+    operable_ports: (user as any).operable_ports || null,
     created_at: user.created_at,
   };
 }

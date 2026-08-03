@@ -1,13 +1,13 @@
 // ════════════════════════════════════════════
 // 角色类型体系
 // ════════════════════════════════════════════
-export const USER_ROLES = ['admin', 'forwarder', 'trader', 'lawyer', 'inspector', 'insurer', 'overseas_agent'] as const;
+export const USER_ROLES = ['admin', 'forwarder', 'trader', 'lawyer', 'inspector', 'insurer', 'overseas_agent', 'broker'] as const;
 export type UserRole = typeof USER_ROLES[number];
 
 export const RoleGroup = {
   BUSINESS: ['forwarder', 'inspector', 'insurer'] as const satisfies readonly string[],
   RESTRICTED: ['inspector', 'insurer'] as const satisfies readonly string[],
-  REQUIRES_CARD: ['forwarder', 'lawyer', 'inspector', 'insurer', 'overseas_agent'] as const satisfies readonly string[],
+  REQUIRES_CARD: ['forwarder', 'lawyer', 'inspector', 'insurer', 'overseas_agent', 'broker'] as const satisfies readonly string[],
 } as const;
 
 export function isBusinessRole(role: string | undefined): boolean {
@@ -25,6 +25,7 @@ export interface RoleChecks {
   isInspector: boolean;
   isInsurer: boolean;
   isOverseasAgent: boolean;
+  isBroker: boolean;
   isBusiness: boolean;
   isRestricted: boolean;
 }
@@ -38,6 +39,7 @@ export function getRoleChecks(role: string | undefined): RoleChecks {
     isInspector: role === 'inspector',
     isInsurer: role === 'insurer',
     isOverseasAgent: role === 'overseas_agent',
+    isBroker: role === 'broker',
     isBusiness: isBusinessRole(role),
     isRestricted: isRestrictedRole(role),
   };

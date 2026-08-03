@@ -70,6 +70,19 @@ export const dgController = {
     } catch (err) { next(err); }
   },
 
+  /** 代理黄页：按运输方式+口岸筛选已入驻代理 */
+  async directory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const type = (req.query.type as string) || '';
+      const port = (req.query.port as string) || '';
+      let query = db('dg_agents').where({ status: 'approved' });
+      if (type) query = query.where({ type });
+      if (port) query = query.where('ports', 'like', `%${port.trim()}%`);
+      const data = await query.orderBy('created_at', 'desc').limit(100);
+      res.json({ data });
+    } catch (err) { next(err); }
+  },
+
   async reviewAgent(req: Request, res: Response, next: NextFunction) {
     try {
       const { id, action } = req.body;

@@ -1,9 +1,9 @@
 import rateLimit from 'express-rate-limit';
 
-// General API rate limiter — 收件箱每5秒轮询（12次/分钟）+ 正常操作
+// General API rate limiter — 收件箱每5秒轮询（12次/分钟）+ Dashboard + 正常操作
 export const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 200, // 200 requests per minute
+  max: 500, // 500 requests per minute（多页面轮询+并行请求）
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -24,10 +24,10 @@ export const chatLimiter = rateLimit({
   },
 });
 
-// Login rate limiter — 防止暴力破解
+// Login rate limiter — 防止暴力破解，同时给正常用户留余量
 export const loginLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 30, // 30 attempts per minute（测试环境频繁登录登出）
+  max: 60, // 60 attempts per minute
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -108,14 +108,26 @@ export const sendCodeLimiter = rateLimit({
   },
 });
 
-// 文件上传限流 — 每 IP 每10分钟最多50次（防止批量填满硬盘，但也给大货代集中注册留空间）
+// 文件上传限流 — 每 IP 每10分钟最多100次
 export const uploadLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
-  max: 50,
+  max: 100,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
     error: '上传过于频繁，请稍后再试',
     code: 'UPLOAD_RATE_LIMITED',
+  },
+});
+
+// 消息发送限流 — 每个 IP 每分钟最多 20 次
+export const messageLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: '发送消息过于频繁，请稍后再试',
+    code: 'MESSAGE_RATE_LIMITED',
   },
 });

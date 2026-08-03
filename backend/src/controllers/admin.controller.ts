@@ -326,7 +326,7 @@ export const adminController = {
 
         const password = randomPwd();
         const passwordHash = await bcrypt.hash(password, 12);
-        const trialEnd = new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0];
+        const trialEnd = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
         const id = uuidv4();
 
         await db('users').insert({

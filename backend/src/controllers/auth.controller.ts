@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 import { authService } from '../services/auth.service';
 import { LoginRequest } from '../types';
 import db from '../config/database';
@@ -95,10 +96,23 @@ export const authController = {
     }
   },
 
+  async lookupByCompany(req: Request, res: Response, next: NextFunction) {
+    try {
+      const company = req.query.company as string;
+      if (!company) return res.status(400).json({ error: '请提供公司名称' });
+      const user = await db('users')
+        .where('company_name', company)
+        .orderBy('created_at', 'asc')
+        .first();
+      if (!user) return res.json({ id: null, display_name: null, company_name: null });
+      res.json({ id: (user as any).id, display_name: (user as any).display_name, company_name: (user as any).company_name });
+    } catch (err) { next(err); }
+  },
+
   async updateProfile(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id;
-      const { display_name, phone, gender, company_name, jc_trans_id, wca_id, notify_inquiry_email, notify_inquiry_site, notify_all_messages_email, bio, is_newbie } = req.body;
+      const { display_name, phone, gender, company_name, jc_trans_id, wca_id, notify_inquiry_email, notify_inquiry_site, notify_all_messages_email, bio, is_newbie, port_city, port_code, operable_ports, business_scope } = req.body;
       const cardFile = req.file;
 
       const currentUser = await db('users').where({ id: userId }).first() as any;
@@ -108,6 +122,10 @@ export const authController = {
       if (jc_trans_id !== undefined) updateData.jc_trans_id = jc_trans_id;
       if (wca_id !== undefined) updateData.wca_id = wca_id;
       if (bio !== undefined) updateData.bio = bio;
+      if (port_city !== undefined) updateData.port_city = port_city || null;
+      if (port_code !== undefined) updateData.port_code = port_code || null;
+      if (operable_ports !== undefined) updateData.operable_ports = operable_ports || null;
+      if (business_scope !== undefined) updateData.business_scope = business_scope;
       // 通知偏好（JSON body 或 multipart 传字符串）
       if (notify_inquiry_email !== undefined) updateData.notify_inquiry_email = notify_inquiry_email === true || notify_inquiry_email === 'true' ? 1 : 0;
       if (notify_inquiry_site !== undefined) updateData.notify_inquiry_site = notify_inquiry_site === true || notify_inquiry_site === 'true' ? 1 : 0;
@@ -120,14 +138,14 @@ export const authController = {
           updateData.company_name = company_name;
         }
       } else if (company_name !== undefined && company_name !== currentUser?.company_name) {
-        // 注册超过15天允许自行修改公司名称
+        // 注册超过30天允许自行修改公司名称
         const createdAt = new Date(currentUser.created_at).getTime();
         const daysSinceReg = (Date.now() - createdAt) / 86400000;
-        if (daysSinceReg >= 15) {
+        if (daysSinceReg >= 30) {
           updateData.company_name = company_name;
         } else {
           return res.status(400).json({
-            error: `注册未满15天，修改公司名称需要先上传最新的公司名片（注册已 ${Math.floor(daysSinceReg)} 天）`,
+            error: `注册未满30天，修改公司名称需要先上传最新的公司名片（注册已 ${Math.floor(daysSinceReg)} 天）`,
             code: 'CARD_REQUIRED',
           });
         }
@@ -163,6 +181,23 @@ export const authController = {
         updated_at: db.fn.now(),
       });
       const updatedUser = await authService.getMe(userId);
+
+      // ── 通知管理员审核 ──
+      try {
+        const adminUser = await db('users').where({ role: 'admin' }).first() as any;
+        if (adminUser) {
+          const userInfo = await db('users').where({ id: userId }).first() as any;
+          await db('messages').insert({
+            id: uuidv4(),
+            sender_id: userId,
+            receiver_id: adminUser.id,
+            content: `📋【企业认证审核】\n\n${userInfo?.display_name || ''}（${userInfo?.company_name || '未填公司'}）提交了营业执照，请前往 管理中心→企业认证 进行审核。`,
+            is_read: false,
+            created_at: new Date().toISOString(),
+          });
+        }
+      } catch {}
+
       res.json({ message: '营业执照已上传，等待管理员审核', user: updatedUser });
     } catch (err) { next(err); }
   },
@@ -275,5 +310,110 @@ export const authController = {
     } catch (err) {
       next(err);
     }
+  },
+
+  // ── 公开公司主页 ──
+  async companyProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const user = await db('users').where({ id, status: 'approved' }).first() as any;
+      if (!user) return res.status(404).json({ error: '用户不存在' });
+
+      // 脱敏手机号
+      const phone = user.phone || '';
+      const maskedPhone = phone.length >= 7
+        ? phone.slice(0, 3) + '****' + phone.slice(-4)
+        : phone;
+
+      // 活跃舱位
+      const activeCargos = await db('cargo_spaces')
+        .where({ status: 'available' })
+        .where(function () {
+          this.where('uploaded_by', id);
+          if (user.phone) this.orWhere('contact_info', 'like', '%' + user.phone + '%');
+        })
+        .where(function () {
+          this.whereNull('valid_to').orWhere('valid_to', '>=', new Date().toISOString().split('T')[0]);
+        })
+        .select('id', 'origin_port', 'dest_port', 'region', 'airline_code', 'cargo_type',
+          'price_per_cbm', 'price_per_kg', 'currency', 'available_cbm', 'available_kg',
+          'notes', 'view_count', 'inquiry_count', 'created_at', 'valid_to')
+        .orderBy('created_at', 'desc')
+        .limit(30);
+
+      // 统计
+      const totalViews = activeCargos.reduce((s: number, c: any) => s + (c.view_count || 0), 0);
+      const totalInquiries = activeCargos.reduce((s: number, c: any) => s + (c.inquiry_count || 0), 0);
+      const totalCargos = await db('cargo_spaces')
+        .where(function () {
+          this.where('uploaded_by', id);
+          if (user.phone) this.orWhere('contact_info', 'like', '%' + user.phone + '%');
+        })
+        .count('* as total').first() as any;
+
+      // 合作统计
+      const cooperationCount = await db('cooperations')
+        .where(function () {
+          this.where('agent_user_id', id).orWhere('forwarder_user_id', id);
+        })
+        .where('status', 'confirmed')
+        .count('* as total')
+        .first() as any;
+
+      // 收到的评价（最近5条）
+      const reviews = await db('reviews')
+        .leftJoin('users as reviewer', 'reviews.reviewer_id', 'reviewer.id')
+        .where('reviews.reviewee_id', id)
+        .select('reviews.rating', 'reviews.comment', 'reviews.created_at',
+          'reviewer.display_name as reviewer_name', 'reviewer.company_name as reviewer_company')
+        .orderBy('reviews.created_at', 'desc')
+        .limit(5);
+
+      res.json({
+        id: user.id,
+        displayName: user.display_name,
+        companyName: user.company_name,
+        role: user.role,
+        avatar: user.avatar,
+        bio: user.bio || '',
+        phone: maskedPhone,
+        email: user.email || '',
+        memberSince: user.created_at?.slice(0, 10),
+        portCity: user.port_city || '',
+        portCode: user.port_code || '',
+        stats: {
+          totalCargos: Number((totalCargos as any)?.total || 0),
+          activeCargos: activeCargos.length,
+          totalViews,
+          totalInquiries,
+          cooperations: Number((cooperationCount as any)?.total || 0),
+        },
+        reviews: reviews.map((r: any) => ({
+          rating: r.rating,
+          comment: r.comment,
+          reviewerName: r.reviewer_name,
+          reviewerCompany: r.reviewer_company,
+          createdAt: r.created_at,
+        })),
+        activeCargos: activeCargos.map((c: any) => ({
+          id: c.id,
+          originPort: c.origin_port,
+          destPort: c.dest_port,
+          region: c.region,
+          airlineCode: c.airline_code,
+          cargoType: c.cargo_type,
+          priceCbm: c.price_per_cbm ? Number(c.price_per_cbm) : null,
+          priceKg: c.price_per_kg ? Number(c.price_per_kg) : null,
+          currency: c.currency,
+          availableCbm: c.available_cbm,
+          availableKg: c.available_kg,
+          validTo: c.valid_to,
+          views: c.view_count || 0,
+          inquiries: c.inquiry_count || 0,
+          notes: c.notes,
+          createdAt: c.created_at,
+        })),
+      });
+    } catch (err) { next(err); }
   },
 };

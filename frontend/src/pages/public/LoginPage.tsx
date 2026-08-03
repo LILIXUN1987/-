@@ -15,6 +15,9 @@ export default function LoginPage() {
   const [showPwd, setShowPwd] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
+  const [rateTimer, setRateTimer] = useState(0);
+  const rateTimerRef = useRef<ReturnType<typeof setInterval>>();
   const navigate = useNavigate();
   const welcomeTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
@@ -22,6 +25,7 @@ export default function LoginPage() {
   useEffect(() => {
     return () => {
       if (welcomeTimerRef.current) clearTimeout(welcomeTimerRef.current);
+      if (rateTimerRef.current) clearInterval(rateTimerRef.current);
     };
   }, []);
 
@@ -65,8 +69,26 @@ export default function LoginPage() {
 
       goToDashboard(user.role || '');
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error || t(LoginT.loginFailed, lang);
+      const resp = (err as { response?: { data?: { error?: string; code?: string } } })?.response?.data;
+      const msg = resp?.error || t(LoginT.loginFailed, lang);
       setError(msg);
+      // 检测是否被限流
+      if (resp?.code === 'LOGIN_RATE_LIMITED') {
+        setRateLimited(true);
+        setRateTimer(10);
+        if (rateTimerRef.current) clearInterval(rateTimerRef.current);
+        rateTimerRef.current = setInterval(() => {
+          setRateTimer(prev => {
+            if (prev <= 1) {
+              setRateLimited(false);
+              setError('');
+              if (rateTimerRef.current) clearInterval(rateTimerRef.current);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      }
     } finally {
       setLoading(false);
     }
@@ -79,6 +101,8 @@ export default function LoginPage() {
       welcomeTimerRef.current = setTimeout(() => {
         navigate('/admin/dashboard', { replace: true });
       }, 2000);
+    } else if (rc.isBroker) {
+      navigate('/admin/broker-console', { replace: true });
     } else if (rc.isAdmin || rc.isForwarder || rc.isLawyer || rc.isInspector || rc.isInsurer) {
       navigate('/admin/dashboard', { replace: true });
     } else {
@@ -164,7 +188,14 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-8 space-y-5">
-          {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">{error}</div>}
+          {error && (
+            <div className={`rounded-lg px-4 py-3 text-sm font-medium ${rateLimited ? 'bg-amber-50 border border-amber-200 text-amber-700' : 'bg-red-50 border border-red-200 text-red-700'}`}>
+              {error}
+              {rateLimited && rateTimer > 0 && (
+                <span className="block text-amber-500 text-xs mt-1">⏳ 请等待 <b>{rateTimer}</b> 秒后重新登录</span>
+              )}
+            </div>
+          )}
           {loginMates && (
             <div className="bg-green-50 border border-green-200 rounded-xl px-5 py-4">
               <div className="text-center mb-3">
@@ -232,7 +263,7 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <button type="submit" disabled={loading} className="btn-primary w-full py-2.5 text-base font-medium">
+          <button type="submit" disabled={loading || rateLimited} className="btn-primary w-full py-2.5 text-base font-medium">
             {loading ? t(LoginT.loggingIn, lang) : t(LoginT.loginBtn, lang)}
           </button>
           </>)}

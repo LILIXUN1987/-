@@ -18,6 +18,7 @@ export interface DDPAgent {
   created_at: string;
   submitter_name?: string;
   coop_forwarder_count?: number;
+  tags?: string;
 }
 
 export interface DDPInquiryItem {
@@ -43,6 +44,11 @@ export interface DDPStatsResponse {
     totalAgents: number;
     pendingAgents: number;
   };
+  replyRate?: number;
+  weeklyNewInquiries?: number;
+  weeklyNewAgents?: number;
+  agentGrowth?: { thisMonth: number; lastMonth: number };
+  recentActivity?: Array<{ id: string; country: string; port?: string; goods_desc?: string; company_name: string; created_at: string }>;
 }
 
 /** 获取已审核代理列表 */

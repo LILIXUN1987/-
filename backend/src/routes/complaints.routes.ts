@@ -8,6 +8,9 @@ router.use(authRequired);
 router.get('/', complaintsController.list);
 router.get('/company-stats', complaintsController.companyStats);
 router.post('/', complaintsController.create);
+router.post('/:id/appeal', complaintsController.appeal);
+router.get('/appeals/list', complaintsController.listAppeals);
+router.put('/appeals/:id/review', complaintsController.reviewAppeal);
 router.delete('/:id', complaintsController.delete);
 
 export default router;

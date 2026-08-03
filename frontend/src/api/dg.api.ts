@@ -45,6 +45,8 @@ export interface DgFaq {
 
 export const dgApi = {
   agents: (type = 'air') => client.get<{ data: DgAgent[] }>('/dg/agents', { params: { type } }).then(r => r.data.data),
+  agentDirectory: (params?: { type?: string; port?: string }) =>
+    client.get<{ data: DgAgent[] }>('/dg/agents/directory', { params }).then(r => r.data.data),
   addAgent: (data: any) => client.post('/dg/agents', data).then(r => r.data),
   allAgents: (type = 'air') => client.get<{ data: DgAgent[] }>('/dg/agents/all', { params: { type } }).then(r => r.data.data),
   reviewAgent: (id: string, action: 'approved' | 'rejected') => client.put('/dg/agents/review', { id, action }).then(r => r.data),

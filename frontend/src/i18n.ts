@@ -82,12 +82,12 @@ export const RegT = {
   hasAccount: { zh: '已有账号？', en: 'Already have an account?' },
   hasAccountLink: { zh: '去登录', en: 'Login' },
   privacy: { zh: '🔒 我们将严格保护您的隐私，尊重您更新手机号码的权利', en: '🔒 Your privacy is protected' },
-  forwarderSuccess: { zh: '您已获得15天免费体验期（15个自然日），请登录后开始使用', en: 'You have a 15-day free trial, please log in to start' },
+  forwarderSuccess: { zh: '您已获得30天免费体验期（30个自然日），请登录后开始使用', en: 'You have a 30-day free trial, please log in to start' },
   forwarderCouponTip: { zh: '💡 登录后可在「开通月费」订阅报关券，19.9元/月，赠送外贸客户维护关系', en: '💡 Subscribe to monthly customs coupons (¥19.9/mo) to send to your clients' },
   lawyerSuccess: { zh: '您已成功注册为社区律师，请登录后开始使用', en: 'Registered as Community Lawyer, please log in to start' },
   traderCouponTip: { zh: '💡 登录后可在「我的券包」查看是否有货代赠送的报关券，抵扣报关费', en: '💡 Check "My Coupon Wallet" for coupons from forwarders to save customs fees' },
   agentSuccess: { zh: '您已成功注册为海外代理，30天试用期，请登录后完善资料', en: 'Registered as Overseas Agent, 30-day trial access. Please log in to complete your profile.' },
-  restrictedSuccess: { zh: '您已获得15天免费体验期（15个自然日），请登录后开始使用', en: 'You have a 15-day free trial, please log in to start' },
+  restrictedSuccess: { zh: '您已获得30天免费体验期（30个自然日），请登录后开始使用', en: 'You have a 30-day free trial, please log in to start' },
   loginDefault: { zh: '请登录后开始使用', en: 'Please log in to start' },
 };
 
@@ -180,7 +180,7 @@ export const ProfileT = {
   emailNote: { zh: '注册时已验证，不可修改', en: 'Verified at registration, cannot be changed' },
   company: { zh: '所属公司', en: 'Company' },
   companyPlaceholder: { zh: '营业执照上的公司全称', en: 'Full company name' },
-  companyChange: { zh: '注册满15天后可直接修改公司名称，15天内修改需上传公司名片', en: 'Change company name freely after 15 days; within 15 days, upload a business card' },
+  companyChange: { zh: '注册满30天后可直接修改公司名称，30天内修改需上传公司名片', en: 'Change company name freely after 30 days; within 30 days, upload a business card' },
   companyChanged: (old: string, _new: string) => ({ zh: `公司名称已修改，保存后将立即更新`, en: `Company name changed, will be updated on save` }),
   currentCard: { zh: '当前名片', en: 'Current card' },
   uploadCard: { zh: '上传名片', en: 'Upload card' },
@@ -343,7 +343,7 @@ export const FileT = {
   loopFooter: { zh: '成交后继续发布 → 循环放大', en: 'Close deals → Post more → Amplify' },
   loopMatch: { zh: '同时 ④ 用户主动发需求 也会匹配到您发布的航线 → 您来报价成交', en: 'Requests also match your routes → you quote & close' },
   // Price table page
-  priceTitle: { zh: '货代价格表', en: 'Price Tables' },
+  priceTitle: { zh: '运价表', en: 'Price Table' },
   priceSubtitle: { zh: '上传文件或查看所有货代发布的价格表', en: 'Upload files or browse all forwarder price tables' },
   priceUploadTitle: { zh: '上传价格表', en: 'Upload Price Table' },
   priceTableTitle: { zh: '已上传文件', en: 'Uploaded Files' },
@@ -360,6 +360,19 @@ export const FileT = {
   exImport: { zh: '进口清关', en: 'Import Clearance' },
   // 角色标签
   badgeNewbie: { zh: '🆕 新手上路', en: '🆕 Newbie' },
+  // ── Query tab ──
+  queryHeroTitle: { zh: '搜索全网舱位与特价', en: 'Search Cargo Spaces' },
+  queryHeroBadge: { zh: '实时数据', en: 'Live Data' },
+  queryHeroDesc: { zh: '以下舱位与特价信息均由货代发布，输入港口代码或航线关键词，秒查全球最新舱位与运价。查找到合适信息后可直接联系货代询价。', en: 'Cargo spaces posted by forwarders. Enter port codes or route keywords to search. Contact forwarders directly for inquiries.' },
+  quickInquiryTitle: { zh: '快递实时询价', en: 'Express Inquiry' },
+  quickInquiryBadge: { zh: '平台自营', en: 'Premium' },
+  categorySearchTitle: { zh: '分类查询', en: 'Category Search' },
+  categorySearchHint: { zh: '点击查询按钮查看各航线舱位', en: 'Click search to find cargo spaces' },
+  catAirExport: { zh: '✈️ 空运出口', en: '✈️ Air Export' },
+  catSeaExport: { zh: '🚢 海运出口', en: '🚢 Sea Export' },
+  catLandExport: { zh: '🚛 陆运出口', en: '🚛 Land Export' },
+  catTraderVersion: { zh: '🌍 空运外贸版', en: '🌍 Air Trader Version' },
+  catOther: { zh: '🔍 其他服务', en: '🔍 Other Services' },
 };
 
 // ════════════════════════════════════════════

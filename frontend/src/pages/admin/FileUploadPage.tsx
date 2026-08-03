@@ -5,7 +5,8 @@ import { cargoApi } from '../../api/cargo.api';
 import { getRoleChecks } from '../../types';
 import {
   CheckCircle, MapPin, Users, Plane, Ship, Truck, Package,
-  Search, Zap, Sparkles, Loader2,
+  Search, Zap, Sparkles, Loader2, Globe, Shield, BarChart3,
+  ArrowRight, Compass, TrendingUp,
 } from 'lucide-react';
 import CategoryQueryPanel from '../../components/admin/CategoryQueryPanel';
 import TraderGuide from '../../components/admin/TraderGuide';
@@ -298,45 +299,203 @@ export default function FileUploadPage() {
       {/* 🔍 用户寻舱位与特价（社区已存在） */}
       {/* ════════════════════════════════════════ */}
       {activeTab === 'query' && (
-        <div className="space-y-4">
-          {/* 提示：数据来源 */}
-          <div className="bg-orange-500 text-white rounded-xl px-5 py-4 shadow-md">
-            <div className="flex items-start gap-3">
-              <span className="text-xl leading-none mt-0.5">💡</span>
-              <div>
-                <p className="text-sm font-bold">以下舱位与特价信息均由 ② 货代发布舱位与特价 中的货代发布，查找后可直接联系询价</p>
+        <div className="space-y-6">
+          {/* ═══ Hero Header ═══ */}
+          <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 rounded-3xl shadow-2xl">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(59,130,246,0.06)_0%,transparent_60%)]" />
+            <div className="relative z-10 px-6 sm:px-10 py-8 sm:py-10">
+              <div className="flex items-start gap-5">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-blue-500 via-cyan-500 to-sky-400 flex items-center justify-center shadow-xl shadow-blue-500/30 ring-4 ring-white/10 flex-shrink-0">
+                  <Compass className="w-8 h-8 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                      {t(FileT.queryHeroTitle, lang)}
+                    </h1>
+                    <span className="px-3 py-1 bg-white/15 backdrop-blur rounded-full text-[11px] font-bold text-white/80 border border-white/10">
+                      🔍 {t(FileT.queryHeroBadge, lang)}
+                    </span>
+                  </div>
+                  <p className="text-sm sm:text-base text-white/60 mt-1.5 max-w-2xl leading-relaxed">
+                    {t(FileT.queryHeroDesc, lang)}
+                  </p>
+                  {/* Stats row */}
+                  <div className="flex items-center gap-4 sm:gap-6 mt-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur flex items-center justify-center">
+                        <Package className="w-4 h-4 text-white/80" />
+                      </div>
+                      <div>
+                        <div className="text-lg font-bold text-white">{stats?.available || 0}</div>
+                        <div className="text-[10px] text-white/50">{t(FileT.statAvailable, lang)}</div>
+                      </div>
+                    </div>
+                    <div className="w-px h-8 bg-white/10" />
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur flex items-center justify-center">
+                        <Globe className="w-4 h-4 text-white/80" />
+                      </div>
+                      <div>
+                        <div className="text-lg font-bold text-white">{stats?.regions || 0}</div>
+                        <div className="text-[10px] text-white/50">{t(FileT.statRegions, lang)}</div>
+                      </div>
+                    </div>
+                    <div className="w-px h-8 bg-white/10" />
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur flex items-center justify-center">
+                        <Users className="w-4 h-4 text-white/80" />
+                      </div>
+                      <div>
+                        <div className="text-lg font-bold text-white">{stats?.users || 0}</div>
+                        <div className="text-[10px] text-white/50">{t(FileT.statGroupUsers, lang)}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
+          {/* ═══ 业务流程 ═══ */}
           <LoopGraph />
 
-          {/* 实时动态 */}
-          <ActivityFeed />
-
-          {/* 快捷询价 */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-50 to-sky-50 border-b border-blue-100 px-5 py-3">
+          {/* ═══ 实时动态 ═══ */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-100">
               <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-blue-500" />
-                <h2 className="font-bold text-gray-900">快捷询价</h2>
-                <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full font-medium">推荐</span>
+                <Zap className="w-5 h-5 text-amber-500" />
+                <h2 className="font-bold text-gray-900 text-base">
+                  {lang === 'en' ? '⚡ Live Feed' : '⚡ 实时动态'}
+                </h2>
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               </div>
-              <p className="text-xs text-gray-500 mt-0.5">输入您的货物信息，系统自动匹配货代</p>
+            </div>
+            <div className="p-5">
+              <ActivityFeed />
+            </div>
+          </div>
+
+          {/* ═══ 快捷询价 ═══ */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-red-500 via-rose-500 to-pink-500 px-6 py-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center flex-shrink-0 shadow-inner">
+                  <Zap className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h2 className="font-bold text-white text-base">{t(FileT.quickInquiryTitle, lang)}</h2>
+                    <span className="text-[10px] bg-white/25 text-white px-2 py-0.5 rounded-full font-bold">{t(FileT.quickInquiryBadge, lang)}</span>
+                  </div>
+                  <p className="text-sm text-white/80 mt-0.5">{t(FileT.quickInquiryDesc, lang)}</p>
+                </div>
+                <div className="hidden sm:flex items-center gap-1 text-white/40">
+                  <Package className="w-5 h-5" />
+                  <ArrowRight className="w-4 h-4" />
+                  <Plane className="w-5 h-5" />
+                </div>
+              </div>
             </div>
             <div className="p-5">
               <ExpressInquiryPanel />
             </div>
           </div>
 
-          {/* 分类查询 */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <CategoryQueryPanel showOnly="空运出口" />
-            <CategoryQueryPanel showOnly="海运出口" />
-            <CategoryQueryPanel showOnly="空运外贸版" />
-            <CategoryQueryPanel showOnly="陆运出口" />
-            {!isTrader && <CategoryQueryPanel showOnly="其他" />}
-            {isTrader && <TraderTrending />}
+          {/* ═══ 分类查询 ═══ */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center shadow-sm">
+                <Search className="w-4 h-4 text-white" />
+              </div>
+              <h2 className="text-lg font-bold text-gray-900">{t(FileT.categorySearchTitle, lang)}</h2>
+              <span className="text-xs text-gray-400 ml-auto">{t(FileT.categorySearchHint, lang)}</span>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md hover:border-sky-200 transition-all duration-300">
+                <div className="h-1.5 bg-gradient-to-r from-sky-400 to-blue-500" />
+                <div className="px-5 py-4">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-100 to-blue-100 flex items-center justify-center">
+                      <Plane className="w-5 h-5 text-sky-600" />
+                    </div>
+                    <h3 className="font-bold text-gray-800">{t(FileT.catAirExport, lang)}</h3>
+                  </div>
+                  <CategoryQueryPanel showOnly="空运出口" />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md hover:border-blue-200 transition-all duration-300">
+                <div className="h-1.5 bg-gradient-to-r from-blue-400 to-indigo-500" />
+                <div className="px-5 py-4">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center">
+                      <Ship className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <h3 className="font-bold text-gray-800">{t(FileT.catSeaExport, lang)}</h3>
+                  </div>
+                  <CategoryQueryPanel showOnly="海运出口" />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md hover:border-amber-200 transition-all duration-300">
+                <div className="h-1.5 bg-gradient-to-r from-amber-400 to-orange-500" />
+                <div className="px-5 py-4">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
+                      <Truck className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <h3 className="font-bold text-gray-800">{t(FileT.catLandExport, lang)}</h3>
+                  </div>
+                  <CategoryQueryPanel showOnly="陆运出口" />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md hover:border-emerald-200 transition-all duration-300">
+                <div className="h-1.5 bg-gradient-to-r from-emerald-400 to-teal-500" />
+                <div className="px-5 py-4">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
+                      <Globe className="w-5 h-5 text-emerald-600" />
+                    </div>
+                    <h3 className="font-bold text-gray-800">{t(FileT.catTraderVersion, lang)}</h3>
+                  </div>
+                  <CategoryQueryPanel showOnly="空运外贸版" />
+                </div>
+              </div>
+
+              {!isTrader && (
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md hover:border-purple-200 transition-all duration-300">
+                  <div className="h-1.5 bg-gradient-to-r from-purple-400 to-violet-500" />
+                  <div className="px-5 py-4">
+                    <div className="flex items-center gap-2.5 mb-3">
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-100 to-violet-100 flex items-center justify-center">
+                        <Search className="w-5 h-5 text-purple-600" />
+                      </div>
+                      <h3 className="font-bold text-gray-800">{t(FileT.catOther, lang)}</h3>
+                    </div>
+                    <CategoryQueryPanel showOnly="其他" />
+                  </div>
+                </div>
+              )}
+
+              {isTrader && (
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md hover:border-pink-200 transition-all duration-300">
+                  <div className="h-1.5 bg-gradient-to-r from-pink-400 to-rose-500" />
+                  <div className="px-5 py-4">
+                    <div className="flex items-center gap-2.5 mb-3">
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-pink-100 to-rose-100 flex items-center justify-center">
+                        <TrendingUp className="w-5 h-5 text-pink-600" />
+                      </div>
+                      <h3 className="font-bold text-gray-800">{lang === 'en' ? 'Hot Searches' : '热门搜索排行'}</h3>
+                    </div>
+                    <TraderTrending />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -364,35 +523,141 @@ export default function FileUploadPage() {
 function LoopGraph() {
   const lang = useAuthStore((s) => s.lang);
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6">
-      <h3 className="text-sm font-bold text-gray-800 text-center mb-4">{t(FileT.loopTitle, lang)}</h3>
-      <div className="flex items-center justify-center gap-0 sm:gap-2">
-        <div className="flex flex-col items-center text-center w-28 sm:w-32">
-          <div className="w-14 h-14 rounded-2xl bg-primary-600 text-white flex items-center justify-center text-2xl shadow-md shadow-primary-200">②</div>
-          <div className="mt-2 text-xs font-bold text-primary-700 leading-tight">{t(FileT.loopStep2, lang)}</div>
-          <div className="text-[10px] text-gray-400 mt-1">{t(FileT.loopStep2Sub, lang)}</div>
+    <div className="bg-gradient-to-br from-white to-indigo-50/30 rounded-2xl border border-gray-100 shadow-sm p-6 mb-6 overflow-hidden">
+      {/* Animated CSS */}
+      <style>{`
+        @keyframes loop-rotate {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes loop-dash {
+          0% { stroke-dashoffset: 0; }
+          100% { stroke-dashoffset: -24; }
+        }
+        @keyframes node-pulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+          50% { box-shadow: 0 0 0 12px rgba(99, 102, 241, 0); }
+        }
+        @keyframes node-pulse-blue {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+          50% { box-shadow: 0 0 0 12px rgba(59, 130, 246, 0); }
+        }
+        @keyframes node-pulse-green {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+          50% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+        }
+        @keyframes float-down {
+          0%, 100% { transform: translateY(0); opacity: 0; }
+          30% { opacity: 1; }
+          70% { opacity: 1; }
+          100% { transform: translateY(40px); opacity: 0; }
+        }
+        @keyframes float-down-blue {
+          0%, 100% { transform: translateY(0); opacity: 0; }
+          30% { opacity: 1; }
+          70% { opacity: 1; }
+          100% { transform: translateY(40px); opacity: 0; }
+        }
+        .loop-particle-1 { animation: float-down 2.5s ease-in-out infinite; }
+        .loop-particle-2 { animation: float-down 2.5s ease-in-out 0.8s infinite; }
+        .loop-particle-3 { animation: float-down 2.5s ease-in-out 1.6s infinite; }
+        .loop-particle-blue-1 { animation: float-down-blue 2.5s ease-in-out 0.4s infinite; }
+        .loop-particle-blue-2 { animation: float-down-blue 2.5s ease-in-out 1.2s infinite; }
+        .loop-particle-blue-3 { animation: float-down-blue 2.5s ease-in-out 2.0s infinite; }
+      `}</style>
+
+      <h3 className="text-sm font-bold text-gray-800 text-center mb-6">{t(FileT.loopTitle, lang)}</h3>
+
+      {/* Loop SVG */}
+      <div className="relative max-w-sm mx-auto">
+        {/* SVG connecting lines (visible on sm+) */}
+        <svg className="hidden sm:block absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 384 280" style={{ zIndex: 0 }}>
+          {/* Dashed orbit ellipse */}
+          <ellipse cx="192" cy="130" rx="150" ry="80" fill="none" stroke="#c7d2fe" strokeWidth="1.5" strokeDasharray="6,4" opacity="0.5" />
+          {/* Animated orbit arc (top-right sector glow) */}
+          <path d="M 60 110 A 150 80 0 0 1 324 110" fill="none" stroke="#818cf8" strokeWidth="2" strokeDasharray="4 3" opacity="0.6"
+            style={{ animation: 'loop-dash 1s linear infinite' }} />
+          {/* Arrow from ②→③ */}
+          <line x1="150" y1="105" x2="234" y2="105" stroke="#a5b4fc" strokeWidth="2" markerEnd="url(#arrow-primary)" />
+          {/* Arrow from ③→💰 */}
+          <line x1="288" y1="130" x2="230" y2="195" stroke="#60a5fa" strokeWidth="2" markerEnd="url(#arrow-blue)" />
+          {/* Arrow from 💰→② */}
+          <line x1="154" y1="195" x2="96" y2="130" stroke="#34d399" strokeWidth="2" markerEnd="url(#arrow-green)" />
+          {/* Defs */}
+          <defs>
+            <marker id="arrow-primary" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#818cf8" /></marker>
+            <marker id="arrow-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#60a5fa" /></marker>
+            <marker id="arrow-green" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#34d399" /></marker>
+          </defs>
+        </svg>
+
+        {/* Floating particles */}
+        <div className="hidden sm:block absolute left-1/3 top-24 -translate-x-1/2 pointer-events-none z-10">
+          <div className="loop-particle-1 w-2 h-2 rounded-full bg-primary-400 mx-auto" />
+          <div className="loop-particle-2 w-2 h-2 rounded-full bg-primary-400 mx-auto -mt-1" />
+          <div className="loop-particle-3 w-2 h-2 rounded-full bg-primary-400 mx-auto -mt-1" />
         </div>
-        <div className="flex flex-col items-center"><span className="text-2xl text-gray-300">→</span><span className="text-[9px] text-gray-400 -mt-1">{t(FileT.loopMore, lang)}</span></div>
-        <div className="flex flex-col items-center text-center w-28 sm:w-32">
-          <div className="w-14 h-14 rounded-2xl bg-blue-500 text-white flex items-center justify-center text-2xl shadow-md shadow-blue-200">③</div>
-          <div className="mt-2 text-xs font-bold text-blue-700 leading-tight">{t(FileT.loopStep3, lang)}</div>
-          <div className="text-[10px] text-gray-400 mt-1">{t(FileT.loopStep3Sub, lang)}</div>
+        <div className="hidden sm:block absolute right-1/4 top-28 pointer-events-none z-10">
+          <div className="loop-particle-blue-1 w-2 h-2 rounded-full bg-blue-400 mx-auto" />
+          <div className="loop-particle-blue-2 w-2 h-2 rounded-full bg-blue-400 mx-auto -mt-1" />
+          <div className="loop-particle-blue-3 w-2 h-2 rounded-full bg-blue-400 mx-auto -mt-1" />
         </div>
-        <div className="flex flex-col items-center"><span className="text-2xl text-gray-300">→</span><span className="text-[9px] text-gray-400 -mt-1">{t(FileT.loopInquiry, lang)}</span></div>
-        <div className="flex flex-col items-center text-center w-28 sm:w-32">
-          <div className="w-14 h-14 rounded-2xl bg-green-500 text-white flex items-center justify-center text-2xl shadow-md shadow-green-200">💰</div>
-          <div className="mt-2 text-xs font-bold text-green-700 leading-tight">{t(FileT.loopStep4, lang)}</div>
-          <div className="text-[10px] text-gray-400 mt-1">{t(FileT.loopStep4Sub, lang)}</div>
+
+        <div className="relative z-20">
+          {/* TOP ROW: ② and ③ */}
+          <div className="grid grid-cols-2 gap-12 justify-items-center">
+            {/* Step 2 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 text-white flex items-center justify-center text-2xl font-bold shadow-lg ring-4 ring-white transition-transform hover:scale-110 duration-300"
+                style={{ animation: 'node-pulse 2.5s ease-in-out infinite' }}>
+                ②
+              </div>
+              <div className="mt-2.5 text-xs font-bold text-primary-700 leading-tight">{t(FileT.loopStep2, lang)}</div>
+              <div className="text-[10px] text-gray-400 mt-0.5 max-w-[100px] leading-snug">{t(FileT.loopStep2Sub, lang)}</div>
+              <div className="text-[9px] text-primary-300 font-medium mt-1.5 bg-primary-50/70 px-2.5 py-0.5 rounded-full border border-primary-100">📊 {t(FileT.loopMore, lang)}</div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white flex items-center justify-center text-2xl font-bold shadow-lg ring-4 ring-white transition-transform hover:scale-110 duration-300"
+                style={{ animation: 'node-pulse-blue 2.5s ease-in-out 0.7s infinite' }}>
+                ③
+              </div>
+              <div className="mt-2.5 text-xs font-bold text-blue-700 leading-tight">{t(FileT.loopStep3, lang)}</div>
+              <div className="text-[10px] text-gray-400 mt-0.5 max-w-[100px] leading-snug">{t(FileT.loopStep3Sub, lang)}</div>
+              <div className="text-[9px] text-blue-300 font-medium mt-1.5 bg-blue-50/70 px-2.5 py-0.5 rounded-full border border-blue-100">💬 {t(FileT.loopInquiry, lang)}</div>
+            </div>
+          </div>
+
+          {/* BOTTOM: 💰 */}
+          <div className="flex justify-center mt-8">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white flex items-center justify-center text-2xl font-bold shadow-lg ring-4 ring-white transition-transform hover:scale-110 duration-300"
+                style={{ animation: 'node-pulse-green 2.5s ease-in-out 1.4s infinite' }}>
+                💰
+              </div>
+              <div className="mt-2.5 text-xs font-bold text-emerald-700 leading-tight">{t(FileT.loopStep4, lang)}</div>
+              <div className="text-[10px] text-gray-400 mt-0.5 max-w-[120px] leading-snug">{t(FileT.loopStep4Sub, lang)}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile arrows (visible only on small screens) */}
+        <div className="sm:hidden flex justify-center gap-2 mt-2 text-lg text-gray-300">
+          <span>② → ③ → 💰</span>
         </div>
       </div>
-      <div className="flex justify-center mt-3">
-        <div className="flex items-center gap-1 text-[11px] text-primary-600 font-medium bg-primary-50 rounded-full px-4 py-1.5 border border-primary-200">
-          <span className="text-lg">↩</span><span>{t(FileT.loopFooter, lang)}</span>
+
+      {/* Bottom info */}
+      <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+        <div className="inline-flex items-center gap-1.5 text-[11px] text-primary-600 font-medium bg-gradient-to-r from-primary-50 via-indigo-50 to-primary-50 rounded-full px-4 py-2 border border-primary-200 shadow-sm hover:shadow-md transition-shadow">
+          <span className="text-lg leading-none animate-bounce">↩</span>
+          <span>{t(FileT.loopFooter, lang)}</span>
         </div>
-      </div>
-      <div className="mt-3 flex items-center justify-center gap-2 text-xs text-gray-500 bg-gray-50 rounded-lg px-4 py-2.5 border border-dashed border-gray-300">
-        <span>💬</span>
-        <span>{t(FileT.loopMatch, lang)}</span>
+        <div className="inline-flex items-center gap-1.5 text-[11px] text-gray-500 bg-gradient-to-r from-gray-50 to-gray-100 rounded-full px-4 py-2 border border-dashed border-gray-300">
+          <span>💬</span>
+          <span className="text-xs">{t(FileT.loopMatch, lang)}</span>
+        </div>
       </div>
     </div>
   );

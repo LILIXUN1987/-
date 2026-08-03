@@ -2,13 +2,14 @@ import { Router } from 'express';
 import { authRequired } from '../middleware/auth.middleware';
 import { messagesController } from '../controllers/messages.controller';
 import { messageUpload } from '../middleware/messageUpload.middleware';
+import { messageLimiter } from '../middleware/rateLimit.middleware';
 
 const router = Router();
 
 router.use(authRequired);
 
 // ── 发送消息（支持文件附件） ──
-router.post('/', messageUpload.array('files', 5), messagesController.send);
+router.post('/', messageLimiter, messageUpload.array('files', 5), messagesController.send);
 
 // ── 对话列表（新） ──
 router.get('/conversations', messagesController.conversations);
@@ -31,8 +32,11 @@ router.delete('/conversation/:userId', messagesController.deleteConversation);
 // ── 其他 ──
 router.get('/poster/:rawMessageId', messagesController.getPosterByRawMessage);
 router.get('/my-inquiries', messagesController.myInquiries);
+router.get('/received-inquiries', messagesController.receivedInquiries);
 router.post('/contact-admin', messagesController.contactAdmin);
 router.post('/legal-consult/:lawyerId', messagesController.legalConsult);
+router.get('/lawyer-consultations', messagesController.lawyerConsultations);
+router.get('/service-consultations', messagesController.serviceConsultations);
 router.post('/service-consult/:role', messagesController.serviceConsult);
 
 export default router;

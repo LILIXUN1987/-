@@ -20,7 +20,12 @@ export const ddpController = {
         query = query.where('country', 'like', `%${country.trim()}%`);
       }
       if (port && typeof port === 'string') {
-        query = query.where('service_ports', 'like', `%${port.trim().toUpperCase()}%`);
+        const portUpper = port.trim().toUpperCase();
+        query = query.where(function () {
+          this.where('service_ports', 'like', `%${portUpper}%`)
+            .orWhere('air_ports', 'like', `%${portUpper}%`)
+            .orWhere('sea_ports', 'like', `%${portUpper}%`);
+        });
       }
 
       const data = await query.orderBy('completed_orders', 'desc').orderBy('created_at', 'desc').limit(100);
@@ -74,6 +79,8 @@ export const ddpController = {
         country: country.trim(),
         city: city || null,
         service_ports: service_ports || null,
+        air_ports: req.body.air_ports || null,
+        sea_ports: req.body.sea_ports || null,
         service_types: service_types || 'DDP',
         description: description || null,
         reference_price: reference_price || null,
@@ -134,10 +141,10 @@ export const ddpController = {
         return res.status(400).json({ error: '您已提交过入驻信息，如需修改请联系管理员' });
       }
 
-      const { company_name, contact_person, phone, country, city, service_ports, service_types, description, reference_price } = req.body;
+      const { company_name, contact_person, phone, country, city, service_ports, air_ports, sea_ports, service_types, description, reference_price } = req.body;
       if (!company_name?.trim()) return res.status(400).json({ error: '请填写公司英文名称' });
       if (!country?.trim()) return res.status(400).json({ error: '请填写所在国家' });
-      if (!service_ports?.trim()) return res.status(400).json({ error: '请填写可操作港口' });
+      if (!service_ports?.trim() && !air_ports?.trim() && !sea_ports?.trim()) return res.status(400).json({ error: '请填写可操作港口' });
 
       const id = uuidv4();
       await db('ddp_agents').insert({
@@ -148,7 +155,9 @@ export const ddpController = {
         phone: phone?.trim() || null,
         country: country.trim(),
         city: city?.trim() || null,
-        service_ports: service_ports.trim(),
+        service_ports: service_ports?.trim() || null,
+        air_ports: air_ports?.trim() || null,
+        sea_ports: sea_ports?.trim() || null,
         service_types: service_types?.trim() || 'DDP,DDU,清关,派送',
         description: description?.trim() || null,
         reference_price: reference_price?.trim() || null,
@@ -232,9 +241,9 @@ export const ddpController = {
         agents = await db('ddp_agents')
           .where({ status: 'approved' })
           .where('country', 'like', `%${countryQ}%`)
-          .select('id', 'created_by', 'email', 'company_name', 'service_ports')
+          .select('id', 'created_by', 'email', 'company_name', 'service_ports', 'air_ports', 'sea_ports')
           .orderByRaw(portQ
-            ? `CASE WHEN INSTR(service_ports, '${portQ.replace(/'/g, "''")}') > 0 THEN INSTR(service_ports, '${portQ.replace(/'/g, "''")}') ELSE 999 END, completed_orders DESC`
+            ? `CASE WHEN INSTR(COALESCE(service_ports,'')||COALESCE(air_ports,'')||COALESCE(sea_ports,''), '${portQ.replace(/'/g, "''")}') > 0 THEN INSTR(COALESCE(service_ports,'')||COALESCE(air_ports,'')||COALESCE(sea_ports,''), '${portQ.replace(/'/g, "''")}') ELSE 999 END, completed_orders DESC`
             : 'completed_orders DESC'
           ) as any[];
       }
@@ -351,7 +360,7 @@ export const ddpController = {
   },
 
   // ════════════════════════════════════════════
-  // 四、需求热度统计
+  // 四、需求热度统计（增强版）
   // ════════════════════════════════════════════
 
   /** 按国家聚合询价量（支持时间范围筛选） */
@@ -389,6 +398,66 @@ export const ddpController = {
       const totalAgents = await db('ddp_agents').where({ status: 'approved' }).count('* as total').first() as any;
       const pendingAgents = await db('ddp_agents').where({ status: 'pending' }).count('* as total').first() as any;
 
+      // === 增强数据 ===
+
+      // 5a. 询价回复率：有回复的询价数 / 总询价数
+      const allInquiries = await db('ddp_inquiries').select('id', 'user_id', 'country');
+      let repliedCount = 0;
+      for (const inv of allInquiries as any[]) {
+        const replyExists = await db('messages')
+          .where({ receiver_id: inv.user_id })
+          .where('content', 'like', `%${inv.country}%`)
+          .where('content', 'like', `%DDP%`)
+          .first();
+        if (replyExists) repliedCount++;
+      }
+      const totalInq = allInquiries.length || 1;
+      const replyRate = Math.round((repliedCount / totalInq) * 100);
+
+      // 5b. 最近7天新增询价数
+      const lastWeek = new Date(Date.now() - 7 * 86400000).toISOString();
+      const weeklyNewInquiries = await db('ddp_inquiries')
+        .where('created_at', '>=', lastWeek)
+        .count('* as total').first() as any;
+
+      // 5c. 最近7天新增代理数
+      const weeklyNewAgents = await db('ddp_agents')
+        .where('created_at', '>=', lastWeek)
+        .where({ status: 'approved' })
+        .count('* as total').first() as any;
+
+      // 5d. 本月新增 vs 上月新增（增长趋势）
+      const monthStart = new Date();
+      monthStart.setDate(1);
+      monthStart.setHours(0, 0, 0, 0);
+      const lastMonthStart = new Date(monthStart);
+      lastMonthStart.setMonth(lastMonthStart.getMonth() - 1);
+
+      const thisMonthAgents = await db('ddp_agents')
+        .where('created_at', '>=', monthStart.toISOString())
+        .where({ status: 'approved' })
+        .count('* as total').first() as any;
+      const lastMonthAgents = await db('ddp_agents')
+        .where('created_at', '>=', lastMonthStart.toISOString())
+        .where('created_at', '<', monthStart.toISOString())
+        .where({ status: 'approved' })
+        .count('* as total').first() as any;
+
+      // 5e. 最近 DDP 动态（最近5条询价）
+      const recentActivity = await db('ddp_inquiries')
+        .leftJoin('users', 'ddp_inquiries.user_id', 'users.id')
+        .select(
+          'ddp_inquiries.id',
+          'ddp_inquiries.country',
+          'ddp_inquiries.port',
+          'ddp_inquiries.goods_desc',
+          'ddp_inquiries.created_at',
+          'users.company_name',
+          'users.display_name',
+        )
+        .orderBy('ddp_inquiries.created_at', 'desc')
+        .limit(5);
+
       res.json({
         inquiryStats: inquiryStats.map((r: any) => ({ country: r.country, count: Number(r.count) })),
         agentStats: agentCounts.map((r: any) => ({ country: r.country, count: Number(r.count) })),
@@ -397,7 +466,366 @@ export const ddpController = {
           totalAgents: Number((totalAgents as any)?.total || 0),
           pendingAgents: Number((pendingAgents as any)?.total || 0),
         },
+        // 增强数据
+        replyRate,
+        weeklyNewInquiries: Number((weeklyNewInquiries as any)?.total || 0),
+        weeklyNewAgents: Number((weeklyNewAgents as any)?.total || 0),
+        agentGrowth: {
+          thisMonth: Number((thisMonthAgents as any)?.total || 0),
+          lastMonth: Number((lastMonthAgents as any)?.total || 0),
+        },
+        recentActivity: recentActivity.map((r: any) => ({
+          id: r.id,
+          country: r.country,
+          port: r.port,
+          goods_desc: r.goods_desc,
+          company_name: r.company_name || r.display_name || '用户',
+          created_at: r.created_at,
+        })),
       });
+    } catch (err) { next(err); }
+  },
+
+  // ════════════════════════════════════════════
+  // 五、结构化报价管理
+  // ════════════════════════════════════════════
+
+  /** 海外代理提交报价 */
+  async submitQuote(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { inquiry_id, ocean_freight, clearance_fee, delivery_fee, duty_fee, other_fees, total_price, currency, valid_until, notes, reply_content } = req.body;
+      const agentUserId = req.user!.id;
+
+      if (!inquiry_id) return res.status(400).json({ error: '缺少询价ID' });
+
+      // 验证询价存在
+      const inquiry = await db('ddp_inquiries').where({ id: inquiry_id }).first();
+      if (!inquiry) return res.status(404).json({ error: '询价不存在' });
+
+      // 检查是否已报过价
+      const existing = await db('ddp_quotes').where({ inquiry_id, agent_user_id: agentUserId }).first();
+      if (existing) {
+        // 更新已有报价
+        await db('ddp_quotes').where({ id: existing.id }).update({
+          ocean_freight: ocean_freight || null,
+          clearance_fee: clearance_fee || null,
+          delivery_fee: delivery_fee || null,
+          duty_fee: duty_fee || null,
+          other_fees: other_fees || null,
+          total_price: total_price || null,
+          currency: currency || 'USD',
+          valid_until: valid_until || null,
+          notes: notes || null,
+          reply_content: reply_content || null,
+          status: 'pending',
+          updated_at: new Date().toISOString(),
+        });
+        return res.json({ message: '报价已更新', id: existing.id });
+      }
+
+      const quoteId = uuidv4();
+      await db('ddp_quotes').insert({
+        id: quoteId,
+        inquiry_id,
+        agent_user_id: agentUserId,
+        forwarder_user_id: (inquiry as any).user_id,
+        ocean_freight: ocean_freight || null,
+        clearance_fee: clearance_fee || null,
+        delivery_fee: delivery_fee || null,
+        duty_fee: duty_fee || null,
+        other_fees: other_fees || null,
+        total_price: total_price || null,
+        currency: currency || 'USD',
+        valid_until: valid_until || null,
+        notes: notes || null,
+        reply_content: reply_content || null,
+        status: 'pending',
+      });
+
+      // 同时向货代发送站内信通知
+      if (reply_content) {
+        const agentUser = await db('users').where({ id: agentUserId }).first() as any;
+        await db('messages').insert({
+          id: uuidv4(),
+          sender_id: agentUserId,
+          receiver_id: (inquiry as any).user_id,
+          content: `📊 您有一份新的DDP报价\n\n${reply_content}\n━━━━━━━━━━━━━━━━━━\n来自: ${agentUser?.company_name || agentUser?.display_name || '海外代理'}\n报价单ID: ${quoteId}\n请在DDP页面查看详情。`,
+          is_read: false,
+          created_at: new Date().toISOString(),
+        });
+      }
+
+      res.status(201).json({ message: '报价已提交', id: quoteId });
+    } catch (err) { next(err); }
+  },
+
+  /** 获取某个询价的报价列表 */
+  async getQuotes(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { inquiryId } = req.params;
+      const userId = req.user!.id;
+
+      const quotes = await db('ddp_quotes')
+        .leftJoin('users', 'ddp_quotes.agent_user_id', 'users.id')
+        .where({ inquiry_id: inquiryId })
+        .select(
+          'ddp_quotes.*',
+          'users.company_name as agent_company',
+          'users.display_name as agent_name',
+        )
+        .orderBy('ddp_quotes.created_at', 'desc');
+
+      // 只允许询价的发起人或报价的代理查看
+      const inquiry = await db('ddp_inquiries').where({ id: inquiryId }).first() as any;
+      const filtered = quotes.filter((q: any) =>
+        userId === inquiry?.user_id || userId === q.agent_user_id
+      );
+
+      res.json({ data: filtered });
+    } catch (err) { next(err); }
+  },
+
+  /** 货代接受/拒绝报价 */
+  async respondQuote(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { action } = req.body; // 'accepted' | 'rejected'
+      const userId = req.user!.id;
+
+      if (!['accepted', 'rejected'].includes(action)) {
+        return res.status(400).json({ error: '无效操作' });
+      }
+
+      const quote = await db('ddp_quotes').where({ id }).first() as any;
+      if (!quote) return res.status(404).json({ error: '报价不存在' });
+
+      // 只有询价的发起人可以接受/拒绝
+      const inquiry = await db('ddp_inquiries').where({ id: quote.inquiry_id }).first() as any;
+      if (inquiry?.user_id !== userId) {
+        return res.status(403).json({ error: '无权操作' });
+      }
+
+      await db('ddp_quotes').where({ id }).update({
+        status: action,
+        updated_at: new Date().toISOString(),
+      });
+
+      // 通知代理
+      const user = await db('users').where({ id: userId }).first() as any;
+      const statusText = action === 'accepted' ? '✅ 已接受' : '❌ 已拒绝';
+      await db('messages').insert({
+        id: uuidv4(),
+        sender_id: userId,
+        receiver_id: quote.agent_user_id,
+        content: `${statusText}\n\n客户 ${user?.company_name || user?.display_name || '用户'} 已${action === 'accepted' ? '接受' : '拒绝'}您的报价。\n报价单ID: ${id}`,
+        is_read: false,
+        created_at: new Date().toISOString(),
+      });
+
+      res.json({ message: action === 'accepted' ? '已接受报价' : '已拒绝报价' });
+    } catch (err) { next(err); }
+  },
+
+  /** 获取当前用户的报价列表（作为代理或作为货代） */
+  async myQuotes(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.id;
+      const role = (req.user as any)?.role;
+
+      let quotes;
+      if (role === 'overseas_agent') {
+        // 海外代理：我报的价
+        quotes = await db('ddp_quotes')
+          .leftJoin('ddp_inquiries', 'ddp_quotes.inquiry_id', 'ddp_inquiries.id')
+          .where('ddp_quotes.agent_user_id', userId)
+          .select(
+            'ddp_quotes.*',
+            'ddp_inquiries.country',
+            'ddp_inquiries.port',
+            'ddp_inquiries.goods_desc',
+            'ddp_inquiries.notes as inquiry_notes',
+          )
+          .orderBy('ddp_quotes.created_at', 'desc')
+          .limit(50);
+      } else {
+        // 货代/其他：我收到的报价
+        quotes = await db('ddp_quotes')
+          .leftJoin('ddp_inquiries', 'ddp_quotes.inquiry_id', 'ddp_inquiries.id')
+          .leftJoin('users', 'ddp_quotes.agent_user_id', 'users.id')
+          .where('ddp_quotes.forwarder_user_id', userId)
+          .select(
+            'ddp_quotes.*',
+            'ddp_inquiries.country',
+            'ddp_inquiries.port',
+            'ddp_inquiries.goods_desc',
+            'ddp_inquiries.notes as inquiry_notes',
+            'users.company_name as agent_company',
+            'users.display_name as agent_name',
+          )
+          .orderBy('ddp_quotes.created_at', 'desc')
+          .limit(50);
+      }
+
+      res.json({ data: quotes || [] });
+    } catch (err) { next(err); }
+  },
+
+  // ════════════════════════════════════════════
+  // 六、入驻草稿管理
+  // ════════════════════════════════════════════
+
+  /** 保存代理入驻草稿 */
+  async saveOnboardingDraft(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.id;
+      const { company_name, country, service_ports, air_ports, sea_ports, contact_person, phone, email, step_reached } = req.body;
+
+      const existing = await db('ddp_onboarding_drafts').where({ user_id: userId }).first();
+      const allPorts = [service_ports, air_ports, sea_ports].filter(Boolean).join(',') || null;
+      const payload = {
+        company_name: company_name || null,
+        country: country || null,
+        service_ports: allPorts,
+        contact_person: contact_person || null,
+        phone: phone || null,
+        email: email || null,
+        step_reached: step_reached || 1,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (existing) {
+        await db('ddp_onboarding_drafts').where({ user_id: userId }).update(payload);
+      } else {
+        await db('ddp_onboarding_drafts').insert({
+          id: uuidv4(),
+          user_id: userId,
+          ...payload,
+        });
+      }
+
+      res.json({ message: '草稿已保存' });
+    } catch (err) { next(err); }
+  },
+
+  /** 获取当前用户的入驻草稿 */
+  async getOnboardingDraft(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.id;
+      const draft = await db('ddp_onboarding_drafts').where({ user_id: userId }).first();
+      res.json({ data: draft || null });
+    } catch (err) { next(err); }
+  },
+
+  /** 管理员：查看未完成入驻的代理列表 */
+  async pendingOnboardings(req: Request, res: Response, next: NextFunction) {
+    try {
+      const drafts = await db('ddp_onboarding_drafts')
+        .leftJoin('users', 'ddp_onboarding_drafts.user_id', 'users.id')
+        .select(
+          'ddp_onboarding_drafts.*',
+          'users.display_name',
+          'users.email as user_email',
+          'users.company_name as user_company',
+          'users.created_at as user_created_at',
+        )
+        .orderBy('ddp_onboarding_drafts.updated_at', 'desc')
+        .limit(50);
+
+      res.json({ data: drafts });
+    } catch (err) { next(err); }
+  },
+
+  // ════════════════════════════════════════════
+  // 七、代理标签计算
+  // ════════════════════════════════════════════
+
+  /** 为代理生成热门路线标签 */
+  async computeAgentTags(req: Request, res: Response, next: NextFunction) {
+    try {
+      const agents = await db('ddp_agents').where({ status: 'approved' });
+
+      for (const agent of agents as any[]) {
+        const tags: string[] = [];
+        const country = (agent.country || '').toLowerCase();
+        const ports = (agent.service_ports || '').toUpperCase();
+
+        // 基于国家的通用标签
+        if (country.includes('usa') || country.includes('美国') || ports.includes('US')) {
+          tags.push('美线专家');
+          if (ports.includes('LAX') || ports.includes('LGB')) tags.push('美西线活跃');
+          if (ports.includes('NYC') || ports.includes('NY') || ports.includes('EWR')) tags.push('美东线活跃');
+          if (ports.includes('CHI') || ports.includes('ORD')) tags.push('美中线活跃');
+        }
+        if (country.includes('germany') || country.includes('德国') || ports.includes('DE')) {
+          tags.push('欧线专家');
+          tags.push('德国双清');
+        }
+        if (country.includes('uk') || country.includes('英国') || ports.includes('GB')) {
+          tags.push('欧线专家');
+          tags.push('英国双清');
+        }
+        if (country.includes('france') || country.includes('法国') || ports.includes('FR')) {
+          tags.push('欧线专家');
+        }
+        if (country.includes('netherlands') || country.includes('荷兰') || ports.includes('NL')) {
+          tags.push('欧线专家');
+          tags.push('荷兰转运');
+        }
+        if (country.includes('japan') || country.includes('日本') || ports.includes('JP')) {
+          tags.push('日线专家');
+        }
+        if (country.includes('korea') || country.includes('韩国') || ports.includes('KR')) {
+          tags.push('韩线专家');
+        }
+        if (country.includes('vietnam') || country.includes('越南') || ports.includes('VN')) {
+          tags.push('东南亚专线');
+        }
+        if (country.includes('thailand') || country.includes('泰国') || ports.includes('TH')) {
+          tags.push('东南亚专线');
+        }
+        if (country.includes('india') || country.includes('印度') || ports.includes('IN')) {
+          tags.push('印巴专线');
+        }
+        if (country.includes('australia') || country.includes('澳大利亚') || ports.includes('AU')) {
+          tags.push('澳新专线');
+        }
+        if (country.includes('uae') || country.includes('阿联酋') || ports.includes('AE') || ports.includes('DXB')) {
+          tags.push('中东专线');
+        }
+        if (country.includes('saudi') || country.includes('沙特') || ports.includes('SA')) {
+          tags.push('中东专线');
+        }
+        if (country.includes('brazil') || country.includes('巴西') || ports.includes('BR')) {
+          tags.push('南美专线');
+        }
+        if (country.includes('kenya') || country.includes('肯尼亚') || ports.includes('KE')) {
+          tags.push('非洲专线');
+        }
+        if (country.includes('nigeria') || country.includes('尼日利亚') || ports.includes('NG')) {
+          tags.push('非洲专线');
+        }
+        if (country.includes('south africa') || country.includes('南非') || ports.includes('ZA')) {
+          tags.push('非洲专线');
+        }
+
+        // 基于服务类型
+        const serviceTypes = (agent.service_types || '').toLowerCase();
+        if (serviceTypes.includes('ddp')) tags.push('DDP双清');
+        if (serviceTypes.includes('ddu')) tags.push('DDU到门');
+        if (serviceTypes.includes('clearance') || serviceTypes.includes('清关')) tags.push('专业清关');
+        if (serviceTypes.includes('warehouse') || serviceTypes.includes('仓储')) tags.push('海外仓');
+
+        // 基于完单数
+        if (agent.completed_orders >= 50) tags.push('高频合作🔥');
+        else if (agent.completed_orders >= 20) tags.push('经验丰富');
+        else if (agent.completed_orders >= 5) tags.push('稳定接单');
+
+        // 去重并限制最多4个标签
+        const uniqueTags = [...new Set(tags)].slice(0, 4);
+        await db('ddp_agents').where({ id: agent.id }).update({ tags: uniqueTags.join(',') || null });
+      }
+
+      res.json({ message: `已更新 ${agents.length} 个代理标签` });
     } catch (err) { next(err); }
   },
 };

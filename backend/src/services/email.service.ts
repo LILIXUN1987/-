@@ -8,7 +8,7 @@ import { isBusinessRole } from '../types';
 // ── Transporter (lazy init) ──
 let transporter: nodemailer.Transporter | null = null;
 
-function getTransporter(): nodemailer.Transporter {
+export function getTransporter(): nodemailer.Transporter {
   if (!transporter) {
     const { host, port, secure, user, pass } = env.smtp;
     if (!pass) {
@@ -244,6 +244,8 @@ export async function sendInquiryNotification(
   lang: string = 'zh',
 ): Promise<void> {
   if (!isEnabled() || !toEmail) return;
+  // 跳过退件邮箱
+  try { const b = await db('users').where({ email: toEmail, email_bounced: 1 }).first(); if (b) return; } catch {}
   const frontendUrl = env.frontendUrl;
   const transport = getTransporter();
   const subject = lang === 'en'
@@ -411,33 +413,123 @@ export async function sendAccountActivationEmail(
       to: toEmail,
       subject,
       html: lang === 'en' ? `
-        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
-          <h2 style="color: #1a56db;">123 Cargo Community</h2>
-          <p>Hi ${toName},</p>
-          <p>Your account has been created for <strong>${companyName}</strong>:</p>
-          <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 16px 0; font-size: 14px;">
-            <p style="margin: 4px 0;"><strong>Username:</strong> ${username}</p>
-            <p style="margin: 4px 0;"><strong>Password:</strong> ${password}</p>
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px; background: #f9fafb;">
+          <div style="text-align: center; margin-bottom: 24px;">
+            <h1 style="color: #1a56db; font-size: 24px; margin: 0;">🚢 123 Cargo Community</h1>
+            <p style="color: #6b7280; font-size: 14px; margin: 8px 0 0;">International Logistics Collaboration Hub</p>
           </div>
-          <p style="color: #dc2626; font-size: 13px;">⚠️ Please change your password after first login</p>
-          <a href="${frontendUrl}/login" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
-            Login Now
-          </a>
-          ${COMMUNITY_INTRO_FORWARDER_EN}
+          <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <p style="font-size: 15px; color: #374151;">Hi <strong>${toName}</strong>,</p>
+            <p style="font-size: 14px; color: #6b7280; line-height: 1.6;">Your business card from <strong>${companyName}</strong> has been imported. An account has been created for you:</p>
+            <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 20px 0; font-size: 14px;">
+              <p style="margin: 6px 0;"><strong>🔗 Website:</strong> <a href="${frontendUrl}" style="color: #1a56db;">${frontendUrl}</a></p>
+              <p style="margin: 6px 0;"><strong>👤 Username:</strong> ${username}</p>
+              <p style="margin: 6px 0;"><strong>🔑 Password:</strong> ${password}</p>
+            </div>
+            <p style="color: #dc2626; font-size: 13px; margin: 4px 0 16px;">⚠️ Please change your password after first login for security.</p>
+            <a href="${frontendUrl}/login" style="display: block; text-align: center; background: linear-gradient(135deg, #2563EB, #4F46E5); color: white; padding: 14px 24px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 15px;">
+              🚀 Login Now
+            </a>
+          </div>
+          <div style="margin-top: 24px; padding: 20px; background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 12px; border: 2px solid #f59e0b;">
+            <h3 style="font-size: 16px; color: #92400e; margin: 0 0 8px;">💡 Why join 123 Cargo Community?</h3>
+            <p style="font-size: 14px; color: #78350f; line-height: 1.7; margin: 0 0 12px;">
+              The forwarding industry is tough for newcomers — posting on WeChat only reaches peers, not real clients. <strong>Our platform connects you directly with traders searching for cargo space.</strong> AI parses your routes in seconds, and your posts get matched to trader searches automatically. No cold-calling, no endless WeChat groups.
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px;">
+              <div style="background: white; padding: 10px 12px; border-radius: 8px; border: 1px solid #fcd34d;">
+                <strong style="color: #1a56db;">🤖 AI Auto-Post</strong><br/><span style="color: #6b7280; font-size: 12px;">Paste text → parsed in seconds</span>
+              </div>
+              <div style="background: white; padding: 10px 12px; border-radius: 8px; border: 1px solid #fcd34d;">
+                <strong style="color: #059669;">🎯 Auto-Match</strong><br/><span style="color: #6b7280; font-size: 12px;">Traders search → you get notified</span>
+              </div>
+              <div style="background: white; padding: 10px 12px; border-radius: 8px; border: 1px solid #fcd34d;">
+                <strong style="color: #7c3aed;">🎫 Coupon System</strong><br/><span style="color: #6b7280; font-size: 12px;">Gift coupons → clients come back</span>
+              </div>
+              <div style="background: white; padding: 10px 12px; border-radius: 8px; border: 1px solid #fcd34d;">
+                <strong style="color: #dc2626;">🚀 Urgent Promote</strong><br/><span style="color: #6b7280; font-size: 12px;">¥1.5 push to ALL traders</span>
+              </div>
+            </div>
+          </div>
+          <p style="text-align: center; color: #9ca3af; font-size: 12px; margin-top: 20px;">This is an automated message. Questions? Reply to this email.</p>
         </div>
       ` : `
-        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
-          <h2 style="color: #1a56db;">123共享外贸物流社区</h2>
-          <p>${toName} 您好！</p>
-          <p>您在 <strong>${companyName}</strong> 的名片已被录入，现已为您开通社区账号：</p>
-          <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 16px 0; font-size: 14px;">
-            <p style="margin: 4px 0;"><strong>用户名：</strong>${username}</p>
-            <p style="margin: 4px 0;"><strong>密码：</strong>${password}</p>
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px; background: #f9fafb;">
+          <div style="text-align: center; margin-bottom: 24px;">
+            <h1 style="color: #1a56db; font-size: 24px; margin: 0;">🚢 123共享外贸物流社区</h1>
+            <p style="color: #6b7280; font-size: 14px; margin: 8px 0 0;">国际物流人都在用的协作平台</p>
           </div>
-          <a href="${frontendUrl}/login" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
-            立即登录
-          </a>
-          ${COMMUNITY_INTRO_FORWARDER}
+          <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <p style="font-size: 15px; color: #374151;"><strong>${toName}</strong> 您好！</p>
+            <p style="font-size: 14px; color: #6b7280; line-height: 1.6;">您在 <strong>${companyName}</strong> 的名片已被录入系统，社区已为您开通了专属账号：</p>
+            <div style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin: 20px 0; font-size: 14px;">
+              <p style="margin: 6px 0;"><strong>🔗 网址：</strong><a href="${frontendUrl}" style="color: #1a56db;">${frontendUrl}</a></p>
+              <p style="margin: 6px 0;"><strong>👤 用户名：</strong>${username}</p>
+              <p style="margin: 6px 0;"><strong>🔑 密码：</strong>${password}</p>
+            </div>
+            <p style="color: #dc2626; font-size: 13px; margin: 4px 0 16px;">⚠️ 首次登录后请尽快修改密码</p>
+            <a href="${frontendUrl}/login" style="display: block; text-align: center; background: linear-gradient(135deg, #2563EB, #4F46E5); color: white; padding: 14px 24px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 15px;">
+              🚀 立即登录社区
+            </a>
+          </div>
+          <div style="margin-top: 24px; padding: 20px; background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 12px; border: 2px solid #f59e0b;">
+            <h3 style="font-size: 16px; color: #92400e; margin: 0 0 12px;">💡 为什么货代新人都在用 123 社区？</h3>
+
+            <!-- 新人与老登对比 -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+              <div style="background: #fef2f2; padding: 12px; border-radius: 10px; border: 1px solid #fecaca;">
+                <p style="font-size: 13px; font-weight: bold; color: #dc2626; margin: 0 0 6px;">😰 货代新人的困境</p>
+                <p style="font-size: 12px; color: #7f1d1d; line-height: 1.7; margin: 0;">
+                  ❌ 没有老客户积累，一切从零开始<br/>
+                  ❌ 不知道去哪找外贸客户<br/>
+                  ❌ 加微信群全是同行，无人询价<br/>
+                  ❌ 没加入WCA/JC TRANS，海外资源空白<br/>
+                  ❌ 大货代垄断航线，新人拼价格死路一条<br/>
+                  ❌ 朋友圈发广告，点赞的都是同行
+                </p>
+              </div>
+              <div style="background: #ecfdf5; padding: 12px; border-radius: 10px; border: 1px solid #a7f3d0;">
+                <p style="font-size: 13px; font-weight: bold; color: #059669; margin: 0 0 6px;">🦾 老货代的优势</p>
+                <p style="font-size: 12px; color: #064e3b; line-height: 1.7; margin: 0;">
+                  ✅ 多年积累的老客户群，细水长流<br/>
+                  ✅ 外贸客户口口相传，自然获客<br/>
+                  ✅ WCA/JC TRANS会员，全球代理网络<br/>
+                  ✅ 固定航司舱位，价格优势明显<br/>
+                  ✅ 口碑建立，新客户主动找上门<br/>
+                  ✅ 收入稳定，新人入职就有业务
+                </p>
+              </div>
+            </div>
+
+            <!-- 解决方案 -->
+            <div style="background: white; padding: 14px; border-radius: 10px; border: 2px solid #1a56db; margin-bottom: 12px;">
+              <p style="font-size: 14px; font-weight: bold; color: #1a56db; margin: 0 0 8px;">🔑 123 社区 = 新人的"加速器"</p>
+              <p style="font-size: 13px; color: #374151; line-height: 1.8; margin: 0;">
+                老货代的优势是<strong>时间积累</strong>的——客户积累、口碑建立、联盟资质，这些新人短时间内无法复制。<br/><br/>
+                但 <strong>123 社区直接给新人一条快车道：</strong>不用自己找客户，外贸搜索航线时系统自动把你的舱位推给他们。<strong>老货代靠人脉获客，你用社区用技术获客。</strong> 新人不需要等三年五年积累客户，注册就能被外贸看到。<br/><br/>
+                更关键的是：社区整合了<strong>海外DDP代理、报关行、律师、检测认证</strong>等全角色资源——这些是老货代花几十万加入WCA/JC TRANS才能有的，你注册社区就免费享用。
+              </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px;">
+              <div style="background: white; padding: 10px 12px; border-radius: 8px; border: 1px solid #fcd34d;">
+                <strong style="color: #1a56db;">🤖 AI 一键录入</strong><br/><span style="color: #6b7280; font-size: 12px;">粘贴文字，3秒解析入库</span>
+              </div>
+              <div style="background: white; padding: 10px 12px; border-radius: 8px; border: 1px solid #fcd34d;">
+                <strong style="color: #059669;">🎯 自动匹配推送</strong><br/><span style="color: #6b7280; font-size: 12px;">外贸搜索→你收通知→秒回复</span>
+              </div>
+              <div style="background: white; padding: 10px 12px; border-radius: 8px; border: 1px solid #fcd34d;">
+                <strong style="color: #7c3aed;">🎫 报关券生态</strong><br/><span style="color: #6b7280; font-size: 12px;">送券给外贸→抵扣报关费→客户粘性</span>
+              </div>
+              <div style="background: white; padding: 10px 12px; border-radius: 8px; border: 1px solid #fcd34d;">
+                <strong style="color: #dc2626;">🚀 紧急推广 ¥9.9</strong><br/><span style="color: #6b7280; font-size: 12px;">舱位收不满？一键推全社区</span>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 16px; padding: 12px; background: #eff6ff; border-radius: 10px; text-align: center; font-size: 13px; color: #1a56db;">
+            💬 有任何问题？直接回复此邮件联系管理员，或加微信群交流
+          </div>
+          <p style="text-align: center; color: #9ca3af; font-size: 12px; margin-top: 16px;">此邮件由系统自动发送，请勿回复。如有疑问请联系社区管理员。</p>
         </div>
       `,
     });
@@ -647,4 +739,132 @@ export async function sendInvitationEmail(params: {
     logger.error(`Failed to send invitation to ${params.toEmail}:`, err);
     throw err;
   }
+}
+
+// ══════════════════════════════════════════════════════════════
+// 海外代理标准版试用升级提醒（英文，每7天发送一次）
+// ══════════════════════════════════════════════════════════════
+export async function sendOverseasUpgradeReminderEmail(
+  toEmail: string, toName: string, trialEnd: string, remainingDays: number,
+): Promise<void> {
+  if (!isEnabled() || !toEmail) return;
+  const frontendUrl = env.frontendUrl;
+  const transport = getTransporter();
+
+  const daysText = remainingDays <= 0
+    ? 'Your trial has ended'
+    : `${remainingDays} days left in your trial`;
+
+  try {
+    await transport.sendMail({
+      from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
+      to: toEmail,
+      subject: `⏰ ${daysText} — Upgrade your 123 Cargo plan`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 24px;">
+          <h2 style="color: #7c3aed;">🌍 123 Cargo Community</h2>
+          <p>Hi <strong>${toName}</strong>,</p>
+          ${remainingDays <= 0 ? `
+            <p>Your <strong>Standard</strong> free trial has ended.</p>
+            <p>You have been downgraded to the <strong>Free</strong> plan (5 DDP inquiries/month).</p>
+          ` : `
+            <p>Your <strong>Standard</strong> free trial is still active.</p>
+            <p><strong style="color: #7c3aed; font-size: 18px;">${remainingDays}</strong> days remaining (ends ${trialEnd}).</p>
+          `}
+          <div style="background: #f5f3ff; border-left: 4px solid #7c3aed; padding: 16px; margin: 20px 0; border-radius: 4px;">
+            <p style="margin: 0 0 8px 0; font-weight: bold;">🚀 Upgrade to Standard ($19.99/mo) to get:</p>
+            <table style="width: 100%; font-size: 14px; line-height: 1.8; color: #374151;">
+              <tr><td style="padding: 2px 0;">✅</td><td style="padding: 2px 8px;"><strong>Unlimited</strong> DDP inquiries</td></tr>
+              <tr><td style="padding: 2px 0;">✅</td><td style="padding: 2px 8px;"><strong>Structured quoting</strong> — Win more deals</td></tr>
+              <tr><td style="padding: 2px 0;">✅</td><td style="padding: 2px 8px;"><strong>Cooperation management</strong> — Track partners</td></tr>
+              <tr><td style="padding: 2px 0;">✅</td><td style="padding: 2px 8px;"><strong>Unlimited</strong> AI queries</td></tr>
+            </table>
+          </div>
+          <p style="font-size: 13px; color: #6b7280;">One DDP deal can bring thousands in profit — your subscription pays for itself with a single inquiry.</p>
+          <a href="${frontendUrl}/admin/subscribe" style="display: block; text-align: center; background: #7c3aed; color: white; padding: 14px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; margin: 20px 0;">
+            👉 Upgrade Now
+          </a>
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+          <p style="color: #9ca3af; font-size: 12px;">123 Cargo Community Team · <a href="${frontendUrl}" style="color: #9ca3af;">Visit website</a></p>
+        </div>
+      `,
+    });
+    logger.info(`Overseas upgrade reminder sent to ${toEmail}`);
+  } catch (err) {
+    logger.error(`Failed to send overseas upgrade reminder to ${toEmail}:`, err);
+  }
+}
+
+/** 报关券被使用通知 */
+export async function sendCouponUsedEmail(
+  toEmail: string, toName: string, faceValue: number,
+) {
+  if (!transporter) return;
+  try {
+    await transporter.sendMail({
+      from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
+      to: toEmail,
+      subject: `您的 ¥${faceValue} 报关券已被使用`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#f9fafb;border-radius:12px">
+        <h2 style="color:#059669">🎉 报关券已使用</h2>
+        <p>${toName}，您好：</p>
+        <p>您赠送的 <strong style="color:#dc2626;font-size:18px">¥${faceValue}</strong> 报关券已被外贸用户提交使用。</p>
+        <p style="color:#6b7280;font-size:13px">报关行将尽快处理核销。</p>
+        <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0" />
+        <p style="color:#9ca3af;font-size:11px">此邮件由系统自动发送，请勿回复。</p>
+      </div>`,
+    });
+  } catch (err) {
+    logger.error(`Failed to send coupon used email to ${toEmail}:`, err);
+  }
+}
+
+/** 货代周报：本周社区动态 + 个人数据 */
+export async function sendWeeklyReport(
+  toEmail: string, toName: string,
+  stats: { totalSearches: number; totalMatches: number; yourViews: number; yourInquiries: number; hotKeywords: string[] },
+) {
+  if (!isEnabled() || !toEmail) return;
+  const transport = getTransporter();
+  try {
+    await transport.sendMail({
+      from: `"${env.smtp.fromName}" <${env.smtp.user}>`,
+      to: toEmail,
+      subject: '📊 123物流社区 · 本周动态周报',
+      html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#f9fafb">
+        <h2 style="color:#1a56db;margin:0 0 4px">📊 123共享外贸物流社区</h2>
+        <p style="color:#6b7280;font-size:13px;margin:0 0 20px">本周动态周报 — ${toName} 您好</p>
+        <div style="background:white;padding:20px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.1);margin-bottom:16px">
+          <h3 style="font-size:15px;color:#374151;margin:0 0 12px">🌐 本周社区动态</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px">
+            <div style="background:#eff6ff;padding:12px;border-radius:8px;text-align:center">
+              <div style="font-size:22px;font-weight:900;color:#1a56db">${stats.totalSearches}</div>
+              <div style="color:#6b7280;font-size:11px">次搜索</div>
+            </div>
+            <div style="background:#fef3c7;padding:12px;border-radius:8px;text-align:center">
+              <div style="font-size:22px;font-weight:900;color:#d97706">${stats.totalMatches}</div>
+              <div style="color:#6b7280;font-size:11px">次询价推送</div>
+            </div>
+          </div>
+          ${stats.hotKeywords.length > 0 ? `<div style="margin-top:10px;font-size:12px;color:#6b7280">🔥 热搜词：${stats.hotKeywords.join('、')}</div>` : ''}
+        </div>
+        <div style="background:white;padding:20px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.1);margin-bottom:16px">
+          <h3 style="font-size:15px;color:#374151;margin:0 0 12px">📦 您的舱位数据</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px">
+            <div style="background:#f0fdf4;padding:12px;border-radius:8px;text-align:center">
+              <div style="font-size:22px;font-weight:900;color:#059669">${stats.yourViews}</div>
+              <div style="color:#6b7280;font-size:11px">次被浏览</div>
+            </div>
+            <div style="background:#fef2f2;padding:12px;border-radius:8px;text-align:center">
+              <div style="font-size:22px;font-weight:900;color:#dc2626">${stats.yourInquiries}</div>
+              <div style="color:#6b7280;font-size:11px">次被询价</div>
+            </div>
+          </div>
+        </div>
+        <a href="${env.frontendUrl}/admin/dashboard" style="display:block;text-align:center;background:linear-gradient(135deg,#2563EB,#4F46E5);color:white;padding:14px;border-radius:10px;text-decoration:none;font-weight:bold;font-size:14px">🚀 登录社区发布舱位</a>
+        <p style="text-align:center;color:#9ca3af;font-size:11px;margin-top:12px">每周自动发送。不想收到？登录后在个人信息页关闭。</p>
+      </div>`,
+    });
+    logger.info(`Weekly report sent to ${toEmail}`);
+  } catch (err) { logger.error(`Failed to send weekly report to ${toEmail}:`, err); }
 }

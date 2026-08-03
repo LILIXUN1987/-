@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Star, X, Send, Loader2 } from 'lucide-react';
 import { reviewsApi } from '../../api/reviews.api';
+import { useAuthStore } from '../../store/authStore';
 
 interface Props {
   userId: string;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function ReviewDialog({ userId, userName, onClose, onDone }: Props) {
+  const lang = useAuthStore((s) => s.lang);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [sending, setSending] = useState(false);
@@ -17,7 +19,10 @@ export default function ReviewDialog({ userId, userName, onClose, onDone }: Prop
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async () => {
-    if (rating === 0) { setError('请选择评分'); return; }
+    if (rating === 0) {
+      setError(lang === 'en' ? 'Please select a rating' : '请选择评分');
+      return;
+    }
     setSending(true);
     setError('');
     try {
@@ -25,7 +30,7 @@ export default function ReviewDialog({ userId, userName, onClose, onDone }: Prop
       setSuccess(true);
       setTimeout(() => { onDone(); onClose(); }, 1500);
     } catch (err: any) {
-      setError(err?.response?.data?.error || '评价失败');
+      setError(err?.response?.data?.error || (lang === 'en' ? 'Review failed' : '评价失败'));
     }
     setSending(false);
   };
@@ -36,17 +41,23 @@ export default function ReviewDialog({ userId, userName, onClose, onDone }: Prop
         {success ? (
           <div className="text-center py-6">
             <div className="text-4xl mb-3">⭐</div>
-            <p className="text-green-600 font-medium">评价成功！</p>
+            <p className="text-green-600 font-medium">
+              {lang === 'en' ? 'Review submitted!' : '评价成功！'}
+            </p>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-gray-900">评价 {userName}</h3>
+              <h3 className="font-bold text-gray-900">
+                {lang === 'en' ? `Rate ${userName}` : `评价 ${userName}`}
+              </h3>
               <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X className="w-4 h-4" /></button>
             </div>
             {error && <p className="text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2 mb-3">{error}</p>}
             <div className="text-center mb-4">
-              <p className="text-sm text-gray-500 mb-2">点击星星评分</p>
+              <p className="text-sm text-gray-500 mb-2">
+                {lang === 'en' ? 'Tap a star to rate' : '点击星星评分'}
+              </p>
               <div className="flex justify-center gap-1">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <Star
@@ -62,13 +73,13 @@ export default function ReviewDialog({ userId, userName, onClose, onDone }: Prop
             </div>
             <textarea
               className="input-field w-full min-h-[80px] text-sm resize-none mb-3"
-              placeholder="写一句话评价（选填）"
+              placeholder={lang === 'en' ? 'Write a quick review (optional)' : '写一句话评价（选填）'}
               value={comment}
               onChange={e => setComment(e.target.value)}
             />
             <button className="btn-primary w-full flex items-center justify-center gap-1" onClick={handleSubmit} disabled={sending}>
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-              提交评价
+              {lang === 'en' ? 'Submit Review' : '提交评价'}
             </button>
           </>
         )}

@@ -5,9 +5,11 @@ import { cargoService } from '../services/cargo.service';
 import { parseTextToCargo, insertParsedCargo } from '../services/textParser.service';
 import { CargoStatus } from '../types';
 import logger from '../utils/logger';
-import { sendInquiryNotification } from '../services/email.service';
+import { env } from '../config/env';
 import { buildPortRegex, getCodeByCityName, getAllCityNamesByCode, isMainlandCity, isHongKongMacau, isForeignCity, isMainlandCode, getAirportCodesByCountry, extractCityCodesFromEnglish } from '../data/airport-codes';
 import { buildAirlineRegexString } from '../data/airline-codes';
+import { injectTrustInfo } from '../services/trust.service';
+import { pushAirInquiry, pushSeaInquiry, hasFiveElements } from '../services/inquiryPush.service';
 
 // Build port matching regex once at module load
 const PORT_REGEX = buildPortRegex();
@@ -52,7 +54,10 @@ export const cargoController = {
 
   async searchByCategory(req: Request, res: Response, next: NextFunction) {
     try {
-      const { category, keyword } = req.query;
+      // 支持 GET（JSON query）和 POST（FormData + 文件）
+      const category = (req.query.category || req.body.category) as string;
+      const keyword = (req.query.keyword || req.body.keyword) as string;
+      const attachedFile = req.file; // 箱单/文件附件
       if (!category || !keyword) {
         return res.status(400).json({ error: '缺少分类或关键词', code: 'MISSING_PARAMS' });
       }
@@ -195,6 +200,38 @@ export const cargoController = {
         return true;
       });
 
+      // ── 综合加权排序（精准度 0.5 + 认证 0.2 + 信用 0.2 + 新鲜度 0.1）──
+      const now = Date.now();
+      for (const item of deduped) {
+        let precisionScore = 0;
+        // 精准度：origin_term 匹配 origin_port 或 expanded term 出现在 port 字段中
+        const op = (item.origin_port || '').toLowerCase();
+        const dp = (item.dest_port || '').toLowerCase();
+        for (const t of originTerms) {
+          if (op === t.toLowerCase()) { precisionScore += 0.3; break; }
+          else if (op.includes(t.toLowerCase())) { precisionScore += 0.2; break; }
+        }
+        for (const t of destTerms) {
+          if (dp === t.toLowerCase()) { precisionScore += 0.3; break; }
+          else if (dp.includes(t.toLowerCase())) { precisionScore += 0.2; break; }
+        }
+        precisionScore = Math.min(precisionScore, 0.5);
+
+        // 新鲜度：基于 created_at
+        const ageDays = item.created_at ? (now - new Date(item.created_at).getTime()) / 86400000 : 30;
+        let freshnessScore = 0;
+        if (ageDays <= 1) freshnessScore = 0.1;
+        else if (ageDays <= 3) freshnessScore = 0.08;
+        else if (ageDays <= 7) freshnessScore = 0.05;
+        else if (ageDays <= 14) freshnessScore = 0.03;
+        else freshnessScore = 0.01;
+
+        // 认证分 + 信用分（后续注入后更新）
+        (item as any)._precision = precisionScore;
+        (item as any)._freshness = freshnessScore;
+        (item as any)._rankScore = precisionScore + freshnessScore; // 临时，后面补充
+      }
+
       // ── 批量注入企业认证状态 ──
       try {
         const companyNames = [...new Set(deduped.map((item: any) => {
@@ -220,44 +257,23 @@ export const cargoController = {
       const currentUserId = (req as any).user?.id;
       if (currentUserId) {
         try {
-          const myCoopAgents = await db('cooperations').where({ forwarder_user_id: currentUserId, status: 'confirmed' }).select('agent_user_id');
-          const myReferrer = await db('referrals').where({ referee_id: currentUserId }).select('referrer_id').first() as any;
-          const myReferees = await db('referrals').where({ referrer_id: currentUserId }).select('referee_id');
-          const currentUser = await db('users').where({ id: currentUserId }).first() as any;
-          const myCompany = currentUser?.company_name || '';
-          for (const item of deduped) {
-            const companyName = item.contact_info?.split(' ')[0];
-            if (!companyName) continue;
-            const uploader = await db('raw_messages')
-              .leftJoin('users', 'raw_messages.uploaded_by', 'users.id')
-              .where('raw_messages.id', item.uploaded_file_id)
-              .select('users.id as uploader_id', 'users.display_name', 'users.company_name', 'users.card_image', 'users.phone', 'users.created_at')
-              .first() as any;
-            if (!uploader?.uploader_id || uploader.uploader_id === currentUserId) continue;
-            const trustHints: string[] = []; const mutualAgents: { name: string }[] = [];
-            const uploaderCoops = await db('cooperations').where({ forwarder_user_id: uploader.uploader_id, status: 'confirmed' }).select('agent_user_id');
-            const uploaderAgentIds = new Set(uploaderCoops.map((c: any) => c.agent_user_id));
-            const sharedAgents = await db('users').whereIn('id', [...uploaderAgentIds].filter((id: string) => myCoopAgents.some((mc: any) => mc.agent_user_id === id))).select('display_name', 'company_name');
-            for (const a of sharedAgents) { mutualAgents.push({ name: a.display_name || a.company_name }); trustHints.push('mutual_agent'); }
-            if (myReferees?.some((r: any) => r.referee_id === uploader.uploader_id)) trustHints.push('referral:i_referred');
-            if (myReferrer?.referrer_id === uploader.uploader_id) trustHints.push('referral:referred_me');
-            if (myCompany && uploader.company_name && myCompany === uploader.company_name) trustHints.push('same_company');
-            const uploaderReviews = await db('reviews').where({ reviewee_id: uploader.uploader_id }).select('rating');
-            const reviewTotal = uploaderReviews.length;
-            const avgRating = reviewTotal > 0 ? (uploaderReviews.reduce((s: number, r: any) => s + r.rating, 0) / reviewTotal).toFixed(1) : null;
-            const uploaderCoopCount = await db('cooperations').where({ forwarder_user_id: uploader.uploader_id, status: 'confirmed' }).count('* as total').first() as any;
-            const daysSinceReg = uploader.created_at ? Math.floor((Date.now() - new Date(uploader.created_at).getTime()) / 86400000) : 0;
-            (item as any).trust_info = {
-              hints: trustHints, mutual_agents: mutualAgents,
-              uploader_name: uploader.display_name, uploader_company: uploader.company_name, uploader_id: uploader.uploader_id,
-              has_card: !!uploader.card_image, has_phone: !!uploader.phone,
-              days_since_reg: daysSinceReg,
-              avg_rating: avgRating ? Number(avgRating) : null, review_count: reviewTotal,
-              coop_count: Number(uploaderCoopCount?.total || 0),
-            };
-          }
+          await injectTrustInfo(deduped, currentUserId);
         } catch (e) { /* 信任信息不影响主结果 */ }
       }
+
+      // ── 最终加权排序：精准0.5 + 认证0.2 + 信用0.2 + 新鲜0.1 ──
+      for (const item of deduped) {
+        const precision = (item as any)._precision || 0;
+        const freshness = (item as any)._freshness || 0;
+        const verified = (item as any).is_verified_company ? 0.2 : 0;
+        const trust = (item as any).trust_info;
+        const creditNorm = trust?.avg_rating
+          ? Math.min((trust.avg_rating / 5) * 0.2, 0.2)
+          : 0.1; // 无评分给基础0.1
+        (item as any)._rankScore = precision + verified + creditNorm + freshness;
+      }
+      // 按综合得分降序排列
+      deduped.sort((a: any, b: any) => (b._rankScore || 0) - (a._rankScore || 0));
 
       // ── 检测5要素齐全（始发港+目的港+件数+重量+体积） ──
       const senderId = (req as any).user?.id;
@@ -291,13 +307,52 @@ export const cargoController = {
         && originTerms.length > 0
         && destTerms.length > 0;
 
+      // ── 通知舱位来源公司（管理员代发时，让注册公司感知到活跃度） ──
+      if (deduped.length > 0 && senderId) {
+        try {
+          const sourceNotes = deduped
+            .map((item: any) => item.notes || '')
+            .filter((n: string) => n.includes('【来源：'));
+          if (sourceNotes.length > 0) {
+            const allNames = new Set<string>();
+            for (const note of sourceNotes) {
+              const m = note.match(/【来源：(.+?)】/);
+              if (m) m[1].split('、').forEach((n: string) => allNames.add(n.trim()));
+            }
+            const notified = new Set<string>();
+            for (const companyName of allNames) {
+              const targetUser = await db('users')
+                .where('company_name', companyName)
+                .where('status', 'approved')
+                .first() as any;
+              if (targetUser && !notified.has(targetUser.id) && targetUser.id !== senderId) {
+                notified.add(targetUser.id);
+                await db('messages').insert({
+                  id: uuidv4(), sender_id: senderId, receiver_id: targetUser.id,
+                  content: `🎯 有客户在社区「${req.query.category || '查询'}」搜索，匹配到了您的舱位：\n\n🔍 客户查询：${String(keyword).substring(0, 150)}\n\n━━━━━━━━━━━━━━━━━━━━\n💡 此舱位由社区管理员代为您发布。登录即可查看和回复询价，客户在等您报价！`,
+                  is_read: false, created_at: new Date().toISOString(),
+                }).catch(() => {});
+                if (targetUser.email && targetUser.email_verified) {
+                  try {
+                    const { sendInquiryNotification } = await import('../services/email.service');
+                    await sendInquiryNotification(targetUser.email, targetUser.display_name || companyName, senderDisplayName || '查询者', String(keyword).substring(0, 200));
+                  } catch {}
+                }
+              }
+            }
+            if (notified.size > 0) logger.info(`来源公司通知: ${notified.size} 家 → "${String(keyword).substring(0, 30)}..."`);
+          }
+        } catch {}
+      }
+
       const isAuth = !!req.user;
       res.json({
         data: sanitizeCargoItems(deduped, isAuth),
         total: deduped.length,
         push_message: has5Elements
           ? '✅ 您输入的信息非常精准，我们已经将您的需求推送至今日对应口岸发布此相关航线信息的货运代理的站内信与外部邮件，稍等他们会通过站内信与您取得联系（请在确认信息可靠后再进行微信或者电话联系）'
-          : undefined,
+          + (attachedFile ? '\n📎 已附带箱单/文件，发布者将收到附件下载链接' : '')
+          : (attachedFile ? '📎 已附带箱单/文件' : undefined),
       });
       // ── 搜索日志 ──
       try {
@@ -311,213 +366,42 @@ export const cargoController = {
         });
       } catch {}
 
+      // ── 零结果时记录需求，后续有人发布匹配舱位时反向通知 ──
+      if (deduped.length === 0 && senderId && String(keyword).length >= 2) {
+        try {
+          const od = originTerms[0] || '';
+          const dd = destTerms[0] || '';
+          await db('demand_records').insert({
+            id: uuidv4(),
+            user_id: senderId,
+            keyword: String(keyword).substring(0, 200),
+            category: req.query.category as string || null,
+            origin_port: od.substring(0, 50),
+            dest_port: dd.substring(0, 50),
+            created_at: new Date().toISOString(),
+          });
+        } catch {}
+      }
+
       if (senderId && /\d+\s*(?:件|KG|CBM|kg|箱|吨)/.test(keyword as string)) {
         try {
-          const kw = String(keyword);
           const category = req.query.category as string;
+          let pushedCount = 0;
+          const filePath = attachedFile?.path;
 
-          // ── 空运出口/空运包税出口：提取始发港+目的港 → 推送给相关发布者 ──
           if (category === '空运出口' || category === '空运包税出口') {
-            const codes = kw.match(/[A-Z0-9]{3}/g) || [];
-            const chinesePorts = kw.match(PORT_REGEX) || [];
-            let portKws = [...new Set([...codes, ...chinesePorts])];
-
-            // 补充：中文国家名 → 该国所有机场代码（如"美国"→所有美国机场代码）
-            const rawTerms = kw.split(/[\s+\/\-－—]+|到|至/).filter(Boolean);
-            let countryCodes: string[] = [];
-            for (const t of rawTerms) {
-              const cc = getAirportCodesByCountry(t);
-              countryCodes = [...countryCodes, ...cc];
-            }
-
-            // 补充：从英文地址中提取城市名 → IATA 代码（如 "Los Angeles" → LAX）
-            const engCodes = extractCityCodesFromEnglish(kw);
-
-            // ── 优先级排列匹配词 ──
-            // 1级（精准）：英文地址匹配的具体机场   2级（兜底）：国家枢纽机场
-            let matchTerms: string[] = [];
-
-            // 1级：英文地址匹配的机场（精准匹配）
-            if (engCodes.length > 0) {
-              matchTerms.push(...engCodes);
-              for (const ec of engCodes) {
-                const cities = getAllCityNamesByCode(ec);
-                for (const c of cities) {
-                  if (!matchTerms.includes(c)) matchTerms.push(c);
-                }
-              }
-            }
-
-            // 2级：直接提取的代码/城市名（不含国家展开的）
-            for (const p of portKws) {
-              if (/^\d{3}$/.test(p)) continue;
-              if (matchTerms.includes(p)) continue;
-              if (/^[A-Z0-9]{3}$/.test(p) && countryCodes.includes(p)) continue;
-              matchTerms.push(p);
-              if (/^[A-Z0-9]{3}$/.test(p)) {
-                const cities = getAllCityNamesByCode(p);
-                for (const c of cities) {
-                  if (!matchTerms.includes(c)) matchTerms.push(c);
-                }
-              }
-            }
-
-            // 3级（兜底）：国家展开的枢纽机场 — 无论英文地址是否匹配都补充
-            // 因为洛杉矶(LAX)的货代也能做圣地亚哥(SAN)的货
-            if (countryCodes.length > 0) {
-              const HUBS = ['LAX','JFK','ORD','SFO','SEA','MIA','ATL','DFW','BOS','IAD','EWR','PHX','DEN','MSP','DTW','PHL','CLT','FLL','TPA','SAN','LAS','PDX','STL','HNL','ANC',
-                'LHR','LGW','MAN','CDG','FRA','MUC','FCO','MXP','AMS','BRU','ZRH','GVA','MAD','BCN','LIS','CPH','ARN','OSL','HEL','DUB','VIE','PRG','BUD','WAW','IST',
-                'NRT','HND','KIX','ICN','HKG','SIN','KUL','BKK','CGK','MNL','SGN','HAN','DEL','BOM','DAC','CMB','DXB','AUH','DOH','JED','RUH',
-                'SYD','MEL','BNE','AKL','NBO','JNB','CPT','CAI','LOS','ADD',
-                'GRU','GIG','EZE','SCL','LIM','BOG','MEX','PTY'];
-              const hubMatch = countryCodes.filter(c => HUBS.includes(c));
-              const fallbackHubs = hubMatch.length > 0 ? hubMatch : countryCodes.slice(0, 5);
-              for (const h of fallbackHubs) {
-                if (matchTerms.includes(h)) continue;
-                matchTerms.push(h);
-                const cities = getAllCityNamesByCode(h);
-                for (const c of cities) {
-                  if (!matchTerms.includes(c)) matchTerms.push(c);
-                }
-              }
-            }
-
-            // 确保至少有始发港词
-            if (portKws.length >= 2) {
-              const finalTerms = matchTerms.slice(0, 10);
-
-              const publishers = await db('raw_messages')
-                .leftJoin('users', 'raw_messages.uploaded_by', 'users.id')
-                .where(function () {
-                  for (const p of finalTerms) {
-                    this.orWhere('raw_messages.content', 'like', `%${p}%`);
-                  }
-                })
-                .whereNotNull('users.id')
-                .select('users.id')
-                .distinct()
-                .limit(20);
-
-              const seen = new Set<string>();
-              for (const p of publishers) {
-                if (p.id === senderId || seen.has(p.id)) continue;
-                seen.add(p.id);
-                const pubRow = await db('users').where({ id: p.id }).select('email','email_verified','notify_inquiry_email','notify_inquiry_site','display_name','company_name').first() as any;
-
-                // 查该发布者匹配查询关键词的原始记录原文
-                let matchedRaw = '';
-                try {
-                  const matched = await db('raw_messages')
-                    .where('uploaded_by', p.id)
-                    .where(function () {
-                      for (const t of finalTerms.slice(0, 5)) {
-                        this.orWhere('content', 'like', `%${t}%`);
-                      }
-                    })
-                    .orderBy('created_at', 'desc')
-                    .first();
-                  if (matched) matchedRaw = (matched as any).content.substring(0, 300);
-                } catch {}
-
-                if (pubRow && pubRow.notify_inquiry_site !== 0) {
-                  const { v4 } = await import('uuid');
-                  const msgBody = `📢 有群友发布货物求购「${kw.substring(0, 50)}」
-
-🔍 查询关键词：${kw.substring(0, 100)}`
-                    + (matchedRaw ? `\n\n📌 您匹配到的推广原文：\n${matchedRaw}` : '')
-                    + `\n\n━━━━━━━━━━━━━━━━━━━━\n\n请及时回复。`;
-                  await db('messages').insert({
-                    id: v4(), sender_id: senderId, receiver_id: p.id,
-                    content: msgBody,
-                    is_read: false,
-                  });
-                }
-                // 发邮件通知发布者
-                try {
-                  if (pubRow && pubRow.email && pubRow.email_verified && pubRow.notify_inquiry_email !== 0) {
-                    await sendInquiryNotification(pubRow.email, pubRow.display_name || pubRow.company_name, senderDisplayName, kw);
-                  }
-                } catch {}
-              }
-              if (seen.size > 0) logger.info(`需求推送: "${kw.substring(0, 30)}..." → ${seen.size} 位发布者`);
-            }
+            pushedCount = await pushAirInquiry(keyword as string, category, PORT_REGEX, senderId, senderDisplayName, filePath);
+            if (pushedCount > 0) logger.info(`需求推送: "${String(keyword).substring(0, 30)}..." → ${pushedCount} 位发布者`);
           }
 
-          // ── 海运出口/海运包税出口：提取始发港+目的港 → 推送给相关发布者 ──
           if (category === '海运出口' || category === '海运包税出口') {
-            const codes = (kw.match(/\b[A-Z]{3}\b/g) || []).filter(c => !/^(?:CBM|KG|KGS|TON|LBS|RMB|USD|EUR|BUP)$/i.test(c));
-            const chinesePorts = kw.match(PORT_REGEX) || [];
-            const portKws = [...new Set([...codes, ...chinesePorts])];
+            pushedCount = await pushSeaInquiry(keyword as string, PORT_REGEX, senderId, senderDisplayName, filePath);
+            if (pushedCount > 0) logger.info(`海运需求推送: "${String(keyword).substring(0, 30)}..." → ${pushedCount} 位发布者`);
+          }
 
-            if (portKws.length >= 2) {
-              // 取前两个作为始发港+目的港，并扩展别名
-              const [origin, dest] = portKws.slice(0, 2);
-              const expandedOrigin: string[] = [origin];
-              const expandedDest: string[] = [dest];
-              if (/^[A-Z]{3}$/.test(origin)) {
-                const cities = getAllCityNamesByCode(origin);
-                for (const c of cities) if (!expandedOrigin.includes(c)) expandedOrigin.push(c);
-              }
-              if (/^[A-Z]{3}$/.test(dest)) {
-                const cities = getAllCityNamesByCode(dest);
-                for (const c of cities) if (!expandedDest.includes(c)) expandedDest.push(c);
-              }
-              const publishers = await db('raw_messages')
-                .leftJoin('users', 'raw_messages.uploaded_by', 'users.id')
-                .where(function () {
-                  this.andWhere(function () {
-                    for (const o of expandedOrigin) this.orWhere('raw_messages.content', 'like', `%${o}%`);
-                  }).andWhere(function () {
-                    for (const d of expandedDest) this.orWhere('raw_messages.content', 'like', `%${d}%`);
-                  });
-                })
-                .whereNotNull('users.id')
-                .select('users.id')
-                .distinct()
-                .limit(20);
-
-              const seen = new Set<string>();
-              for (const p of publishers) {
-                if (p.id === senderId || seen.has(p.id)) continue;
-                seen.add(p.id);
-                const pubRow = await db('users').where({ id: p.id }).select('email','email_verified','notify_inquiry_email','notify_inquiry_site','display_name','company_name').first() as any;
-                // 查该发布者匹配查询关键词的原始记录原文
-                let matchedRaw = '';
-                try {
-                  const matched = await db('raw_messages')
-                    .where('uploaded_by', p.id)
-                    .where(function () {
-                      for (const t of [...expandedOrigin, ...expandedDest].slice(0, 5)) {
-                        this.orWhere('content', 'like', `%${t}%`);
-                      }
-                    })
-                    .orderBy('created_at', 'desc')
-                    .first();
-                  if (matched) matchedRaw = (matched as any).content.substring(0, 300);
-                } catch {}
-
-                if (pubRow && pubRow.notify_inquiry_site !== 0) {
-                  const { v4 } = await import('uuid');
-                  const msgBody = `📢 有群友发布海运需求「${kw.substring(0, 50)}」
-
-🔍 查询关键词：${kw.substring(0, 100)}`
-                    + (matchedRaw ? `\n\n📌 您匹配到的推广原文：\n${matchedRaw}` : '')
-                    + `\n\n━━━━━━━━━━━━━━━━━━━━\n\n请及时报价回复。`;
-                  await db('messages').insert({
-                    id: v4(), sender_id: senderId, receiver_id: p.id,
-                    content: msgBody,
-                    is_read: false,
-                  });
-                }
-                // 发邮件通知发布者
-                try {
-                  if (pubRow && pubRow.email && pubRow.email_verified && pubRow.notify_inquiry_email !== 0) {
-                    await sendInquiryNotification(pubRow.email, pubRow.display_name || pubRow.company_name, senderDisplayName, kw);
-                  }
-                } catch {}
-              }
-              if (seen.size > 0) logger.info(`海运需求推送: "${kw.substring(0, 30)}..." → ${seen.size} 位发布者`);
-            }
+          // ── 零匹配结果 → 只发 express 邮箱，存入需求看板 ──
+          if (pushedCount === 0 && deduped.length === 0) {
+            try { const { sendInquiryNotification } = await import('../services/email.service'); await sendInquiryNotification('express@tiangaocargo.com', '未匹配询价', senderDisplayName, keyword as string); } catch {}
           }
         } catch (pushErr) {
           logger.error('需求推送失败:', pushErr);
@@ -587,7 +471,7 @@ export const cargoController = {
 
   async parseText(req: Request, res: Response, next: NextFunction) {
     try {
-      const { text } = req.body;
+      const { text, source_companies, source_company_ids, auto_assign, auto_region } = req.body;
       const category = req.body.category || '普货推广';
 
       if (!text || typeof text !== 'string' || text.trim().length === 0) {
@@ -658,6 +542,30 @@ export const cargoController = {
         });
       }
 
+      // ── 查重：同一个人近30天已发布完全相同的航线+价格 → 提示已有 ──
+      if (userId !== 'system') {
+        for (const row of rows) {
+          const dupQuery = db('cargo_spaces')
+            .where('uploaded_by', userId);
+          if (row.origin_port) dupQuery.where('origin_port', row.origin_port);
+          if (row.dest_port) dupQuery.where('dest_port', row.dest_port);
+          if (row.airline_code) dupQuery.where('airline_code', row.airline_code);
+          if (row.price_per_cbm) dupQuery.where('price_per_cbm', row.price_per_cbm);
+          if (row.price_per_kg) dupQuery.where('price_per_kg', row.price_per_kg);
+
+          const existing = await dupQuery.where('created_at', '>=', db.raw("datetime('now', '-30 days')")).first();
+          if (existing) {
+            const routeLabel = [row.origin_port, row.dest_port].filter(Boolean).join('→') || row.region || '';
+            const priceLabel = row.price_per_cbm ? `¥${row.price_per_cbm}/CBM` : row.price_per_kg ? `¥${row.price_per_kg}/KG` : '';
+            return res.json({
+              message: `⚠️ 系统已存在相同的推广：${routeLabel} ${row.airline_code||''} ${priceLabel}（30天内已发布过，请勿重复录入）`,
+              rows: [],
+              inserted: 0,
+            });
+          }
+        }
+      }
+
       // 解析成功后才保存原始记录（避免解析失败产生无法重试的死记录）
       const rawId = uuidv4();
       await db('raw_messages').insert({
@@ -668,8 +576,92 @@ export const cargoController = {
         category,
       });
 
+      // ── 自动分配50家货代（优先业务类型 + 省份筛选） ──
+      let srcCompanies: string[] = Array.isArray(source_companies) ? source_companies : [];
+      if (auto_assign === true || auto_assign === 'true') {
+        const catKey = (category || '').replace('包税', '').replace('出口', '').replace('进口', '');
+        const bizKeywords: Record<string, string> = {
+          '空运': '空运', '海运': '海运', '陆运': '陆运',
+          '快递': '快递', '进口清关': '进口清关', '双清': '双清包税',
+        };
+        const matchKeyword = bizKeywords[catKey] || '';
+        const region = (auto_region || '') as string;
+
+        // 省份关键词映射（公司名包含这些关键词）
+        const regionMap: Record<string, string[]> = {
+          '上海': ['上海'],
+          '北京': ['北京'],
+          '广深': ['广州', '深圳'],
+          '新疆': ['新疆'],
+          '其他': [], // 排除上海/北京/广深/新疆
+        };
+
+        // 省份筛选
+        const allFwds = await db('users')
+          .where({ role: 'forwarder', status: 'approved' })
+          .whereNotNull('company_name')
+          .select('company_name', 'business_scope') as any[];
+
+        let pool = allFwds;
+        if (region && regionMap[region]) {
+          const keys = regionMap[region];
+          pool = allFwds.filter(f => keys.some(k => (f.company_name || '').includes(k)));
+        } else if (region === '其他') {
+          const excludeKeys = ['上海', '北京', '广州', '深圳', '新疆'];
+          pool = allFwds.filter(f => !excludeKeys.some(k => (f.company_name || '').includes(k)));
+        }
+
+        // 业务类型优先
+        let matched = pool.filter(f => matchKeyword && (f.business_scope || '').includes(matchKeyword));
+        let remaining = pool.filter(f => !matched.includes(f));
+
+        const shuffle = (arr: any[]) => arr.sort(() => Math.random() - 0.5);
+        srcCompanies = [...shuffle(matched), ...shuffle(remaining)].slice(0, 50).map(f => f.company_name);
+      }
+
+      // ── 注入来源公司到 notes ──
+      if (srcCompanies.length > 0) {
+        const srcTag = `【来源：${srcCompanies.join('、')}】`;
+        for (const row of rows) {
+          row.notes = row.notes ? `${srcTag} ${row.notes}` : srcTag;
+        }
+      }
+
       // Insert into database (link to raw message)
       const inserted = await insertParsedCargo(rows, userId, rawId, category, contactInfo);
+
+      // ── 反向匹配：新舱位是否满足之前的零结果搜索需求 ──
+      if (inserted > 0) {
+        try {
+          const allPorts: string[] = [];
+          for (const row of rows) {
+            if (row.origin_port) allPorts.push(row.origin_port);
+            if (row.dest_port) allPorts.push(row.dest_port);
+          }
+          if (allPorts.length > 0) {
+            let demandQuery = db('demand_records').where('notified', 0);
+            demandQuery = demandQuery.where(function () {
+              for (const p of allPorts) {
+                this.orWhere('keyword', 'like', `%${p}%`);
+              }
+            });
+            const demands = await demandQuery.limit(30) as any[];
+            const notified = new Set<string>();
+            for (const d of demands) {
+              if (d.user_id && !notified.has(d.user_id) && d.user_id !== userId) {
+                notified.add(d.user_id);
+                await db('messages').insert({
+                  id: uuidv4(), sender_id: userId, receiver_id: d.user_id,
+                  content: `🔔 您之前搜索「${d.category || '舱位'}」：${d.keyword.substring(0, 80)} 现在有新的匹配结果了！\n\n社区刚刚发布了相关航线舱位，快来查看：${env.frontendUrl}/admin/files?tab=query`,
+                  is_read: false, created_at: new Date().toISOString(),
+                }).catch(() => {});
+              }
+              await db('demand_records').where({ id: d.id }).update({ notified: 1 });
+            }
+            if (notified.size > 0) logger.info(`反向通知: ${notified.size} 个用户收到新舱位匹配通知`);
+          }
+        } catch {}
+      }
 
       res.json({
         message: `成功解析并入库 ${inserted} 条货舱记录`,
@@ -986,4 +978,232 @@ export const cargoController = {
       });
     } catch (err) { next(err); }
   },
+
+  /** 我的发布记录（当前用户发布的推广/舱位） */
+  async myPublications(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.id;
+      const currentUser = await db("users").where({ id: userId }).first() as any;
+      const phone = currentUser?.phone;
+
+      const { page: pageStr, limit: limitStr } = req.query;
+      const page = Math.max(1, parseInt(pageStr as string) || 1);
+      const limit = Math.min(100, Math.max(1, parseInt(limitStr as string) || 20));
+      const offset = (page - 1) * limit;
+
+      // 找到用户的原始记录
+      const rawIds = await db("raw_messages").where({ uploaded_by: userId }).select("id");
+      const rawIdList = rawIds.map((r: any) => r.id);
+
+      let query = db("cargo_spaces")
+        .leftJoin('raw_messages', 'cargo_spaces.uploaded_file_id', 'raw_messages.id')
+        .where(function () {
+          if (phone) this.where("cargo_spaces.contact_info", "like", "%" + phone + "%");
+          if (rawIdList.length > 0) this.orWhereIn("cargo_spaces.uploaded_file_id", rawIdList);
+        });
+
+      const countResult = await query.clone().count('* as total').first();
+      const total = Number((countResult as any)?.total || 0);
+
+      const items = await query.clone()
+        .select(
+          'cargo_spaces.id',
+          'cargo_spaces.origin_port',
+          'cargo_spaces.dest_port',
+          'cargo_spaces.region',
+          'cargo_spaces.airline_code',
+          'cargo_spaces.cargo_type',
+          'cargo_spaces.price_per_cbm',
+          'cargo_spaces.price_per_kg',
+          'cargo_spaces.currency',
+          'cargo_spaces.available_cbm',
+          'cargo_spaces.available_kg',
+          'cargo_spaces.valid_from',
+          'cargo_spaces.valid_to',
+          'cargo_spaces.status',
+          'cargo_spaces.view_count',
+          'cargo_spaces.inquiry_count',
+          'cargo_spaces.notes',
+          'cargo_spaces.contact_info',
+          'cargo_spaces.created_at',
+          'cargo_spaces.updated_at',
+          'raw_messages.original_text',
+        )
+        .orderBy('cargo_spaces.created_at', 'desc')
+        .limit(limit)
+        .offset(offset);
+
+      res.json({ data: items, total, page, limit });
+    } catch (err) { next(err); }
+  },
+
+  /** 公开搜索已注册用户（含免费版每日次数限制，未登录/免费版每日3次） */
+  async searchUsers(req: Request, res: Response, next: NextFunction) {
+    try {
+      const q = String(req.query.q || '').trim();
+      if (!q || q.length < 2) { res.json({ data: [], remainingSearch: -1 }); return; }
+
+      const userId = req.user?.id;
+      const user = userId ? await db('users').where({ id: userId }).first() : null;
+      const planTier = (user as any)?.plan_tier || 'free';
+      const trialEnd = (user as any)?.trial_end;
+      const isPaidUser = planTier !== 'free' && trialEnd && new Date(trialEnd + 'T23:59:59') > new Date();
+      const isAdmin = (user as any)?.role === 'admin';
+
+      let remainingSearch = -1;
+      if (!isPaidUser && !isAdmin && userId) {
+        const today = new Date().toISOString().split('T')[0];
+        const row = await db('search_logs').where({ user_id: userId }).where('created_at', '>=', today + ' 00:00:00').count('* as total').first() as any;
+        const c = Number(row?.total || 0);
+        remainingSearch = Math.max(0, 3 - c);
+        if (c >= 3) {
+          const rc: Record<string,number> = {};
+          (await db('users').where('status','approved').select('role').select(db.raw('COUNT(*) as cnt')).groupBy('role') as any[]).forEach((r:any) => { rc[r.role] = Number(r.cnt); });
+          res.json({ data:[], total:0, roleCounts:rc, remainingSearch:0, overLimit:true }); return;
+        }
+        try { await db('search_logs').insert({ id: uuidv4(), user_id:userId, keyword:q, created_at:new Date().toISOString() }); } catch {}
+      }
+
+      const dbUsers = await db('users').where('status','approved').where(function(){this.where('company_name','like','%'+q+'%').orWhere('display_name','like','%'+q+'%').orWhere('port_city','like','%'+q+'%').orWhere('port_code','like','%'+q+'%').orWhere('operable_ports','like','%'+q+'%');}).select('id','display_name','company_name','role','is_newbie','created_at','port_city','port_code').orderBy('role','asc').limit(20) as any[];
+      const sanitized = dbUsers.map((u:any) => ({ id:u.id, display_name:u.display_name, company_name:u.company_name, role:u.role, is_newbie:!!u.is_newbie, days_on_platform:u.created_at?Math.floor((Date.now()-new Date(u.created_at).getTime())/86400000):0 }));
+      const roleCounts: Record<string,number> = {};
+      dbUsers.forEach((u:any) => { roleCounts[u.role] = (roleCounts[u.role]||0)+1; });
+      res.json({ data:sanitized, total:sanitized.length, roleCounts, remainingSearch });
+    } catch(err) { next(err); }
+  },
+
+  /** 向特定用户发起询价（替代直接发消息，防止群发推广） */
+  async inquiryUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.id;
+      const { receiver_id, origin_port, dest_port, goods_desc, weight_kg, volume_cbm, pieces, notes } = req.body;
+      if (!receiver_id) { res.status(400).json({ error:'请选择询价对象' }); return; }
+      if (!origin_port || !dest_port) { res.status(400).json({ error:'请填写始发港和目的港' }); return; }
+
+      const sender = await db('users').where({ id:userId }).first() as any;
+      const receiver = await db('users').where({ id:receiver_id }).first() as any;
+      if (!receiver) { res.status(404).json({ error:'用户不存在' }); return; }
+
+      const lines: string[] = ['📦 新物流询价', '', '来自：'+(sender?.company_name||'')+' '+(sender?.display_name||''), '航线：'+origin_port+' → '+dest_port];
+      if (goods_desc) lines.push('货物：'+goods_desc);
+      if (pieces) lines.push('件数：'+pieces);
+      if (weight_kg) lines.push('重量：'+weight_kg+'KG');
+      if (volume_cbm) lines.push('体积：'+volume_cbm+'CBM');
+      if (notes) lines.push('备注：'+notes);
+      lines.push('', '请回复报价，谢谢！');
+      const inquiryContent = lines.join(String.fromCharCode(10));
+
+      await db('messages').insert({ id:uuidv4(), sender_id:userId, receiver_id, content:inquiryContent, is_read:false, created_at:new Date().toISOString() });
+      if (receiver.email && receiver.email_verified) {
+        try { const { sendInquiryNotification } = await import('../services/email.service'); await sendInquiryNotification(receiver.email, receiver.display_name, sender?.display_name||'', inquiryContent); } catch {}
+      }
+      res.json({ message:'询价已发送，对方将收到通知' });
+    } catch(err:any) { logger.error('询价发送失败:', err.message||err); res.status(500).json({ error:'询价发送失败' }); }
+  },
+
+  /** 🚀 紧急填舱推广 — 第一步：创建微信支付订单 */
+  async bulkPromote(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.id;
+      const { content } = req.body;
+
+      if (!content || typeof content !== 'string' || content.trim().length < 10) {
+        return res.status(400).json({ error: '请输入推广内容（至少10个字）' });
+      }
+      if (content.length > 500) {
+        return res.status(400).json({ error: '推广内容不能超过500字' });
+      }
+
+      const user = await db('users').where({ id: userId }).first() as any;
+      if (!user || (user.role !== 'forwarder' && user.role !== 'admin')) {
+        return res.status(403).json({ error: '仅货运代理可使用紧急推广功能' });
+      }
+
+      // 查询目标人数
+      const targetCount = await db('users')
+        .whereIn('role', ['trader', 'forwarder'])
+        .where('status', 'approved')
+        .whereNot('id', userId)
+        .count('* as total').first() as any;
+      const count = Number(targetCount?.total || 0);
+      if (count === 0) {
+        return res.status(400).json({ error: '暂无可推送的用户' });
+      }
+
+      // 创建订单（微信支付要求订单号≤32位，去掉UUID的横线）
+      const orderId = uuidv4().replace(/-/g, '');
+      const amount = 9.9;
+      try {
+        await db('bulk_promote_orders').insert({
+          id: orderId,
+          user_id: userId,
+          content: content.trim(),
+          recipient_count: count,
+          amount,
+          status: 'pending',
+          created_at: new Date().toISOString(),
+        });
+      } catch { /* 表可能不存在 */ }
+
+      // 生成微信支付二维码
+      const { isWechatConfigured, createWechatNativePay } = await import('../services/wechat.service');
+      let codeUrl = '';
+      if (isWechatConfigured()) {
+        try {
+          const result = await createWechatNativePay(orderId, amount, `紧急填舱推广 - ${user.company_name || user.display_name}`);
+          codeUrl = result.codeUrl;
+        } catch (e: any) { logger.error('微信支付下单失败:', e.message); }
+      }
+
+      res.json({
+        order_id: orderId,
+        amount,
+        recipient_count: count,
+        code_url: codeUrl,
+        need_wechat_pay: !!codeUrl,
+      });
+    } catch (err) { next(err); }
+  },
+
+  /** 🚀 微信支付回调：支付成功后执行推送 */
+  async bulkPromoteCallback(orderId: string) {
+    try {
+      const order = await db('bulk_promote_orders').where({ id: orderId, status: 'pending' }).first() as any;
+      if (!order) return;
+
+      const userId = order.user_id;
+      const content = order.content;
+      const user = await db('users').where({ id: userId }).first() as any;
+      if (!user) return;
+
+      // 查询所有目标用户
+      const targets = await db('users')
+        .whereIn('role', ['trader', 'forwarder'])
+        .where('status', 'approved')
+        .whereNot('id', userId)
+        .select('id') as any[];
+
+      const company = user.company_name || user.display_name;
+      const contactName = user.display_name || '';
+      const msgBody = `🚀【紧急填舱推广】\n\n${company}（${contactName}）紧急推广：\n\n${content}\n\n━━━━━━━━━━━━━━━━━━━━\n💬 对此舱位感兴趣？直接回复此消息即可联系 ${contactName}\n📌 此推广由 ${company} 付费发送至全社区`;
+
+      const now = new Date().toISOString();
+      const messages = targets.map((t: any) => ({
+        id: uuidv4(),
+        sender_id: userId,
+        receiver_id: t.id,
+        content: msgBody,
+        is_read: false,
+        created_at: now,
+      }));
+
+      for (let i = 0; i < messages.length; i += 100) {
+        await db('messages').insert(messages.slice(i, i + 100));
+      }
+
+      await db('bulk_promote_orders').where({ id: orderId }).update({ status: 'paid', paid_at: now });
+      logger.info(`[bulk-promote] 支付成功，${user.username} 推广给 ${targets.length} 人`);
+    } catch (err) { logger.error('[bulk-promote] callback failed:', err); }
+  },
+
 };

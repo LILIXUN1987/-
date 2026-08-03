@@ -61,10 +61,9 @@ export default function InboxPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   // ── 加载对话列表 ──
-  const fetchConversations = useCallback(async (page: number, search: string, append = false) => {
+  const fetchConversations = useCallback(async (page: number, _search: string, append = false) => {
     try {
       const result = await messagesApi.conversations({
-        search: search || undefined,
         page,
         limit: 20,
       });
@@ -72,6 +71,7 @@ export default function InboxPage() {
         setConversations((prev) => [...prev, ...result.data]);
       } else {
         setConversations(result.data);
+        setAllConversations(result.data);
       }
       setConversationsTotal(result.total);
     } catch {
@@ -81,11 +81,42 @@ export default function InboxPage() {
     }
   }, []);
 
+  // 全量对话数据（用于前端过滤搜索）
+  const [allConversations, setAllConversations] = useState<Conversation[]>([]);
+
+  // ── 消息分类过滤 ──
+  type MsgFilter = 'all' | 'review' | 'express' | 'chat';
+  const [msgFilter, setMsgFilter] = useState<MsgFilter>('all');
+  const isAdmin = user?.role === 'admin';
+
+  const REVIEW_PATTERNS = ['【企业认证审核】', '⚖️', '【申诉', '风控触发'];
+  const EXPRESS_PATTERN = '📦 香港快递出口实时询价';
+
+  // ── 首次加载对话列表（仅一次，不依赖 searchQuery，不跳动） ──
   useEffect(() => {
-    setIsLoadingConversations(true);
-    setConversationsPage(1);
-    fetchConversations(1, searchQuery);
-  }, [searchQuery, fetchConversations]);
+    fetchConversations(1, '');
+  }, []);
+
+  // 纯前端过滤搜索 — 零延迟，不触发任何API，不跳动
+  const allData = allConversations.length > 0 ? allConversations : conversations;
+  const bySearch = searchQuery.trim()
+    ? allData.filter(c =>
+        (c.company_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (c.display_name || '').toLowerCase().includes(searchQuery.toLowerCase()))
+    : allData;
+
+  // 分类过滤
+  const filteredConversations = msgFilter === 'all'
+    ? bySearch
+    : msgFilter === 'review'
+      ? bySearch.filter(c => REVIEW_PATTERNS.some(p => (c.last_message || '').includes(p)))
+      : msgFilter === 'express'
+        ? bySearch.filter(c => (c.last_message || '').includes(EXPRESS_PATTERN))
+        : bySearch.filter(c => !REVIEW_PATTERNS.some(p => (c.last_message || '').includes(p)) && !(c.last_message || '').includes(EXPRESS_PATTERN));
+
+  // 审核通知数量
+  const reviewCount = allData.filter(c => REVIEW_PATTERNS.some(p => (c.last_message || '').includes(p))).length;
+  const expressCount = allData.filter(c => (c.last_message || '').includes(EXPRESS_PATTERN)).length;
 
   // ── 加载聊天消息（支持搜索） ──
   const fetchMessages = useCallback(async (contactId: string, before?: string, search?: string) => {
@@ -264,21 +295,46 @@ export default function InboxPage() {
       {/* 收件箱 Tab - 对话列表 */}
       {/* ════════════════════════════════════════════════ */}
       {activeTab === 'inbox' && !chatWith && (
-        <InboxSidebar
-          conversations={conversations}
-          total={conversationsTotal}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onClearSearch={() => setSearchQuery('')}
-          onOpenChat={openChat}
-          onDeleteTarget={setDeleteTarget}
-          onLoadMore={() => {
-            const nextPage = conversationsPage + 1;
-            setConversationsPage(nextPage);
-            fetchConversations(nextPage, searchQuery, true);
-          }}
-          lang={lang}
+        <>
+          {/* ── 消息分类标签（管理员可见） ── */}
+          {isAdmin && (
+            <div className="flex gap-1 mb-3">
+              {[
+                { key: 'all', label: lang === 'en' ? 'All' : '全部消息' },
+                { key: 'review', label: (lang === 'en' ? '📋 Review' : '📋 审核通知') + (reviewCount > 0 ? ` (${reviewCount})` : '') },
+                { key: 'express', label: (lang === 'en' ? '📦 Express' : '📦 快递询价') + (expressCount > 0 ? ` (${expressCount})` : '') },
+                { key: 'chat', label: lang === 'en' ? '💬 Chat' : '💬 普通消息' },
+              ].map(f => (
+                <button key={f.key}
+                  onClick={() => setMsgFilter(f.key as MsgFilter)}
+                  className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-all ${
+                    msgFilter === f.key
+                      ? 'bg-blue-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          )}
+          <InboxSidebar
+            conversations={conversations}
+            total={conversationsTotal}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onClearSearch={() => setSearchQuery('')}
+            onOpenChat={openChat}
+            onDeleteTarget={setDeleteTarget}
+            onLoadMore={() => {
+              const nextPage = conversationsPage + 1;
+              setConversationsPage(nextPage);
+              fetchConversations(nextPage, searchQuery, true);
+            }}
+            lang={lang}
+            filteredConversations={filteredConversations}
         />
+        </>
       )}
 
       {/* ════════════════════════════════════════════════ */}

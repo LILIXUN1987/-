@@ -77,6 +77,19 @@ export const cooperationController = {
         await db('ddp_agents').where({ id: ddpAgent.id }).increment('completed_orders', 1);
       }
 
+      // 通知货代方合作已确认（站内信 + push）
+      try {
+        await db('messages').insert({
+          id: uuidv4(),
+          sender_id: req.user!.id,
+          receiver_id: coop.forwarder_user_id,
+          content: `🤝 您与海外代理的合作已被确认！信用分已更新。`,
+          created_at: new Date().toISOString(),
+        });
+        const { sendPushNotification } = await import('../services/push.service');
+        await sendPushNotification(coop.forwarder_user_id, '合作已确认', '海外代理已确认与您的合作，信用分已更新');
+      } catch {}
+
       res.json({ message: '✅ 合作已确认' });
     } catch (err) { next(err); }
   },
@@ -147,79 +160,14 @@ export const cooperationController = {
     } catch (err) { next(err); }
   },
 
-  // ── 代理信用分 ──
+  // ── 信用分（统一调用共享服务） ──
   async creditScore(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.params.userId;
       if (!userId) return res.status(400).json({ error: '缺少用户ID' });
-
-      // 1. 评价统计
-      const reviews = await db('reviews').where({ reviewee_id: userId }).select('rating');
-      const reviewCount = reviews.length;
-      const avgRating = reviewCount > 0
-        ? reviews.reduce((s: number, r: any) => s + r.rating, 0) / reviewCount
-        : 0;
-
-      // 2. 已确认的合作数
-      const coopConfirmed = await db('cooperations')
-        .where(function () { this.where({ agent_user_id: userId }).orWhere({ forwarder_user_id: userId }); })
-        .where({ status: 'confirmed' })
-        .count('* as total').first() as any;
-      const totalCoops = Number(coopConfirmed?.total || 0);
-
-      // 3. 争议情况
-      const disputesAgainst = await db('dispute_cases')
-        .where({ respondent_id: userId })
-        .count('* as total').first() as any;
-      const totalDisputes = Number((disputesAgainst as any)?.total || 0);
-
-      // 4. 是否上传了公司认证
-      const user = await db('users').where({ id: userId }).first() as any;
-      const hasCard = !!user?.card_image;
-
-      // 5. 账号注册天数
-      const daysSinceReg = user?.created_at
-        ? Math.floor((Date.now() - new Date(user.created_at).getTime()) / 86400000)
-        : 0;
-
-      // ── 计算信用分 (0-100) ──
-      let score = 50; // 基础分
-
-      // 评价：满分30
-      if (reviewCount > 0) {
-        score += (avgRating / 5) * 30;
-      } else {
-        score += 10; // 暂无评价给基础分
-      }
-
-      // 合作数：满分25
-      score += Math.min(totalCoops, 50) * 0.5;
-
-      // 争议：每有一条扣15分
-      score -= totalDisputes * 15;
-
-      // 名片认证：+10
-      if (hasCard) score += 10;
-
-      // 注册时长：满1年+5，满2年+10
-      if (daysSinceReg >= 365) score += 5;
-      if (daysSinceReg >= 730) score += 5;
-
-      score = Math.max(0, Math.min(100, Math.round(score)));
-
-      // 等级
-      let level: string;
-      if (score >= 90) level = '⭐⭐⭐⭐⭐ 行业金口碑';
-      else if (score >= 75) level = '⭐⭐⭐⭐ 非常可靠';
-      else if (score >= 60) level = '⭐⭐⭐ 信誉良好';
-      else if (score >= 40) level = '⭐⭐ 基础可信';
-      else level = '⭐ 新入驻';
-
-      res.json({
-        score,
-        level,
-        details: { reviewCount, avgRating: Math.round(avgRating * 10) / 10, totalCoops, totalDisputes, hasCard, daysSinceReg },
-      });
+      const { calculateCreditScore } = await import('../services/creditScore.service');
+      const result = await calculateCreditScore(userId);
+      res.json(result);
     } catch (err) { next(err); }
   },
 };

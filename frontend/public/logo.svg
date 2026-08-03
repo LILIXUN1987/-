@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="50%" stop-color="#4F46E5"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="ship" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#E0E7FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect x="20" y="20" width="360" height="360" rx="80" fill="url(#bg)"/>
+
+  <!-- Globe circle (subtle) -->
+  <circle cx="200" cy="165" r="85" stroke="white" stroke-opacity="0.12" stroke-width="2" fill="none"/>
+  <circle cx="200" cy="165" r="95" stroke="white" stroke-opacity="0.06" stroke-width="1.5" fill="none"/>
+
+  <!-- Ship icon -->
+  <g transform="translate(200,155)" fill="url(#ship)">
+    <!-- Hull -->
+    <path d="M-50,25 L-38,10 L38,10 L50,25 L38,40 L-38,40 Z" fill="white" fill-opacity="0.95"/>
+    <!-- Container blocks -->
+    <rect x="-5" y="-15" width="12" height="12" rx="2" fill="white" fill-opacity="0.7"/>
+    <rect x="10" y="-15" width="12" height="12" rx="2" fill="white" fill-opacity="0.85"/>
+    <rect x="2" y="-30" width="12" height="12" rx="2" fill="white" fill-opacity="0.6"/>
+    <!-- Mast -->
+    <line x1="0" y1="-15" x2="0" y2="-50" stroke="white" stroke-opacity="0.4" stroke-width="2"/>
+    <!-- Flag -->
+    <path d="M0,-50 L20,-44 L0,-38 Z" fill="white" fill-opacity="0.5"/>
+    <!-- Wave -->
+    <path d="M-45,35 Q-30,30 -15,35 Q0,40 15,35 Q30,30 45,35" stroke="white" stroke-opacity="0.3" stroke-width="1.5" fill="none"/>
+  </g>
+
+  <!-- 123 Text -->
+  <text x="200" y="280" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="72" fill="white" letter-spacing="-2">
+    123
+  </text>
+
+  <!-- CARGO subtitle -->
+  <text x="200" y="315" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="22" fill="white" fill-opacity="0.7" letter-spacing="4">
+    CARGO
+  </text>
+
+  <!-- Bottom dot accent -->
+  <circle cx="200" cy="345" r="3" fill="white" fill-opacity="0.4"/>
+</svg>
