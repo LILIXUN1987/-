@@ -541,26 +541,24 @@ export default function DashboardPage() {
                     onClick={() => { setSelectedCargo(null); setCargoPaused(false); }}>
                     {lang === 'en' ? 'Close' : '关闭'}
                   </button>
-                  {selectedCargo.user_id && (
-                    <button className="px-4 py-1.5 bg-primary-600 text-white font-bold text-xs rounded-lg hover:bg-primary-700 transition-all flex items-center gap-1.5"
-                      onClick={async () => {
-                        setContactingId(selectedCargo.id);
-                        try {
-                          await client.post('/messages', {
-                            receiver_id: selectedCargo.user_id,
-                            content: `您好，我看到您在社区发布了「${selectedCargo.origin_port}→${selectedCargo.dest_port}」的舱位信息（¥${selectedCargo.price_per_cbm || '--'}/CBM），我对这条航线很感兴趣，请发详细报价给我。`,
-                          });
-                          alert(lang === 'en' ? '✅ Inquiry sent!' : '✅ 询价已发送！');
-                        } catch {
-                          alert(lang === 'en' ? '❌ Failed' : '❌ 发送失败');
-                        }
-                        setContactingId(null);
-                      }}
-                      disabled={contactingId === selectedCargo.id}>
-                      <MessageSquare className="w-3.5 h-3.5" />
-                      {lang === 'en' ? 'Inquire Now' : '立即询价'}
-                    </button>
-                  )}
+                  <button className="px-4 py-1.5 bg-primary-600 text-white font-bold text-xs rounded-lg hover:bg-primary-700 transition-all flex items-center gap-1.5"
+                    onClick={async () => {
+                      setContactingId(selectedCargo.id);
+                      try {
+                        await client.post('/messages', {
+                          receiver_id: selectedCargo.user_id,
+                          content: `您好，我看到您在社区发布了「${selectedCargo.origin_port}→${selectedCargo.dest_port}」的舱位信息（¥${selectedCargo.price_per_cbm || '--'}/CBM），我对这条航线很感兴趣，请发详细报价给我。`,
+                        });
+                        alert(lang === 'en' ? '✅ Inquiry sent!' : '✅ 询价已发送！');
+                      } catch {
+                        alert(lang === 'en' ? '❌ Failed' : '❌ 发送失败');
+                      }
+                      setContactingId(null);
+                    }}
+                    disabled={contactingId === selectedCargo.id}>
+                    <MessageSquare className="w-3.5 h-3.5" />
+                    {lang === 'en' ? 'Inquire Now' : '立即询价'}
+                  </button>
                 </div>
               </div>
             </div>

@@ -776,6 +776,41 @@ export const cargoController = {
         .orderBy("cargo_spaces.created_at", "desc")
         .limit(10) as any[];
 
+      // 回填缺失的 user_id：通过 contact_info 反查用户（匹配 display_name 或 company_name）
+      const missingUserIds = latest.filter((item: any) => !item.user_id && item.contact_info);
+      if (missingUserIds.length > 0) {
+        const names = [...new Set(missingUserIds.map((item: any) => {
+          return (item.contact_info || '').split(' ')[0];
+        }).filter(Boolean))];
+        if (names.length > 0) {
+          const matchedUsers = await db('users')
+            .where(function() {
+              this.whereIn('company_name', names).orWhereIn('display_name', names);
+            })
+            .where('status', 'approved')
+            .select('id', 'company_name', 'display_name') as any[];
+          const nameToId: Record<string, string> = {};
+          matchedUsers.forEach((u: any) => {
+            if (u.company_name && !nameToId[u.company_name]) nameToId[u.company_name] = u.id;
+            if (u.display_name && !nameToId[u.display_name]) nameToId[u.display_name] = u.id;
+          });
+          latest.forEach((item: any) => {
+            if (!item.user_id && item.contact_info) {
+              const cn = (item.contact_info || '').split(' ')[0];
+              if (cn && nameToId[cn]) item.user_id = nameToId[cn];
+            }
+          });
+        }
+        // 最终兜底：仍未匹配的，尝试找管理员
+        const stillMissing = latest.filter((item: any) => !item.user_id);
+        if (stillMissing.length > 0) {
+          const admin = await db('users').where('role', 'admin').where('status', 'approved').select('id').first() as any;
+          if (admin) {
+            stillMissing.forEach((item: any) => { item.user_id = admin.id; });
+          }
+        }
+      }
+
       // 对未登录用户：只显示公司名（contact_info 的第一个字段），不显示姓名手机号
       const sanitized = latest.map((item: any) => {
         const { contact_info, is_newbie, user_id, price_per_cbm, price_per_kg, ...rest } = item;
