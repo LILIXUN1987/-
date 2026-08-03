@@ -221,11 +221,33 @@ app.listen(env.port, async () => {
   setInterval(expireStaleCoupons, 24 * 60 * 60 * 1000);
 
   // ── 每周一早上9点发送货代周报 ──
-  const dayOfWeek = new Date().getDay();
-  const daysUntilMonday = dayOfWeek === 0 ? 1 : dayOfWeek === 1 ? 0 : 8 - dayOfWeek;
-  const msUntilMonday9am = daysUntilMonday * 86400000 + (9 - new Date().getHours()) * 3600000 - new Date().getMinutes() * 60000;
+  // 防重复：记录上次发送的周一日期到文件
+  const fs = await import('fs');
+  const path = await import('path');
+  const REPORT_SENT_FILE = path.resolve(__dirname, '../../logs/weekly_report_sent.txt');
+  const getMondayThisWeek = () => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    const day = d.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    d.setDate(d.getDate() + diff);
+    return d.toISOString().split('T')[0];
+  };
+
   const sendWeeklyReports = async () => {
     try {
+      const thisMonday = getMondayThisWeek();
+      // 检查本周是否已发送
+      try {
+        const lastSent = fs.readFileSync(REPORT_SENT_FILE, 'utf8').trim();
+        if (lastSent === thisMonday) {
+          logger.info(`周报本周一(${thisMonday})已发送，跳过重复发送`);
+          return;
+        }
+      } catch {}
+      // 记录本次发送
+      try { fs.writeFileSync(REPORT_SENT_FILE, thisMonday); } catch {}
+
       const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
       const totalSearches = Number(((await db('search_logs').where('created_at', '>=', weekAgo).count('* as total').first()) as any)?.total || 0);
       const totalMatches = Number(((await db('messages').where('created_at', '>=', weekAgo).where('content', 'like', '%🎯%').count('* as total').first()) as any)?.total || 0);
@@ -247,7 +269,16 @@ app.listen(env.port, async () => {
       logger.info(`周报已发送给 ${fwds.length} 位货代`);
     } catch (e) { logger.error('周报发送失败:', e); }
   };
-  setTimeout(sendWeeklyReports, Math.max(msUntilMonday9am, 60000));
+
+  // 计算到下一个周一9am的延迟
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const daysUntilMonday = dayOfWeek === 0 ? 1 : dayOfWeek === 1 ? 7 : 8 - dayOfWeek;
+  const nextMonday = new Date(now);
+  nextMonday.setDate(now.getDate() + daysUntilMonday);
+  nextMonday.setHours(9, 0, 0, 0);
+  const msUntilNextMonday9am = nextMonday.getTime() - now.getTime();
+  setTimeout(sendWeeklyReports, msUntilNextMonday9am);
   setInterval(sendWeeklyReports, 7 * 86400000);
 
   // ── 货代考核：每日凌晨4:00更新数据，月底评估 ──
