@@ -120,7 +120,7 @@ export const dashboardController = {
       const recentActivities = await db('search_logs')
         .leftJoin('users', 'search_logs.user_id', 'users.id')
         .whereNotNull('users.company_name')
-        .select('search_logs.keyword', 'search_logs.created_at', 'users.company_name', 'users.display_name')
+        .select('search_logs.keyword', 'search_logs.created_at', 'users.id as user_id', 'users.company_name', 'users.display_name')
         .orderBy('search_logs.created_at', 'desc')
         .limit(8) as any[];
 
@@ -165,6 +165,7 @@ export const dashboardController = {
           keyword: a.keyword,
           company: a.company_name,
           name: a.display_name,
+          user_id: a.user_id,
           time: a.created_at,
         })),
       });

@@ -25,7 +25,7 @@ interface DashboardData {
   myStats: { totalCargos: number; activeCargos: number; totalViews: number; totalInquiries: number; topRoutes: Array<{ origin_port: string; dest_port: string; region: string; view_count: number; inquiry_count: number }>; weeklyViews: Array<{ day: string; views: number }> };
   todayStats: { searches: number; inquiries: number; newUsers: number };
   couponInfo: null | { subscribed?: boolean; total?: number; available?: number; used?: number; sent?: number; total_issued?: number; current_month?: string };
-  recentActivities: Array<{ keyword: string; company: string; name: string; time: string }>;
+  recentActivities: Array<{ keyword: string; company: string; name: string; user_id: string; time: string }>;
 }
 
 function timeAgo(timeStr: string) {
@@ -146,6 +146,9 @@ export default function DashboardPage() {
   const [recentSearches, setRecentSearches] = useState<any[]>([]);
 
   const [probation, setProbation] = useState<any>(null);
+  const [selectedActivity, setSelectedActivity] = useState<any>(null);
+  const [marqueePaused, setMarqueePaused] = useState(false);
+  const [contactingId, setContactingId] = useState<string | null>(null);
 
   useEffect(() => {
     client.get("/cargo-spaces/trending").then(r => {
@@ -233,25 +236,79 @@ export default function DashboardPage() {
             @keyframes dashScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
             .dash-scroll-loop { display: flex; gap: 12px; width: max-content; animation: dashScroll 40s linear infinite; }
             .dash-scroll-loop:hover { animation-play-state: paused; }
+            .dash-scroll-paused { animation-play-state: paused !important; }
           `}</style>
           <div className="relative overflow-hidden py-2 px-3" style={{ maskImage: 'linear-gradient(to right, transparent, black 20px, black calc(100% - 20px), transparent)' }}>
             <div className="flex items-center gap-2 px-2 mb-2">
               <Activity className="w-3.5 h-3.5 text-blue-500" />
               <span className="text-xs font-bold text-gray-600">{lang === 'en' ? '🔍 Users Searching for Rates' : '🔍 用户在寻找舱位价格'}</span>
+              <span className="text-[10px] text-gray-300">{lang === 'en' ? 'Click to view details & contact' : '点击查看详情并联系'}</span>
               <span className="text-[10px] text-gray-300 ml-auto">{data.recentActivities.length}{lang === 'en' ? ' items' : '条'}</span>
             </div>
-            <div className="dash-scroll-loop">
+            <div className={`dash-scroll-loop${marqueePaused ? ' dash-scroll-paused' : ''}`}>
               {[...data.recentActivities, ...data.recentActivities].map((act, i) => (
-                <div key={i} className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-lg px-3 py-1.5 text-xs whitespace-nowrap flex-shrink-0">
+                <button key={i} className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-lg px-3 py-1.5 text-xs whitespace-nowrap flex-shrink-0 hover:bg-blue-100 hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer"
+                  onClick={() => { setSelectedActivity(act); setMarqueePaused(true); }}>
                   <span className="text-xs bg-white rounded-full px-1.5 py-0.5 shadow-sm border border-blue-100">⚡</span>
                   <span className="text-gray-700 font-medium">{act.company}</span>
                   <span className="text-gray-400">{lang === 'en' ? 'searched' : '查'}</span>
                   <span className="text-primary-600 font-semibold">「{act.keyword?.substring(0, 14)}」</span>
                   <span className="text-[10px] text-gray-300">{timeAgo(act.time)}</span>
-                </div>
+                </button>
               ))}
             </div>
           </div>
+
+          {/* ── 点击展开的详情面板 ── */}
+          {selectedActivity && (
+            <div className="border-t-2 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-4">
+              <div className="flex items-start justify-between gap-4 flex-wrap">
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                      {selectedActivity.company?.charAt(0) || '?'}
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-gray-800">{selectedActivity.company}</div>
+                      <div className="text-[11px] text-gray-500">
+                        {lang === 'en' ? 'Search keyword' : '搜索关键词'}：<span className="text-primary-600 font-semibold">「{selectedActivity.keyword}」</span>
+                        · {lang === 'en' ? 'Time' : '时间'}：{timeAgo(selectedActivity.time)}
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-600">
+                    {lang === 'en'
+                      ? `This trader/potential customer searched for "${selectedActivity.keyword}" — they are actively looking for rates on this route. Reach out now!`
+                      : `该用户搜索了「${selectedActivity.keyword}」相关航线——说明对方正在寻找此航线的舱位和价格，可以主动联系报价！`}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <button className="px-3 py-1.5 text-xs text-gray-500 hover:text-gray-700 border border-gray-200 rounded-lg hover:bg-white transition-all"
+                    onClick={() => { setSelectedActivity(null); setMarqueePaused(false); }}>
+                    {lang === 'en' ? 'Close' : '关闭'}
+                  </button>
+                  <button className="px-4 py-1.5 bg-blue-600 text-white font-bold text-xs rounded-lg hover:bg-blue-700 transition-all flex items-center gap-1.5 disabled:opacity-50"
+                    disabled={contactingId === selectedActivity.name}
+                    onClick={async () => {
+                      setContactingId(selectedActivity.name);
+                      try {
+                        await client.post('/messages', {
+                          receiver_id: selectedActivity.user_id,
+                          content: `您好，我注意到您在社区搜索了「${selectedActivity.keyword}」的航线价格。我们公司有这条航线的舱位资源，如果您还需要报价，欢迎随时联系我！`,
+                        });
+                        alert(lang === 'en' ? '✅ Message sent!' : '✅ 站内信已发送！');
+                      } catch {
+                        alert(lang === 'en' ? '❌ Failed' : '❌ 发送失败');
+                      }
+                      setContactingId(null);
+                    }}>
+                    <MessageSquare className="w-3.5 h-3.5" />
+                    {lang === 'en' ? 'Contact Company' : '联系TA报价'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
