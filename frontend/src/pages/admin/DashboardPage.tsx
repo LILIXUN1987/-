@@ -495,6 +495,17 @@ export default function DashboardPage() {
       )}
 
       {/* ── 搜同行 · 找公司 ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+        <BannerCard icon={Search} title={lang === 'en' ? 'Find Partners' : '搜同行 · 找公司'}
+          subtitle={lang === 'en' ? 'Search companies & contacts in the community' : '搜公司名、联系人，直达同行主页'}
+          badge="🔍" color="indigo"
+          onClick={() => {
+            const el = document.getElementById('search-sec');
+            if (el) { el.scrollIntoView({ behavior: 'smooth' }); el.classList.add('ring-4', 'ring-indigo-300'); setTimeout(() => el.classList.remove('ring-4', 'ring-indigo-300'), 2000); }
+          }} />
+      </div>
+
+      {/* ── 搜索面板（点击上方 Banner 滚动至此） ── */}
       <div id="search-sec" className="mb-6">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5">
           <div className="flex items-center gap-2 mb-3">
