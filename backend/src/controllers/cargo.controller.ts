@@ -1129,7 +1129,14 @@ export const cargoController = {
         .where('search_logs.keyword', 'like', `%${port}%`)
         .where('search_logs.created_at', '>=', since)
         .where('users.status', 'approved')
-        .whereNot('users.id', userId)
+        // 过滤数据录入记录：排除含货物规格关键词的条目（AI解析的舱位数据不是真实搜索）
+        .whereNot('search_logs.keyword', 'like', '%件数%')
+        .whereNot('search_logs.keyword', 'like', '%毛重%')
+        .whereNot('search_logs.keyword', 'like', '%体积%')
+        .whereNot('search_logs.keyword', 'like', '%尺寸见附件%')
+        .whereNot('search_logs.keyword', 'like', '%询价等级%')
+        .whereNot('search_logs.keyword', 'like', '%目的地机场%')
+        .whereNot('search_logs.keyword', 'like', '%CBM %')
         .select(
           'users.id as user_id', 'users.display_name', 'users.company_name',
           'users.role', 'users.port_city', 'users.port_code',
@@ -1156,10 +1163,17 @@ export const cargoController = {
         days_ago: Math.floor((Date.now() - new Date(r.created_at).getTime()) / 86400000),
       }));
 
-      // 同时统计该港口的总搜索次数和被多少用户搜过
+      // 同时统计该港口的总搜索次数（排除数据录入记录）
       const stats = await db('search_logs')
         .where('keyword', 'like', `%${port}%`)
         .where('created_at', '>=', since)
+        .whereNot('keyword', 'like', '%件数%')
+        .whereNot('keyword', 'like', '%毛重%')
+        .whereNot('keyword', 'like', '%体积%')
+        .whereNot('keyword', 'like', '%尺寸见附件%')
+        .whereNot('keyword', 'like', '%询价等级%')
+        .whereNot('keyword', 'like', '%目的地机场%')
+        .whereNot('keyword', 'like', '%CBM %')
         .count('* as total')
         .first() as any;
 
