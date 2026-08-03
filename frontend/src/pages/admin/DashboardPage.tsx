@@ -227,6 +227,28 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* ═══ 今日热搜（置顶） ═══ */}
+      {data?.trending && data.trending.length > 0 && (
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingUp className="w-4 h-4 text-orange-500" />
+            <h2 className="text-sm font-bold text-gray-700">{lang === 'en' ? '🔥 Trending Searches' : '🔥 今日热搜'}</h2>
+            <span className="text-[10px] text-gray-400 ml-auto">{lang === 'en' ? 'Real-time community searches' : '社区实时搜索趋势'}</span>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+            {data.trending.slice(0, 6).map((item, i) => (
+              <div key={i} className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors cursor-pointer">
+                <span className={`w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center flex-shrink-0 ${i < 3 ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-500'}`}>{i + 1}</span>
+                <div className="min-w-0">
+                  <div className="text-xs font-medium text-gray-700 truncate">{item.keyword}</div>
+                  <div className="text-[10px] text-gray-400">{item.count}{lang === 'en' ? ' searches' : '次搜索'}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ═══ 管理中心Banner（管理员专属） ═══ */}
       {isAdmin && (
         <button
@@ -341,40 +363,39 @@ export default function DashboardPage() {
 
       {/* ═══ 今日社区动态（货代可见） ═══ */}
       {(isForwarder || isAdmin) && data?.pulse && (
-        <div className="bg-white rounded-2xl border-2 border-emerald-200 shadow-lg mb-6 overflow-hidden">
-          <div className="bg-gradient-to-r from-emerald-500 to-green-600 px-6 py-4 text-white">
+        <div className="bg-white rounded-xl border border-emerald-200 shadow-sm mb-6 overflow-hidden">
+          <div className="bg-gradient-to-r from-emerald-500 to-green-600 px-4 py-2 text-white">
             <div className="flex items-center gap-2">
-              <span className="text-lg">📊</span>
-              <h3 className="text-base font-black">{lang === 'en' ? 'Community Pulse Today' : '今日社区动态'}</h3>
-              <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full animate-pulse">LIVE</span>
+              <span className="text-sm">📊</span>
+              <h3 className="text-sm font-bold">{lang === 'en' ? 'Community Pulse Today' : '今日社区动态'}</h3>
+              <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">LIVE</span>
             </div>
           </div>
-          <div className="p-5">
-            <div className="grid grid-cols-3 gap-4 mb-4">
-              <div className="bg-blue-50 rounded-xl p-4 text-center">
-                <div className="text-2xl font-black text-blue-600">{data.pulse.searches}</div>
-                <div className="text-xs text-blue-500 mt-1">{lang === 'en' ? 'Searches Today' : '今日搜索次数'}</div>
+          <div className="p-3">
+            <div className="grid grid-cols-3 gap-2">
+              <div className="bg-blue-50 rounded-lg p-2 text-center">
+                <div className="text-lg font-black text-blue-600">{data.pulse.searches}</div>
+                <div className="text-[10px] text-blue-500">{lang === 'en' ? 'Searches' : '今日搜索'}</div>
               </div>
-              <div className="bg-amber-50 rounded-xl p-4 text-center">
-                <div className="text-2xl font-black text-amber-600">{data.pulse.matches}</div>
-                <div className="text-xs text-amber-500 mt-1">{lang === 'en' ? 'Inquiries Sent' : '已推送询价'}</div>
+              <div className="bg-amber-50 rounded-lg p-2 text-center">
+                <div className="text-lg font-black text-amber-600">{data.pulse.matches}</div>
+                <div className="text-[10px] text-amber-500">{lang === 'en' ? 'Inquiries' : '已推送询价'}</div>
               </div>
-              <div className="bg-emerald-50 rounded-xl p-4 text-center">
-                <div className="text-2xl font-black text-emerald-600">{data.pulse.newCargo}</div>
-                <div className="text-xs text-emerald-500 mt-1">{lang === 'en' ? 'New Cargo' : '新增舱位'}</div>
+              <div className="bg-emerald-50 rounded-lg p-2 text-center">
+                <div className="text-lg font-black text-emerald-600">{data.pulse.newCargo}</div>
+                <div className="text-[10px] text-emerald-500">{lang === 'en' ? 'New Cargo' : '新增舱位'}</div>
               </div>
             </div>
             {data.pulse.hotKeywords?.length > 0 && (
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-gray-500 flex-shrink-0">{lang === 'en' ? '🔥 Hot:' : '🔥 热搜：'}</span>
-                <div className="flex flex-wrap gap-1.5">
-                  {data.pulse.hotKeywords.map((kw, i) => (
-                    <span key={i} className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full font-medium">{kw}</span>
+              <div className="flex items-center gap-1.5 text-[10px] mt-2">
+                <span className="text-gray-400 flex-shrink-0">🔥</span>
+                <div className="flex flex-wrap gap-1">
+                  {data.pulse.hotKeywords.slice(0, 5).map((kw, i) => (
+                    <span key={i} className="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">{kw}</span>
                   ))}
                 </div>
               </div>
             )}
-            <p className="text-[11px] text-gray-400 mt-3">{lang === 'en' ? '💡 Every search is a potential client. Keep your cargo spaces updated to get matched.' : '💡 每一次搜索都是一个潜在客户。保持舱位信息更新，外贸搜索时自动匹配推送给你。'}</p>
           </div>
         </div>
       )}
@@ -827,17 +848,6 @@ export default function DashboardPage() {
             </div>
           )}
 
-{/* 今日热搜 */}
-          {data?.trending && data.trending.length > 0 && (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-              <SectionTitle icon={<TrendingUp className="w-4 h-4 text-orange-500" />} title={lang === 'en' ? 'Trending Searches' : '今日热搜'} />
-              <div className="space-y-1">
-                {data.trending.slice(0, 6).map((item, i) => (
-                  <RankRow key={i} rank={i} label={item.keyword} value={`${item.count}${lang === 'en' ? ' searches' : '次搜索'}`} />
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* 新手业务选择弹窗 */}
           {!isLawyer && !isRestricted && data?.user?.is_newbie && !data?.user?.business_scope && (
