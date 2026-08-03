@@ -1072,6 +1072,71 @@ export const cargoController = {
     } catch(err) { next(err); }
   },
 
+  /** 反向匹配：货代输入港口，找出搜过该港口的外贸用户（潜在客户） */
+  async matchSearchers(req: Request, res: Response, next: NextFunction) {
+    try {
+      const port = String(req.query.port || '').trim().toUpperCase();
+      if (!port || port.length < 2) { res.json({ data: [], total: 0 }); return; }
+
+      const userId = req.user!.id;
+      const user = await db('users').where({ id: userId }).first() as any;
+      // 仅货代和管理员可用
+      if (user.role !== 'forwarder' && user.role !== 'admin') {
+        res.json({ data: [], total: 0 }); return;
+      }
+
+      const days = Math.min(Number(req.query.days) || 90, 365);
+      const since = new Date(Date.now() - days * 86400000).toISOString();
+
+      const rows = await db('search_logs')
+        .join('users', 'search_logs.user_id', 'users.id')
+        .where('search_logs.keyword', 'like', `%${port}%`)
+        .where('search_logs.created_at', '>=', since)
+        .where('users.status', 'approved')
+        .whereNot('users.id', userId)
+        .select(
+          'users.id as user_id', 'users.display_name', 'users.company_name',
+          'users.role', 'users.port_city', 'users.port_code',
+          'search_logs.keyword', 'search_logs.created_at'
+        )
+        .orderBy('search_logs.created_at', 'desc')
+        .limit(50) as any[];
+
+      // 按用户去重，保留最新搜索
+      const seen = new Set<string>();
+      const data = rows.filter((r: any) => {
+        if (seen.has(r.user_id)) return false;
+        seen.add(r.user_id);
+        return true;
+      }).map((r: any) => ({
+        user_id: r.user_id,
+        display_name: r.display_name,
+        company_name: r.company_name,
+        role: r.role,
+        port_city: r.port_city,
+        port_code: r.port_code,
+        match_keyword: r.keyword,
+        searched_at: r.created_at,
+        days_ago: Math.floor((Date.now() - new Date(r.created_at).getTime()) / 86400000),
+      }));
+
+      // 同时统计该港口的总搜索次数和被多少用户搜过
+      const stats = await db('search_logs')
+        .where('keyword', 'like', `%${port}%`)
+        .where('created_at', '>=', since)
+        .count('* as total')
+        .first() as any;
+
+      res.json({
+        data,
+        total: data.length,
+        port,
+        totalSearches: Number(stats?.total || 0),
+        uniqueSearchers: data.length,
+      });
+    } catch(err) { next(err); }
+  },
+
   /** 向特定用户发起询价（替代直接发消息，防止群发推广） */
   async inquiryUser(req: Request, res: Response, next: NextFunction) {
     try {

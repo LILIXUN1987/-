@@ -82,6 +82,9 @@ router.get('/bulk-promote/status/:orderId', authRequired, async (req, res) => {
 router.get('/search-users', authOptional, cargoController.searchUsers);
 router.post('/inquiry-user', authRequired, cargoController.inquiryUser);
 
+// ── 反向匹配：货代搜潜在客户 ──
+router.get('/match-searchers', authRequired, cargoController.matchSearchers);
+
 // 单条记录操作
 router.get('/:id', authOptional, cargoController.getById);
 router.put('/:id', authRequired, requireActiveTrial, cargoController.update);

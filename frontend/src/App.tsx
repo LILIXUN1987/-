@@ -62,6 +62,7 @@ const FrequentPartnersPage = lazy(() => import('./pages/admin/FrequentPartnersPa
 const AdminCompanyProfilePage = lazy(() => import('./pages/admin/AdminCompanyProfilePage'));
 const LawyerConsultPage = lazy(() => import('./pages/admin/LawyerConsultPage'));
 const ServiceConsultPage = lazy(() => import('./pages/admin/ServiceConsultPage'));
+const CustomerFinderPage = lazy(() => import('./pages/admin/CustomerFinderPage'));
 
 function PageLoading() {
   return <div className="flex items-center justify-center py-20"><div className="w-6 h-6 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" /></div>;
@@ -179,6 +180,7 @@ export default function App() {
             <Route path="/admin/company-profile" element={<ProtectedRoute><AdminCompanyProfilePage /></ProtectedRoute>} />
             <Route path="/admin/lawyer-consults" element={<ProtectedRoute><LawyerConsultPage /></ProtectedRoute>} />
             <Route path="/admin/service-consults" element={<ProtectedRoute><ServiceConsultPage /></ProtectedRoute>} />
+            <Route path="/admin/customer-finder" element={<ProtectedRoute><CustomerFinderPage /></ProtectedRoute>} />
           </Route>
 
           {/* 404 */}

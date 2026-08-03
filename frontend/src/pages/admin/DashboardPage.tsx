@@ -11,6 +11,7 @@ import {
   Handshake, AlertTriangle, Bookmark, Globe,
   Shield, Mail, MessageSquare, Scale, Star,
   Zap, Ship,
+  Target,
   Building2,
 } from 'lucide-react';
 import TrialBanner from '../../components/admin/TrialBanner';
@@ -640,6 +641,7 @@ export default function DashboardPage() {
               <BannerCard icon={Bookmark} title={lang === 'en' ? 'Tools' : '工具箱'} subtitle={lang === 'en' ? 'HS code, exchange rate & more' : '海关编码·汇率·时差查询'} badge="🔧" color="teal" onClick={() => navigate('/admin/tools')} />
               <BannerCard icon={MapPin} title={lang === 'en' ? 'Port & City Setup' : '口岸城市设置'} subtitle={lang === 'en' ? 'Set your ports to be found by overseas agents' : '设置你的口岸与城市，可被海外代理搜到'} badge="📍" color="blue" onClick={() => navigate('/admin/profile')} />
               <BannerCard icon={Search} title={lang === 'en' ? 'Find Partners' : '搜同行 · 找公司'} subtitle={lang === 'en' ? 'Search companies & contacts in the community' : '搜公司名、联系人，直达同行主页'} badge="🔍" color="indigo" onClick={() => { const el = document.getElementById('search-sec'); if (el) { el.scrollIntoView({ behavior: 'smooth' }); } }} />
+              <BannerCard icon={Target} title={lang === 'en' ? 'Find Customers' : '反向匹配客户'} subtitle={lang === 'en' ? 'Enter port code, find traders who searched it' : '输入港口代码，找到搜索过的外贸用户'} badge="🎯" color="emerald" onClick={() => navigate('/admin/customer-finder')} />
             </div>
           </>
         )}
