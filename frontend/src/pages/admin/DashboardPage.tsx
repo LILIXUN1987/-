@@ -668,6 +668,68 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/* ═══ 🎯 反向匹配客户 — 社区核心亮点（仅货代） ═══ */}
+      {(isForwarder || isAdmin) && (
+        <button
+          onClick={() => navigate('/admin/customer-finder')}
+          className="w-full group relative overflow-hidden rounded-2xl mb-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5"
+        >
+          {/* 背景 */}
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700" />
+          {/* 纹理 */}
+          <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'radial-gradient(circle at 25% 50%, white 1px, transparent 1px), radial-gradient(circle at 75% 50%, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+          {/* 光效 */}
+          <div className="absolute -top-20 -right-10 w-64 h-64 bg-yellow-400 rounded-full blur-[120px] opacity-20 group-hover:opacity-30 transition-opacity" />
+          <div className="absolute -bottom-10 left-10 w-48 h-48 bg-emerald-300 rounded-full blur-[80px] opacity-15 group-hover:opacity-25 transition-opacity" />
+
+          <div className="relative p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-5">
+            {/* 图标 */}
+            <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center flex-shrink-0 shadow-xl group-hover:scale-105 transition-transform duration-300">
+              <span className="text-4xl">🎯</span>
+            </div>
+
+            {/* 文字 */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-bold bg-yellow-400/30 text-yellow-200 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  {lang === 'en' ? '⭐ Core Feature' : '⭐ 社区核心亮点'}
+                </span>
+                <span className="text-[10px] font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">
+                  {lang === 'en' ? 'Exclusive' : '独家功能'}
+                </span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">
+                {lang === 'en' ? '🎯 Reverse Match — Find Your Customers' : '🎯 反向匹配客户 — 被动变主动'}
+              </h2>
+              <p className="text-sm text-emerald-100 mt-2 max-w-2xl leading-relaxed">
+                {lang === 'en'
+                  ? 'Got cargo space at JFK? Enter the port code to instantly discover traders who searched for it. Reach out before competitors — turn their search into your deal!'
+                  : '你有 JFK 的舱位？输入港口代码，立即看到所有搜索过该港口的外贸用户。在竞争对手之前主动联系——把他们的搜索变成你的订单！'}
+              </p>
+
+              {/* 亮点标签 */}
+              <div className="flex flex-wrap gap-2 mt-3">
+                {[
+                  { icon: '🔍', text: lang === 'en' ? 'Find active searchers' : '找到活跃搜索用户' },
+                  { icon: '📩', text: lang === 'en' ? 'One-click contact' : '一键联系报价' },
+                  { icon: '📊', text: lang === 'en' ? 'Real search data' : '真实搜索数据' },
+                ].map((item, i) => (
+                  <span key={i} className="text-[10px] bg-white/15 text-white px-2.5 py-1 rounded-full backdrop-blur">
+                    {item.icon} {item.text}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-xl bg-white text-emerald-700 font-black text-sm shadow-xl shadow-emerald-900/30 group-hover:bg-yellow-400 group-hover:text-emerald-900 transition-all group-hover:scale-105">
+              <span>{lang === 'en' ? 'Try Now' : '立即体验'}</span>
+              <span className="text-xl group-hover:translate-x-1 transition-transform">→</span>
+            </div>
+          </div>
+        </button>
+      )}
+
       {/* ═══ 全部功能快捷入口 ═══ */}
       <div className="mb-6 space-y-4">
         <SectionTitle icon={<Sparkles className="w-4 h-4 text-primary-500" />} title={lang === 'en' ? 'All Features' : '全部功能'} />
@@ -693,7 +755,6 @@ export default function DashboardPage() {
               <BannerCard icon={Bookmark} title={lang === 'en' ? 'Tools' : '工具箱'} subtitle={lang === 'en' ? 'HS code, exchange rate & more' : '海关编码·汇率·时差查询'} badge="🔧" color="teal" onClick={() => navigate('/admin/tools')} />
               <BannerCard icon={MapPin} title={lang === 'en' ? 'Port & City Setup' : '口岸城市设置'} subtitle={lang === 'en' ? 'Set your ports to be found by overseas agents' : '设置你的口岸与城市，可被海外代理搜到'} badge="📍" color="blue" onClick={() => navigate('/admin/profile')} />
               <BannerCard icon={Search} title={lang === 'en' ? 'Find Partners' : '搜同行 · 找公司'} subtitle={lang === 'en' ? 'Search companies & contacts in the community' : '搜公司名、联系人，直达同行主页'} badge="🔍" color="indigo" onClick={() => { const el = document.getElementById('search-sec'); if (el) { el.scrollIntoView({ behavior: 'smooth' }); } }} />
-              <BannerCard icon={Target} title={lang === 'en' ? 'Find Customers' : '反向匹配客户'} subtitle={lang === 'en' ? 'Enter port code, find traders who searched it' : '输入港口代码，找到搜索过的外贸用户'} badge="🎯" color="emerald" onClick={() => navigate('/admin/customer-finder')} />
             </div>
           </>
         )}
