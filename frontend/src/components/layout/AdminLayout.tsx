@@ -119,19 +119,38 @@ export default function AdminLayout() {
               const remaining = Math.max(0, Math.ceil((end.getTime() - now.getTime()) / 86400000));
               if (remaining <= 0) return null;
               const isUrgent = remaining <= 7;
+              const totalDays = 30;
+              const pct = Math.min(100, Math.round((remaining / totalDays) * 100));
               return (
-                <div className={`w-full mt-1.5 text-[10px] rounded-lg px-2 py-1.5 flex items-center justify-between gap-1 ${
-                  isUrgent ? 'bg-red-400/20 text-red-100' : 'bg-white/10 text-white/80'
+                <div className={`w-full mt-2 rounded-xl overflow-hidden shadow-lg ${
+                  isUrgent
+                    ? 'bg-gradient-to-r from-red-500 via-rose-500 to-pink-500 animate-pulse'
+                    : 'bg-gradient-to-r from-amber-400 to-orange-500'
                 }`}>
-                  <span>
-                    {isUrgent ? '⚠️' : '⏰'} {lang === 'en' ? `${remaining}d trial left` : `免费体验剩余 ${remaining} 天`}
-                  </span>
-                  <button
-                    onClick={() => navigate(isUrgent ? '/admin/renew' : '/admin/subscribe')}
-                    className="text-[10px] font-bold bg-white/20 hover:bg-white/30 px-1.5 py-0.5 rounded transition-colors flex-shrink-0"
-                  >
-                    {isUrgent ? (lang === 'en' ? 'Renew' : '续期') : (lang === 'en' ? 'Upgrade' : '升级')} →
-                  </button>
+                  <div className="px-3 py-2.5">
+                    <div className="flex items-center gap-1.5 mb-1.5">
+                      <span className="text-base">{isUrgent ? '🔥' : '⏳'}</span>
+                      <span className="text-xs font-black text-white drop-shadow">
+                        {lang === 'en' ? `${remaining} days left` : `免费体验剩余 ${remaining} 天`}
+                      </span>
+                    </div>
+                    {/* 进度条 */}
+                    <div className="h-1.5 bg-black/20 rounded-full overflow-hidden mb-2">
+                      <div className={`h-full rounded-full transition-all duration-500 ${
+                        isUrgent ? 'bg-white' : 'bg-white/90'
+                      }`} style={{ width: `${pct}%` }} />
+                    </div>
+                    <button
+                      onClick={() => navigate(isUrgent ? '/admin/renew' : '/admin/subscribe')}
+                      className={`w-full text-[11px] font-black py-1.5 rounded-lg transition-all flex items-center justify-center gap-1 ${
+                        isUrgent
+                          ? 'bg-white text-red-600 hover:bg-red-50 shadow-md'
+                          : 'bg-white/90 text-amber-800 hover:bg-white shadow-sm'
+                      }`}
+                    >
+                      {isUrgent ? '🔔' : '🚀'} {isUrgent ? (lang === 'en' ? 'Renew Now' : '立即续期') : (lang === 'en' ? 'Upgrade Plan' : '升级套餐')}
+                    </button>
+                  </div>
                 </div>
               );
             })()}
