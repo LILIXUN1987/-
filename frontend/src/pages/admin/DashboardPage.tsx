@@ -485,28 +485,7 @@ export default function DashboardPage() {
       )}
 
 
-      {/* ── 口岸城市设置（仅国内货代/报关行） ── */}
-      {isForwarderOrBroker && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-          <BannerCard icon={MapPin} title={lang === 'en' ? 'Port & City Setup' : '口岸城市设置'}
-            subtitle={lang === 'en' ? 'Set your ports to be found by overseas agents' : '设置你的口岸与城市，可被海外代理搜到'}
-            badge={lang === 'en' ? '📍 Setup' : '📍 去设置'} color="blue"
-            onClick={() => navigate('/admin/profile')} />
-        </div>
-      )}
-
-      {/* ── 搜同行 · 找公司 ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-        <BannerCard icon={Search} title={lang === 'en' ? 'Find Partners' : '搜同行 · 找公司'}
-          subtitle={lang === 'en' ? 'Search companies & contacts in the community' : '搜公司名、联系人，直达同行主页'}
-          badge="🔍" color="indigo"
-          onClick={() => {
-            const el = document.getElementById('search-sec');
-            if (el) { el.scrollIntoView({ behavior: 'smooth' }); el.classList.add('ring-4', 'ring-indigo-300'); setTimeout(() => el.classList.remove('ring-4', 'ring-indigo-300'), 2000); }
-          }} />
-      </div>
-
-      {/* ── 搜索面板（点击上方 Banner 滚动至此） ── */}
+      {/* ── 搜索面板 ── */}
       <div id="search-sec" className="mb-6">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5">
           <div className="flex items-center gap-2 mb-3">
@@ -609,6 +588,8 @@ export default function DashboardPage() {
               <BannerCard icon={Mail} title={lang === 'en' ? 'Inbox' : '站内信'} subtitle={lang === 'en' ? 'Real-time messages' : '实时沟通与报价回复'} badge={unreadCount > 0 ? String(unreadCount) : '📩'} color="cyan" onClick={() => navigate('/admin/inbox')} />
               <BannerCard icon={Shield} title={lang === 'en' ? 'Company Lookup' : '货代避雷针'} subtitle={lang === 'en' ? 'Check reviews' : '合作前查口碑'} badge="🆓" color="rose" onClick={() => navigate('/admin/complaints')} />
               <BannerCard icon={Bookmark} title={lang === 'en' ? 'Tools' : '工具箱'} subtitle={lang === 'en' ? 'HS code, exchange rate & more' : '海关编码·汇率·时差查询'} badge="🔧" color="teal" onClick={() => navigate('/admin/tools')} />
+              <BannerCard icon={MapPin} title={lang === 'en' ? 'Port & City Setup' : '口岸城市设置'} subtitle={lang === 'en' ? 'Set your ports to be found by overseas agents' : '设置你的口岸与城市，可被海外代理搜到'} badge="📍" color="blue" onClick={() => navigate('/admin/profile')} />
+              <BannerCard icon={Search} title={lang === 'en' ? 'Find Partners' : '搜同行 · 找公司'} subtitle={lang === 'en' ? 'Search companies & contacts in the community' : '搜公司名、联系人，直达同行主页'} badge="🔍" color="indigo" onClick={() => { const el = document.getElementById('search-sec'); if (el) { el.scrollIntoView({ behavior: 'smooth' }); } }} />
             </div>
           </>
         )}
@@ -627,6 +608,8 @@ export default function DashboardPage() {
               <BannerCard icon={FileText} title={lang === 'en' ? 'Price Tables' : '价格表'} subtitle={lang === 'en' ? 'Download & compare rates' : '下载运价表对比报价'} badge="📊" color="purple" onClick={() => navigate('/admin/price-tables')} />
               <BannerCard icon={Bookmark} title={lang === 'en' ? 'Directory' : '展会通讯录'} subtitle={lang === 'en' ? '3000+ contacts' : '3000+ 同行名录'} badge="📇" color="violet" onClick={() => navigate('/admin/card-directory')} />
               <BannerCard icon={Bookmark} title={lang === 'en' ? 'Tools' : '工具箱'} subtitle={lang === 'en' ? 'HS code, exchange rate & more' : '海关编码·汇率·时差查询'} badge="🔧" color="teal" onClick={() => navigate('/admin/tools')} />
+              <BannerCard icon={MapPin} title={lang === 'en' ? 'Port & City Setup' : '口岸城市设置'} subtitle={lang === 'en' ? 'Set your ports to be found by overseas agents' : '设置你的口岸与城市，可被海外代理搜到'} badge="📍" color="blue" onClick={() => navigate('/admin/profile')} />
+              <BannerCard icon={Search} title={lang === 'en' ? 'Find Partners' : '搜同行 · 找公司'} subtitle={lang === 'en' ? 'Search companies & contacts in the community' : '搜公司名、联系人，直达同行主页'} badge="🔍" color="indigo" onClick={() => { const el = document.getElementById('search-sec'); if (el) { el.scrollIntoView({ behavior: 'smooth' }); } }} />
             </div>
           </>
         )}
