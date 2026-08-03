@@ -116,17 +116,10 @@ export const dashboardController = {
         };
       }
 
-      // ── 7. 近期活动（排除数据录入的货物规格，仅展示真实搜索行为） ──
+      // ── 7. 近期活动 ──
       const recentActivities = await db('search_logs')
         .leftJoin('users', 'search_logs.user_id', 'users.id')
         .whereNotNull('users.company_name')
-        .whereNot('search_logs.keyword', 'like', '%件数%')
-        .whereNot('search_logs.keyword', 'like', '%毛重%')
-        .whereNot('search_logs.keyword', 'like', '%体积%')
-        .whereNot('search_logs.keyword', 'like', '%尺寸见附件%')
-        .whereNot('search_logs.keyword', 'like', '%询价等级%')
-        .whereNot('search_logs.keyword', 'like', '%目的地机场%')
-        .whereNot('search_logs.keyword', 'like', '%CBM %')
         .select('search_logs.keyword', 'search_logs.created_at', 'users.id as user_id', 'users.company_name', 'users.display_name')
         .orderBy('search_logs.created_at', 'desc')
         .limit(8) as any[];
