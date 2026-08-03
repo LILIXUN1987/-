@@ -10,6 +10,7 @@ import {
   Sparkles, MapPin, Loader2, FileText,
   Handshake, AlertTriangle, Bookmark, Globe,
   Shield, Mail, MessageSquare, Scale, Star,
+  Zap, Ship,
   Building2,
 } from 'lucide-react';
 import TrialBanner from '../../components/admin/TrialBanner';
@@ -663,6 +664,46 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* ═══ 数据查询：6大分类（货代/外贸可见） ═══ */}
+      {!isOverseasAgent && !isLawyer && !isRestricted && (
+        <div className="mb-6 space-y-4">
+          <SectionTitle icon={<Search className="w-4 h-4 text-primary-500" />} title={lang === 'en' ? '📊 Data Query' : '📊 数据查询'} />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <BannerCard icon={Zap} title={lang === 'en' ? 'Express Inquiry' : '快速询价'}
+              subtitle={lang === 'en' ? 'AI-powered instant rate inquiry' : '输入需求，AI秒级匹配舱位报价'}
+              badge="⚡" color="orange"
+              onClick={() => navigate('/admin/files?tab=query')} />
+            <BannerCard icon={Plane} title={lang === 'en' ? 'Air Export' : '空运出口'}
+              subtitle={lang === 'en' ? 'Air freight cargo spaces' : '查看空运舱位与特价信息'}
+              badge="✈️" color="sky"
+              onClick={() => navigate('/admin/files?tab=query')} />
+            <BannerCard icon={Ship} title={lang === 'en' ? 'Sea Export' : '海运出口'}
+              subtitle={lang === 'en' ? 'Sea freight cargo spaces' : '查看海运舱位与特价信息'}
+              badge="🚢" color="blue"
+              onClick={() => navigate('/admin/files?tab=query')} />
+            <BannerCard icon={Truck} title={lang === 'en' ? 'Land Export' : '陆运出口'}
+              subtitle={lang === 'en' ? 'Land freight cargo spaces' : '查看陆运舱位与特价信息'}
+              badge="🚛" color="amber"
+              onClick={() => navigate('/admin/files?tab=query')} />
+            <BannerCard icon={Globe} title={lang === 'en' ? 'Trader Version' : '空运外贸版'}
+              subtitle={lang === 'en' ? 'Trader-oriented air freight' : '外贸用户专属空运报价展示'}
+              badge="🌍" color="emerald"
+              onClick={() => navigate('/admin/files?tab=query')} />
+            {isTrader ? (
+              <BannerCard icon={TrendingUp} title={lang === 'en' ? 'Hot Searches' : '热门搜索排行'}
+                subtitle={lang === 'en' ? 'Trending search keywords' : '查看社区热搜关键词趋势'}
+                badge="🔥" color="pink"
+                onClick={() => navigate('/admin/files?tab=query')} />
+            ) : (
+              <BannerCard icon={Search} title={lang === 'en' ? 'Other Services' : '其他服务'}
+                subtitle={lang === 'en' ? 'Express, rail & multimodal' : '快递·铁路·多式联运服务'}
+                badge="🔍" color="purple"
+                onClick={() => navigate('/admin/files?tab=query')} />
+            )}
+          </div>
+        </div>
+      )}
 
       {/* ═══ 主内容: 两列 ═══ */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
