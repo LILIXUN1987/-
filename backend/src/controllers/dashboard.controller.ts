@@ -58,17 +58,7 @@ export const dashboardController = {
         .orderBy('cargo_spaces.view_count', 'desc')
         .limit(5) as any[];
 
-      // ── 6. 热搜趋势 ──
-      const trending = await db('search_logs')
-        .select('keyword')
-        .select(db.raw('COUNT(*) as count'))
-        .where('created_at', '>=', sevenDaysAgoStr)
-        .whereNotNull('keyword')
-        .groupBy('keyword')
-        .orderByRaw('COUNT(*) desc')
-        .limit(10) as any[];
-
-      // ── 7. 今日活跃动态 ──
+      // ── 6. 今日活跃动态 ──
       const todayStart = new Date();
       todayStart.setHours(0, 0, 0, 0);
       const todayStr = todayStart.toISOString();
@@ -126,7 +116,7 @@ export const dashboardController = {
         };
       }
 
-      // ── 9. 近期活动 ──
+      // ── 7. 近期活动 ──
       const recentActivities = await db('search_logs')
         .leftJoin('users', 'search_logs.user_id', 'users.id')
         .whereNotNull('users.company_name')
@@ -134,36 +124,7 @@ export const dashboardController = {
         .orderBy('search_logs.created_at', 'desc')
         .limit(8) as any[];
 
-      // ── 今日社区动态（货代视角） ──
-      const todayPulse = await db('search_logs')
-        .where('created_at', '>=', todayStr)
-        .count('* as total')
-        .first() as any;
-      const todayMatches = await db('messages')
-        .where('created_at', '>=', todayStr)
-        .where('content', 'like', '%📢%')
-        .count('* as total')
-        .first() as any;
-      const todayNewCargo = await db('cargo_spaces')
-        .where('created_at', '>=', todayStr)
-        .count('* as total')
-        .first() as any;
-      const hotKw = await db('search_logs')
-        .where('created_at', '>=', todayStr)
-        .whereNotNull('keyword')
-        .select('keyword')
-        .select(db.raw('COUNT(*) as cnt'))
-        .groupBy('keyword')
-        .orderBy('cnt', 'desc')
-        .limit(5) as any[];
-
       res.json({
-        pulse: {
-          searches: Number(todayPulse?.total || 0),
-          matches: Number(todayMatches?.total || 0),
-          newCargo: Number(todayNewCargo?.total || 0),
-          hotKeywords: hotKw.map((k: any) => k.keyword),
-        },
         user: {
           display_name: user?.display_name || '',
           company_name: user?.company_name || '',
@@ -194,10 +155,6 @@ export const dashboardController = {
           topRoutes: topRoutes || [],
           weeklyViews: weeklyViews || [],
         },
-        trending: (trending || []).map((t: any) => ({
-          keyword: t.keyword,
-          count: Number(t.count || 0),
-        })),
         todayStats: {
           searches: Number(todaySearches?.total || 0),
           inquiries: Number(todayInquiries?.total || 0),

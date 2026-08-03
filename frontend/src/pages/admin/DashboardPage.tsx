@@ -23,11 +23,9 @@ interface DashboardData {
   user: { display_name: string; company_name: string; role: string; avatar: string | null; trial_end: string | null; email: string | null; phone: string | null; is_newbie: boolean; is_verified_company?: boolean; company_license?: string | null; business_scope?: string | null };
   globalStats: { totalUsers: number; availableCargos: number; regions: number; todayAir: number; todaySea: number; todayLand: number; todayExpress: number };
   myStats: { totalCargos: number; activeCargos: number; totalViews: number; totalInquiries: number; topRoutes: Array<{ origin_port: string; dest_port: string; region: string; view_count: number; inquiry_count: number }>; weeklyViews: Array<{ day: string; views: number }> };
-  trending: Array<{ keyword: string; count: number }>;
   todayStats: { searches: number; inquiries: number; newUsers: number };
   couponInfo: null | { subscribed?: boolean; total?: number; available?: number; used?: number; sent?: number; total_issued?: number; current_month?: string };
   recentActivities: Array<{ keyword: string; company: string; name: string; time: string }>;
-  pulse?: { searches: number; matches: number; newCargo: number; hotKeywords: string[] };
 }
 
 function timeAgo(timeStr: string) {
@@ -228,29 +226,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* ═══ 今日热搜（置顶） ═══ */}
-      {data?.trending && data.trending.length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <TrendingUp className="w-4 h-4 text-orange-500" />
-            <h2 className="text-sm font-bold text-gray-700">{lang === 'en' ? '🔥 Trending Searches' : '🔥 今日热搜'}</h2>
-            <span className="text-[10px] text-gray-400 ml-auto">{lang === 'en' ? 'Real-time community searches' : '社区实时搜索趋势'}</span>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-            {data.trending.slice(0, 6).map((item, i) => (
-              <div key={i} className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2 hover:bg-orange-50 transition-colors cursor-pointer">
-                <span className={`w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center flex-shrink-0 ${i < 3 ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-500'}`}>{i + 1}</span>
-                <div className="min-w-0">
-                  <div className="text-xs font-medium text-gray-700 truncate">{item.keyword}</div>
-                  <div className="text-[10px] text-gray-400">{item.count}{lang === 'en' ? ' searches' : '次搜索'}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ═══ 实时动态（置顶滚动） ═══ */}
+      {/* ═══ 实时动态：用户在寻找舱位价格 ═══ */}
       {data?.recentActivities && data.recentActivities.length > 0 && (
         <div className="bg-white rounded-xl border border-blue-100 shadow-sm mb-6 overflow-hidden">
           <style>{`
@@ -261,7 +237,7 @@ export default function DashboardPage() {
           <div className="relative overflow-hidden py-2 px-3" style={{ maskImage: 'linear-gradient(to right, transparent, black 20px, black calc(100% - 20px), transparent)' }}>
             <div className="flex items-center gap-2 px-2 mb-2">
               <Activity className="w-3.5 h-3.5 text-blue-500" />
-              <span className="text-xs font-bold text-gray-600">{lang === 'en' ? '⚡ Live Activity' : '⚡ 实时动态'}</span>
+              <span className="text-xs font-bold text-gray-600">{lang === 'en' ? '🔍 Users Searching for Rates' : '🔍 用户在寻找舱位价格'}</span>
               <span className="text-[10px] text-gray-300 ml-auto">{data.recentActivities.length}{lang === 'en' ? ' items' : '条'}</span>
             </div>
             <div className="dash-scroll-loop">
@@ -391,45 +367,6 @@ export default function DashboardPage() {
         </button>
       )}
 
-      {/* ═══ 今日社区动态（货代可见） ═══ */}
-      {(isForwarder || isAdmin) && data?.pulse && (
-        <div className="bg-white rounded-xl border border-emerald-200 shadow-sm mb-6 overflow-hidden">
-          <div className="bg-gradient-to-r from-emerald-500 to-green-600 px-4 py-2 text-white">
-            <div className="flex items-center gap-2">
-              <span className="text-sm">📊</span>
-              <h3 className="text-sm font-bold">{lang === 'en' ? 'Community Pulse Today' : '今日社区动态'}</h3>
-              <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">LIVE</span>
-            </div>
-          </div>
-          <div className="p-3">
-            <div className="grid grid-cols-3 gap-2">
-              <div className="bg-blue-50 rounded-lg p-2 text-center">
-                <div className="text-lg font-black text-blue-600">{data.pulse.searches}</div>
-                <div className="text-[10px] text-blue-500">{lang === 'en' ? 'Searches' : '今日搜索'}</div>
-              </div>
-              <div className="bg-amber-50 rounded-lg p-2 text-center">
-                <div className="text-lg font-black text-amber-600">{data.pulse.matches}</div>
-                <div className="text-[10px] text-amber-500">{lang === 'en' ? 'Inquiries' : '已推送询价'}</div>
-              </div>
-              <div className="bg-emerald-50 rounded-lg p-2 text-center">
-                <div className="text-lg font-black text-emerald-600">{data.pulse.newCargo}</div>
-                <div className="text-[10px] text-emerald-500">{lang === 'en' ? 'New Cargo' : '新增舱位'}</div>
-              </div>
-            </div>
-            {data.pulse.hotKeywords?.length > 0 && (
-              <div className="flex items-center gap-1.5 text-[10px] mt-2">
-                <span className="text-gray-400 flex-shrink-0">🔥</span>
-                <div className="flex flex-wrap gap-1">
-                  {data.pulse.hotKeywords.slice(0, 5).map((kw, i) => (
-                    <span key={i} className="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full">{kw}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* ═══ 企业认证提醒（仅货代可见） ═══ */}
       {isForwarder && !data?.user?.is_verified_company && !data?.user?.company_license && (
         <div className="relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 border-2 border-amber-200 shadow-lg">
@@ -491,7 +428,7 @@ export default function DashboardPage() {
         <div className="mb-4"><div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-primary-100 overflow-hidden">
           <div className="flex items-center gap-2 px-4 pt-3 pb-0">
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">LIVE</span>
+            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{lang === 'en' ? 'PUBLISHED RATES' : '系统已发布舱位价格'}</span>
             <span className="text-[10px] text-gray-400 font-medium ml-auto">{latestItems.length}{lang === 'en' ? ' posts' : '条舱位'}</span>
           </div>
           <div className="relative overflow-hidden py-3 px-2">
@@ -517,8 +454,8 @@ export default function DashboardPage() {
         <div className="mb-4"><div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-amber-100 overflow-hidden">
           <div className="flex items-center gap-2 px-4 pt-3 pb-0">
             <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">INQUIRIES</span>
-            <span className="text-[10px] text-gray-400 font-medium ml-auto">{recentSearches.length}{lang === 'en' ? ' inquiries' : '条实时需求'}</span>
+            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{lang === 'en' ? 'USERS SEARCHING' : '用户在寻找舱位价格'}</span>
+            <span className="text-[10px] text-gray-400 font-medium ml-auto">{recentSearches.length}{lang === 'en' ? ' inquiries' : '条搜索记录'}</span>
           </div>
           <div className="relative overflow-hidden py-3 px-2">
             <div className="m-track-slow gap-4">
