@@ -14,9 +14,8 @@ import {
 } from 'lucide-react';
 import TrialBanner from '../../components/admin/TrialBanner';
 import { useUnreadStore } from '../../store/unreadStore';
-import PortSetupPanel from '../../components/admin/PortSetupPanel';
-import BusinessScopeModal from '../../components/admin/BusinessScopeModal';
 import { FEATURES } from '../../config/features';
+import BusinessScopeModal from '../../components/admin/BusinessScopeModal';
 
 interface DashboardData {
   user: { display_name: string; company_name: string; role: string; avatar: string | null; trial_end: string | null; email: string | null; phone: string | null; is_newbie: boolean; is_verified_company?: boolean; company_license?: string | null; business_scope?: string | null };
@@ -485,8 +484,15 @@ export default function DashboardPage() {
       )}
 
 
-      {/* ── 口岸城市设置（仅国内货代） ── */}
-      {isForwarderOrBroker && <PortSetupPanel />}
+      {/* ── 口岸城市设置（仅国内货代/报关行） ── */}
+      {isForwarderOrBroker && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          <BannerCard icon={MapPin} title={lang === 'en' ? 'Port & City Setup' : '口岸城市设置'}
+            subtitle={lang === 'en' ? 'Set your ports to be found by overseas agents' : '设置你的口岸与城市，可被海外代理搜到'}
+            badge={lang === 'en' ? '📍 Setup' : '📍 去设置'} color="blue"
+            onClick={() => navigate('/admin/profile')} />
+        </div>
+      )}
 
       {/* ── 搜同行 · 找公司 ── */}
       <div id="search-sec" className="mb-6">
