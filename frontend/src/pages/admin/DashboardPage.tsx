@@ -149,6 +149,8 @@ export default function DashboardPage() {
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
   const [marqueePaused, setMarqueePaused] = useState(false);
   const [contactingId, setContactingId] = useState<string | null>(null);
+  const [selectedCargo, setSelectedCargo] = useState<any>(null);
+  const [cargoPaused, setCargoPaused] = useState(false);
 
   useEffect(() => {
     client.get("/cargo-spaces/trending").then(r => {
@@ -486,23 +488,83 @@ export default function DashboardPage() {
           <div className="flex items-center gap-2 px-4 pt-3 pb-0">
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{lang === 'en' ? 'PUBLISHED RATES' : '系统已发布舱位价格'}</span>
+            <span className="text-[10px] text-gray-400">{lang === 'en' ? 'Click to view details' : '点击查看详情并联系'}</span>
             <span className="text-[10px] text-gray-400 font-medium ml-auto">{latestItems.length}{lang === 'en' ? ' posts' : '条舱位'}</span>
           </div>
           <div className="relative overflow-hidden py-3 px-2">
-            <style>{'@keyframes m-scroll{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}.m-track{display:flex;animation:m-scroll 120s linear infinite;width:max-content}.m-track:hover{animation-play-state:paused}.m-track-slow{display:flex;animation:m-scroll 160s linear infinite;width:max-content}.m-track-slow:hover{animation-play-state:paused}'}</style>
-            <div className="m-track gap-4">
+            <style>{'@keyframes m-scroll{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}.m-track{display:flex;animation:m-scroll 120s linear infinite;width:max-content}.m-track:hover{animation-play-state:paused}.m-track-paused{animation-play-state:paused !important}.m-track-slow{display:flex;animation:m-scroll 160s linear infinite;width:max-content}.m-track-slow:hover{animation-play-state:paused}'}</style>
+            <div className={`m-track gap-4${cargoPaused ? ' m-track-paused' : ''}`}>
               {[...latestItems, ...latestItems].map((item, i) => (
-                <div key={i} className="flex items-center gap-2.5 bg-gradient-to-r from-gray-50 to-white rounded-xl px-3.5 py-2 border border-gray-100 shadow-sm whitespace-nowrap flex-shrink-0 hover:border-primary-300 hover:shadow-md transition-all">
+                <button key={i} className="flex items-center gap-2.5 bg-gradient-to-r from-gray-50 to-white rounded-xl px-3.5 py-2 border border-gray-100 shadow-sm whitespace-nowrap flex-shrink-0 hover:border-primary-300 hover:shadow-md transition-all cursor-pointer"
+                  onClick={() => { setSelectedCargo(item); setCargoPaused(true); }}>
                   <span>{item.airline_code ? '✈️' : item.notes?.includes('DDP') ? '🌍' : '🚢'}</span>
                   <span className="text-sm font-bold">{item.origin_port||'?'}<span className="text-gray-300 mx-1">→</span>{item.dest_port||'?'}</span>
                   {item.company_name && <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{item.company_name.substring(0, 8)}{item.company_name.length > 8 ? '…' : ''}</span>}
                   {item.price_per_cbm && <span className="text-xs font-bold text-emerald-600">¥{item.price_per_cbm}/CBM</span>}
                   <span className="text-[10px] text-gray-400">{item.created_at?.substring(5,10)||''}</span>
                   {item.is_newbie && <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold">NEW</span>}
-                </div>
+                </button>
               ))}
             </div>
           </div>
+          {/* ── 点击展开的详情面板 ── */}
+          {selectedCargo && (
+            <div className="border-t-2 border-primary-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-4">
+              <div className="flex items-start justify-between gap-4 flex-wrap">
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-primary-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                      {selectedCargo.airline_code ? '✈️' : selectedCargo.notes?.includes('DDP') ? '🌍' : '🚢'}
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-gray-800">
+                        {selectedCargo.origin_port || '?'} → {selectedCargo.dest_port || '?'}
+                        {selectedCargo.airline_code && <span className="text-[11px] text-gray-500 ml-1">({selectedCargo.airline_code})</span>}
+                      </div>
+                      <div className="text-[11px] text-gray-500">
+                        {selectedCargo.company_name && <span>🏢 {selectedCargo.company_name}</span>}
+                        {selectedCargo.price_per_cbm && <span className="ml-2">💰 ¥{selectedCargo.price_per_cbm}/CBM</span>}
+                        {selectedCargo.price_per_kg && <span className="ml-2">¥{selectedCargo.price_per_kg}/KG</span>}
+                        <span className="ml-2">📅 {selectedCargo.created_at?.substring(0, 10) || ''}</span>
+                        {selectedCargo.valid_to && <span className="ml-2">⏳ {lang === 'en' ? 'Valid until' : '有效期至'} {selectedCargo.valid_to?.substring(0, 10)}</span>}
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-600">
+                    {lang === 'en'
+                      ? `This forwarder published ${selectedCargo.origin_port}→${selectedCargo.dest_port} cargo space — contact them directly for rates and booking.`
+                      : `该货代发布了 ${selectedCargo.origin_port}→${selectedCargo.dest_port} 的舱位信息，可点击下方按钮联系对方获取详细报价和订舱。`}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <button className="px-3 py-1.5 text-xs text-gray-500 hover:text-gray-700 border border-gray-200 rounded-lg hover:bg-white transition-all"
+                    onClick={() => { setSelectedCargo(null); setCargoPaused(false); }}>
+                    {lang === 'en' ? 'Close' : '关闭'}
+                  </button>
+                  {selectedCargo.user_id && (
+                    <button className="px-4 py-1.5 bg-primary-600 text-white font-bold text-xs rounded-lg hover:bg-primary-700 transition-all flex items-center gap-1.5"
+                      onClick={async () => {
+                        setContactingId(selectedCargo.id);
+                        try {
+                          await client.post('/messages', {
+                            receiver_id: selectedCargo.user_id,
+                            content: `您好，我看到您在社区发布了「${selectedCargo.origin_port}→${selectedCargo.dest_port}」的舱位信息（¥${selectedCargo.price_per_cbm || '--'}/CBM），我对这条航线很感兴趣，请发详细报价给我。`,
+                          });
+                          alert(lang === 'en' ? '✅ Inquiry sent!' : '✅ 询价已发送！');
+                        } catch {
+                          alert(lang === 'en' ? '❌ Failed' : '❌ 发送失败');
+                        }
+                        setContactingId(null);
+                      }}
+                      disabled={contactingId === selectedCargo.id}>
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      {lang === 'en' ? 'Inquire Now' : '立即询价'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
           <div className="h-1 bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500" />
         </div></div>
       )}

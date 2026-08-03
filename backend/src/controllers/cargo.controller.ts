@@ -770,20 +770,21 @@ export const cargoController = {
           "cargo_spaces.id", "cargo_spaces.origin_port", "cargo_spaces.dest_port",
           "cargo_spaces.airline_code", "cargo_spaces.notes", "cargo_spaces.contact_info",
           "cargo_spaces.created_at", "cargo_spaces.valid_from", "cargo_spaces.valid_to",
-          "users.is_newbie",
+          "cargo_spaces.price_per_cbm", "cargo_spaces.price_per_kg",
+          "users.id as user_id", "users.is_newbie",
         )
         .orderBy("cargo_spaces.created_at", "desc")
         .limit(10) as any[];
 
       // 对未登录用户：只显示公司名（contact_info 的第一个字段），不显示姓名手机号
       const sanitized = latest.map((item: any) => {
-        const { contact_info, is_newbie, ...rest } = item;
+        const { contact_info, is_newbie, user_id, price_per_cbm, price_per_kg, ...rest } = item;
         let company_name = null;
         if (contact_info) {
           const parts = contact_info.split(' ');
           company_name = parts[0] || null;
         }
-        return { ...rest, company_name, is_newbie: is_newbie ? true : false };
+        return { ...rest, company_name, user_id, price_per_cbm, price_per_kg, is_newbie: is_newbie ? true : false };
       });
 
       res.json({ hotSearches, latest: sanitized });
