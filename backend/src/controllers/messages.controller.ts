@@ -845,6 +845,7 @@ export const messagesController = {
           .limit(5) as any[];
 
         // 这个发件人最近7天联系了多少代理
+        const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
         const contactedCount = await db('messages')
           .where('sender_id', msg.sender_id)
           .where('created_at', '>=', weekAgo)
