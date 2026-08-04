@@ -125,25 +125,25 @@ export default function CustomerFinderPage() {
       </div>
 
       {/* ── 港口订阅 ── */}
-      <div className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-500 rounded-2xl shadow-xl shadow-amber-200 p-5 text-white">
+      <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-100 rounded-2xl border-2 border-amber-300 shadow-md p-5">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-9 h-9 rounded-xl bg-white/25 backdrop-blur flex items-center justify-center">
-            <Bell className="w-5 h-5 text-white" />
+          <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center">
+            <Bell className="w-5 h-5 text-amber-600" />
           </div>
           <div>
-            <h3 className="text-base font-black">{lang === 'en' ? '📡 Port Subscriptions' : '📡 港口订阅'}</h3>
-            <p className="text-xs text-white/80">
+            <h3 className="text-base font-black text-amber-900">{lang === 'en' ? '📡 Port Subscriptions' : '📡 港口订阅'}</h3>
+            <p className="text-xs text-amber-700">
               {lang === 'en' ? 'Subscribe to your advantage ports — get priority alerts when searched' : '点选你的优势港口——有人搜索时，系统优先推送给你'}
             </p>
           </div>
-          <span className="ml-auto text-xs font-black bg-white/20 px-3 py-1.5 rounded-full">
+          <span className="ml-auto text-xs font-black bg-amber-100 text-amber-700 px-3 py-1.5 rounded-full">
             {subscribedPorts.length}/10 {lang === 'en' ? 'subscribed' : '已订阅'}
           </span>
         </div>
 
         {/* 全球主要枢纽港口——一键订阅 */}
-        <div className="bg-white/15 backdrop-blur rounded-xl p-3 mb-3">
-          <p className="text-[10px] font-bold text-white/70 mb-2 uppercase tracking-wide">
+        <div className="bg-white rounded-xl border border-amber-200 p-3 mb-3">
+          <p className="text-[10px] font-bold text-amber-500 mb-2 uppercase tracking-wide">
             🌍 {lang === 'en' ? 'GLOBAL HUBS — Click to Subscribe' : '全球主要枢纽——点击订阅'}
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -153,8 +153,8 @@ export default function CustomerFinderPage() {
                 <button key={p} onClick={() => isSubbed ? unsubscribe(p) : subscribe(p)} disabled={subLoading}
                   className={`text-xs font-black px-3 py-2 rounded-lg border-2 transition-all ${
                     isSubbed
-                      ? 'bg-white text-amber-700 border-white shadow-md scale-105'
-                      : 'bg-transparent text-white border-white/30 hover:bg-white/10 hover:border-white/50'
+                      ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
+                      : 'bg-white border-amber-200 text-amber-700 hover:bg-amber-50 hover:border-amber-400'
                   }`}>
                   {isSubbed ? '📡' : '＋'} {p}
                 </button>
@@ -167,7 +167,7 @@ export default function CustomerFinderPage() {
         {subscribedPorts.filter(p => !['JFK','LAX','ORD','MIA','ATL','LHR','FRA','AMS','CDG','MAD','DXB','SIN','HKG','NRT','ICN','SYD','GRU','JNB'].includes(p)).length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-2">
             {subscribedPorts.filter(p => !['JFK','LAX','ORD','MIA','ATL','LHR','FRA','AMS','CDG','MAD','DXB','SIN','HKG','NRT','ICN','SYD','GRU','JNB'].includes(p)).map(p => (
-              <span key={p} className="inline-flex items-center gap-1 bg-white text-amber-700 rounded-full px-3 py-1 text-xs font-black shadow-sm">
+              <span key={p} className="inline-flex items-center gap-1 bg-amber-500 text-white rounded-full px-3 py-1 text-xs font-black shadow-sm">
                 📡 {p}
                 <button onClick={() => unsubscribe(p)} disabled={subLoading} className="text-amber-400 hover:text-red-500 ml-0.5">✕</button>
               </span>
@@ -178,7 +178,7 @@ export default function CustomerFinderPage() {
         {/* 自定义输入 */}
         <div className="flex items-center gap-2">
           <input
-            className="w-28 px-4 py-2 text-sm font-black border-2 border-dashed border-white/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-white bg-white/10 placeholder:text-white/40 text-white uppercase"
+            className="w-28 px-4 py-2 text-sm font-black border-2 border-dashed border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 bg-white placeholder:text-amber-300 text-amber-800 uppercase"
             placeholder={lang === 'en' ? 'Other...' : '其他...'}
             maxLength={3}
             value={subPort}
@@ -188,7 +188,7 @@ export default function CustomerFinderPage() {
           <button
             onClick={() => { subscribe(subPort); setSubPort(''); }}
             disabled={subLoading || subPort.length < 3 || subscribedPorts.length >= 10}
-            className="text-sm font-black bg-white text-amber-600 hover:bg-amber-50 disabled:opacity-50 px-4 py-2 rounded-lg transition-colors shadow-sm">
+            className="text-sm font-black bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-50 px-4 py-2 rounded-lg transition-colors shadow-sm">
             ＋ {lang === 'en' ? 'Add' : '添加'}
           </button>
         </div>

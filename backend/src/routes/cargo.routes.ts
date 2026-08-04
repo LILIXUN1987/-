@@ -82,6 +82,44 @@ router.get('/bulk-promote/status/:orderId', authRequired, async (req, res) => {
 router.get('/search-users', authOptional, cargoController.searchUsers);
 router.post('/inquiry-user', authRequired, cargoController.inquiryUser);
 
+// ── 公开搜索（无需登录，返回脱敏数据） ──
+router.get('/public-search', async (req, res) => {
+  try {
+    const q = String(req.query.q || '').trim();
+    if (!q || q.length < 2) return res.json({ data: [], total: 0 });
+
+    const { default: db } = await import('../config/database');
+    const rows = await db('cargo_spaces')
+      .leftJoin('raw_messages', 'cargo_spaces.uploaded_file_id', 'raw_messages.id')
+      .leftJoin('users', 'raw_messages.uploaded_by', 'users.id')
+      .where('cargo_spaces.status', 'available')
+      .where(function() {
+        this.where('cargo_spaces.origin_port', 'like', `%${q}%`)
+          .orWhere('cargo_spaces.dest_port', 'like', `%${q}%`)
+          .orWhere('cargo_spaces.airline_code', 'like', `%${q}%`)
+          .orWhere('cargo_spaces.notes', 'like', `%${q}%`)
+          .orWhere('cargo_spaces.region', 'like', `%${q}%`);
+      })
+      .select(
+        'cargo_spaces.origin_port', 'cargo_spaces.dest_port', 'cargo_spaces.airline_code',
+        'cargo_spaces.notes', 'cargo_spaces.created_at', 'cargo_spaces.region',
+        'cargo_spaces.price_per_cbm', 'cargo_spaces.price_per_kg',
+        'users.company_name', 'users.is_newbie'
+      )
+      .orderBy('cargo_spaces.created_at', 'desc')
+      .limit(20) as any[];
+
+    // 脱敏: 公司名只显示前10字，不返回联系人
+    const data = rows.map((r: any) => ({
+      ...r,
+      company_name: r.company_name || null,
+      is_newbie: !!r.is_newbie,
+    }));
+
+    res.json({ data, total: data.length });
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
 // ── 反向匹配：货代搜潜在客户 ──
 router.get('/match-searchers', authRequired, cargoController.matchSearchers);
 

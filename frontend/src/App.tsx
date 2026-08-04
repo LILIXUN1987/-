@@ -13,6 +13,7 @@ import { useBrowserNotifications } from './hooks/useBrowserNotifications';
 
 // Pages — 懒加载，按需下载
 const LandingPage = lazy(() => import('./pages/public/LandingPage'));
+const SearchPage = lazy(() => import('./pages/public/SearchPage'));
 const RegisterPage = lazy(() => import('./pages/public/RegisterPage'));
 const LoginPage = lazy(() => import('./pages/public/LoginPage'));
 const CompanyPublicPage = lazy(() => import('./pages/public/CompanyPublicPage'));
@@ -114,6 +115,9 @@ export default function App() {
 
           {/* Unified login (no layout) */}
           <Route path="/login" element={<LoginPage />} />
+
+          {/* Public search — no login required */}
+          <Route path="/search" element={<SearchPage />} />
 
           {/* Legacy chat page */}
           <Route path="/chat" element={<ChatPage />} />

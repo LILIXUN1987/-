@@ -266,7 +266,7 @@ export default function LandingPage() {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     const val = (e.target as HTMLInputElement).value.trim();
-                    if (val) navigate(`/admin/files?tab=query&q=${encodeURIComponent(val)}`);
+                    if (val) navigate(`/search?q=${encodeURIComponent(val)}`);
                   }
                 }}
               />
@@ -274,7 +274,7 @@ export default function LandingPage() {
                 onClick={() => {
                   const input = document.querySelector('.hero-search-input') as HTMLInputElement;
                   const val = input?.value?.trim();
-                  if (val) navigate(`/admin/files?tab=query&q=${encodeURIComponent(val)}`);
+                  if (val) navigate(`/search?q=${encodeURIComponent(val)}`);
                 }}
                 className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold text-sm rounded-xl hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/20 transition-all flex-shrink-0"
               >
