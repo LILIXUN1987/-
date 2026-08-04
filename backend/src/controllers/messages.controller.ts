@@ -822,14 +822,37 @@ export const messagesController = {
         .limit(limit)
         .offset(offset);
 
-      // 补充回复状态
+      // 补充回复状态 + 竞争信息
       const result: any[] = [];
       for (const msg of rows as any[]) {
-        const replyCount = await db('messages')
+        // 当前用户的回复
+        const myReplyCount = await db('messages')
           .where({ sender_id: userId, receiver_id: msg.sender_id })
           .where('created_at', '>', msg.created_at)
           .count('* as total')
           .first();
+
+        // 其他代理回复情况：这个发件人最近7天发了多少询价，有多少代理已回复
+        const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+        const otherReplies = await db('messages')
+          .join('users', 'messages.sender_id', 'users.id')
+          .where('messages.receiver_id', msg.sender_id)  // 发件人收到的回复
+          .where('messages.created_at', '>', msg.created_at)
+          .whereNot('messages.sender_id', userId)  // 排除当前用户自己的回复
+          .where('users.role', 'forwarder')
+          .select('users.company_name', 'users.display_name', 'messages.created_at')
+          .orderBy('messages.created_at', 'desc')
+          .limit(5) as any[];
+
+        // 这个发件人最近7天联系了多少代理
+        const contactedCount = await db('messages')
+          .where('sender_id', msg.sender_id)
+          .where('created_at', '>=', weekAgo)
+          .whereNot('receiver_id', userId)
+          .distinct('receiver_id')
+          .count('* as total')
+          .first();
+
         result.push({
           id: msg.id,
           content: msg.content,
@@ -838,8 +861,13 @@ export const messagesController = {
           senderId: msg.sender_id,
           senderName: msg.sender_name,
           senderCompany: msg.sender_company,
-          hasReply: Number((replyCount as any)?.total || 0) > 0,
-          replyCount: Number((replyCount as any)?.total || 0),
+          hasReply: Number((myReplyCount as any)?.total || 0) > 0,
+          replyCount: Number((myReplyCount as any)?.total || 0),
+          otherReplies: otherReplies.map((r: any) => ({
+            company: r.company_name || r.display_name,
+            time: r.created_at,
+          })),
+          contactedOthers: Number((contactedCount as any)?.total || 0),
         });
       }
 

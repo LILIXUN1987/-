@@ -17,6 +17,18 @@ interface InquiryItem {
   senderCompany: string;
   hasReply: boolean;
   replyCount: number;
+  otherReplies?: { company: string; time: string }[];
+  contactedOthers?: number;
+}
+
+const IGNORED_KEY = 'ignored_inquiries';
+function getIgnored(): string[] {
+  try { return JSON.parse(localStorage.getItem(IGNORED_KEY) || '[]'); } catch { return []; }
+}
+function ignoreInquiry(id: string) {
+  const list = getIgnored();
+  list.push(id);
+  localStorage.setItem(IGNORED_KEY, JSON.stringify(list));
 }
 
 type ReplyMode = 'text' | 'quote';
@@ -109,9 +121,11 @@ export default function InquiriesPage() {
 
   const unrepliedCount = inquiries.filter(i => !i.hasReply).length;
   const repliedCount = inquiries.filter(i => i.hasReply).length;
-  let filtered = inquiries;
+  const [ignoredIds, setIgnoredIds] = useState<string[]>(getIgnored());
+  let filtered = inquiries.filter(i => !ignoredIds.includes(i.id));
   if (filter === 'unreplied') filtered = filtered.filter(i => !i.hasReply);
   else if (filter === 'replied') filtered = filtered.filter(i => i.hasReply);
+  const ignoredCount = inquiries.filter(i => ignoredIds.includes(i.id)).length;
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -203,6 +217,27 @@ export default function InquiriesPage() {
                     <p className="text-slate-500 mt-1 bg-slate-50 p-2 rounded-lg whitespace-pre-wrap text-xs">{item.content}</p>
                   </details>
 
+                  {/* 竞争信息：其他代理回复 */}
+                  {(item.otherReplies?.length || 0) > 0 && (
+                    <div className="mt-2 pt-2 border-t border-amber-100">
+                      <p className="text-[10px] font-bold text-amber-700 mb-1">
+                        ⚠️ {lang === 'en' ? 'Competitors have replied:' : '已有其他代理回复：'}
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {item.otherReplies!.map((r, j) => (
+                          <span key={j} className="text-[10px] bg-amber-50 text-amber-800 border border-amber-200 rounded-full px-2 py-0.5 font-medium">
+                            🏢 {r.company} · {new Date(r.time).toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' })}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {item.contactedOthers && item.contactedOthers > 0 && (
+                    <p className="text-[10px] text-red-400 mt-1">
+                      {lang === 'en' ? `📢 This trader contacted ${item.contactedOthers} other forwarders` : `📢 此客户还联系了 ${item.contactedOthers} 家其他代理`}
+                    </p>
+                  )}
+
                   {/* 操作按钮 */}
                   <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-50">
                     {!hasReply && (
@@ -214,6 +249,10 @@ export default function InquiriesPage() {
                         <button className="flex items-center gap-1 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-lg px-3 py-1.5 border border-amber-200 transition-colors"
                           onClick={() => { openReply(item); setReplyMode('quote'); }}>
                           <DollarSign className="w-3 h-3" />{lang === 'en' ? 'Quote' : '报价'}
+                        </button>
+                        <button className="flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-red-500 bg-slate-50 hover:bg-red-50 rounded-lg px-3 py-1.5 transition-colors"
+                          onClick={() => { ignoreInquiry(item.id); setIgnoredIds(getIgnored()); toast.success(lang === 'en' ? 'Ignored' : '已忽略'); }}>
+                          <X className="w-3 h-3" />{lang === 'en' ? 'Ignore' : '忽略'}
                         </button>
                       </>
                     )}
