@@ -17,6 +17,7 @@ import {
 import { useUnreadStore } from '../../store/unreadStore';
 import { FEATURES } from '../../config/features';
 import BusinessScopeModal from '../../components/admin/BusinessScopeModal';
+import RadarWins from '../../components/admin/RadarWins';
 
 interface DashboardData {
   user: { display_name: string; company_name: string; role: string; avatar: string | null; trial_end: string | null; email: string | null; phone: string | null; is_newbie: boolean; is_verified_company?: boolean; company_license?: string | null; business_scope?: string | null };
@@ -819,6 +820,9 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* ═══ 🏆 雷达战报——制造羊群效应（仅货代） ═══ */}
+      {(isForwarder || isAdmin) && <RadarWins />}
 
       {/* ═══ 数据查询：6大分类（货代/外贸可见） ═══ */}
       {!isOverseasAgent && !isLawyer && !isRestricted && (
