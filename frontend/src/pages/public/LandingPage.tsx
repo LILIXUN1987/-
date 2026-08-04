@@ -256,6 +256,35 @@ export default function LandingPage() {
               'Carriers report daily remaining space. Forwarders check live inventory. Not browsing ads — checking who has space RIGHT NOW. JFK still available? Scan to find out.'
             )}
           </p>
+          {/* ═══ 首页搜索框——核心获客入口 ═══ */}
+          <div className="max-w-xl mx-auto mb-6">
+            <div className="flex items-center gap-2 p-1.5 bg-white rounded-2xl shadow-2xl shadow-blue-500/10 border-2 border-blue-200 focus-within:border-blue-400 focus-within:shadow-blue-500/20 transition-all">
+              <Search className="w-5 h-5 text-gray-400 ml-3 flex-shrink-0" />
+              <input
+                className="hero-search-input flex-1 text-base py-3 px-2 bg-transparent border-none outline-none text-gray-900 placeholder:text-gray-400"
+                placeholder={t('输入港口代码，如 JFK、LAX、CAN...', 'Enter port code: JFK, LAX, CAN...')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const val = (e.target as HTMLInputElement).value.trim();
+                    if (val) navigate(`/admin/files?tab=query&q=${encodeURIComponent(val)}`);
+                  }
+                }}
+              />
+              <button
+                onClick={() => {
+                  const input = document.querySelector('.hero-search-input') as HTMLInputElement;
+                  const val = input?.value?.trim();
+                  if (val) navigate(`/admin/files?tab=query&q=${encodeURIComponent(val)}`);
+                }}
+                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold text-sm rounded-xl hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/20 transition-all flex-shrink-0"
+              >
+                {t('搜舱位', 'Search')}
+              </button>
+            </div>
+            <p className="text-xs text-gray-400 mt-2 text-center">
+              {t('💡 试试输入 JFK、LAX、FRA——看看哪个庄家现在有舱位', '💡 Try JFK, LAX, FRA — see which carrier has space right now')}
+            </p>
+          </div>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => navigate('/register')}
