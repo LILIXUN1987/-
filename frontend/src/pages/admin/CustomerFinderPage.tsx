@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import client from '../../api/client';
-import { Search, Loader2, Users, MapPin, MessageSquare, Clock, TrendingUp, Target, Shield, Zap, Award, Globe } from 'lucide-react';
+import { Search, Loader2, Users, MapPin, MessageSquare, Clock, TrendingUp, Target, Shield, Zap, Award, Globe, Bell } from 'lucide-react';
 
 interface Searcher {
   user_id: string;
@@ -27,9 +27,33 @@ export default function CustomerFinderPage() {
   const [totalSearches, setTotalSearches] = useState(0);
   const [searched, setSearched] = useState(false);
   const [sending, setSending] = useState<string | null>(null);
+  const [subscribedPorts, setSubscribedPorts] = useState<string[]>([]);
+  const [subLoading, setSubLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { inputRef.current?.focus(); }, []);
+
+  // 加载已订阅港口
+  useEffect(() => {
+    client.get('/auth/subscribed-ports').then(r => setSubscribedPorts(r.data.data || [])).catch(() => {});
+  }, []);
+
+  const subscribe = async (p: string) => {
+    setSubLoading(true);
+    try {
+      const r = await client.post('/auth/subscribe-port', { port: p });
+      setSubscribedPorts(r.data.data || []);
+    } catch (e: any) { alert(e?.response?.data?.error || '订阅失败'); }
+    setSubLoading(false);
+  };
+  const unsubscribe = async (p: string) => {
+    setSubLoading(true);
+    try {
+      const r = await client.post('/auth/unsubscribe-port', { port: p });
+      setSubscribedPorts(r.data.data || []);
+    } catch { alert('取消订阅失败'); }
+    setSubLoading(false);
+  };
 
   const handleSearch = async () => {
     const q = port.trim().toUpperCase();
@@ -97,6 +121,29 @@ export default function CustomerFinderPage() {
               : '输入港口代码，立即看到谁在搜——在竞争对手之前拦截客户'}
           </p>
         </div>
+      </div>
+
+      {/* ── 港口订阅 ── */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Bell className="w-4 h-4 text-amber-500" />
+          <h3 className="text-sm font-bold text-slate-700">{lang === 'en' ? '📡 Port Subscriptions' : '📡 港口订阅'}</h3>
+          <span className="text-[10px] text-slate-400">
+            {lang === 'en' ? 'Get priority alerts when someone searches your subscribed ports' : '订阅你的优势港口——有人搜索时优先推送'}
+          </span>
+        </div>
+        {subscribedPorts.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {subscribedPorts.map(p => (
+              <span key={p} className="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 rounded-full px-3 py-1.5 text-xs font-bold text-amber-800">
+                📡 {p}
+                <button onClick={() => unsubscribe(p)} disabled={subLoading} className="text-amber-400 hover:text-red-500 transition-colors ml-0.5">✕</button>
+              </span>
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs text-slate-400">{lang === 'en' ? 'No ports subscribed yet. Subscribe below to get priority alerts.' : '尚未订阅任何港口。在下方搜索并订阅，有人搜你订阅的港口时优先推送。'}</p>
+        )}
       </div>
 
       {/* ── 搜索区 ── */}
@@ -176,6 +223,12 @@ export default function CustomerFinderPage() {
               <span className="text-xs bg-yellow-400/30 text-yellow-100 px-2.5 py-1 rounded-full font-bold ml-auto">
                 🚨 {results.length} {lang === 'en' ? 'active leads' : '条活跃线索'} · {totalSearches} {lang === 'en' ? 'total searches' : '次搜索'}
               </span>
+              {!subscribedPorts.includes(port.toUpperCase()) && (
+                <button onClick={() => subscribe(port.toUpperCase())} disabled={subLoading}
+                  className="text-[10px] font-bold bg-white/20 hover:bg-white/30 text-white px-2.5 py-1 rounded-full transition-colors flex items-center gap-1 flex-shrink-0">
+                  🔔 {lang === 'en' ? 'Subscribe' : '订阅此港口'}
+                </button>
+              )}
             </div>
             {results.length > 0 && (
               <p className="text-xs text-emerald-100 mt-1.5">

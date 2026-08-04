@@ -60,6 +60,7 @@ export interface UserPublic {
   wca_id?: string;
   alliance_name?: string;
   alliance_id?: string;
+  subscribed_ports?: string;
   trial_end?: string;
   referral_code?: string;
   role?: UserRole;
