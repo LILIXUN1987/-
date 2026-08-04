@@ -175,6 +175,8 @@ export async function pushAirInquiry(
           pubRow.display_name || pubRow.company_name,
           senderDisplayName,
           kw,
+          'zh',
+          attachmentPath,
         );
       }
     } catch {}
@@ -184,7 +186,7 @@ export async function pushAirInquiry(
 
   // 公共邮箱推送
   try {
-    await sendInquiryNotification('express@tiangaocargo.com', '公共询价通知', senderDisplayName, kw);
+    await sendInquiryNotification('express@tiangaocargo.com', '公共询价通知', senderDisplayName, kw, 'zh', attachmentPath);
   } catch {}
 
   return sentCount;
@@ -296,6 +298,8 @@ export async function pushSeaInquiry(
           pubRow.display_name || pubRow.company_name,
           senderDisplayName,
           kw,
+          'zh',
+          attachmentPath,
         );
       }
     } catch {}
@@ -305,7 +309,7 @@ export async function pushSeaInquiry(
 
   // 公共邮箱推送
   try {
-    await sendInquiryNotification('express@tiangaocargo.com', '公共询价通知', senderDisplayName, kw);
+    await sendInquiryNotification('express@tiangaocargo.com', '公共询价通知', senderDisplayName, kw, 'zh', attachmentPath);
   } catch {}
 
   return sentCount;

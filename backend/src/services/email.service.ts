@@ -242,6 +242,7 @@ export async function verifyCode(email: string, code: string): Promise<boolean> 
 export async function sendInquiryNotification(
   toEmail: string, toName: string, senderName: string, keyword: string,
   lang: string = 'zh',
+  attachmentPath?: string,
 ): Promise<void> {
   if (!isEnabled() || !toEmail) return;
   // 跳过退件邮箱
@@ -268,6 +269,7 @@ export async function sendInquiryNotification(
           <a href="${frontendUrl}/admin/inbox" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
             View Inquiry & Reply
           </a>
+          ${attachmentPath ? `<p style="color: #6b7280; font-size: 13px;">📎 Attachment: <a href="${frontendUrl}/api/uploads/${attachmentPath.replace(/^uploads[\\/]/, '')}" style="color: #1a56db;">Download file</a></p>` : ''}
           <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">⚠️ Do not reply directly to this email.</p>
           ${COMMUNITY_INTRO_FORWARDER_EN}
         </div>
@@ -282,6 +284,7 @@ export async function sendInquiryNotification(
           <a href="${frontendUrl}/admin/inbox" style="display: inline-block; background: #1a56db; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 8px 0;">
             查看询价并回复
           </a>
+          ${attachmentPath ? `<p style="color: #6b7280; font-size: 13px;">📎 附件：<a href="${frontendUrl}/api/uploads/${attachmentPath.replace(/^uploads[\\/]/, '')}" style="color: #1a56db;">下载文件</a></p>` : ''}
           <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">⚠️ 请勿直接回复此邮件。</p>
           ${COMMUNITY_INTRO_FORWARDER}
         </div>
