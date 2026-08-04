@@ -122,9 +122,23 @@ export default function InquiriesPage() {
   const unrepliedCount = inquiries.filter(i => !i.hasReply).length;
   const repliedCount = inquiries.filter(i => i.hasReply).length;
   const [ignoredIds, setIgnoredIds] = useState<string[]>(getIgnored());
+  const [transportFilter, setTransportFilter] = useState('');
+
+  // 运输类型检测 + 统计
+  function detectTransport(content: string): string {
+    if (/空运|航空|飞机|✈️/.test(content)) return '空运';
+    if (/海运|海路|船运|🚢/.test(content)) return '海运';
+    if (/陆运|铁路|公路|卡车|拖车|🚛/.test(content)) return '陆运';
+    if (/快递|速递|国际快件|📦/.test(content)) return '快递';
+    if (/DDP|双清|包税/.test(content)) return '双清包税';
+    return '其他';
+  }
+  const transportTypes = [...new Set(inquiries.map(i => detectTransport(i.content || '')))].filter(Boolean);
+
   let filtered = inquiries.filter(i => !ignoredIds.includes(i.id));
   if (filter === 'unreplied') filtered = filtered.filter(i => !i.hasReply);
   else if (filter === 'replied') filtered = filtered.filter(i => i.hasReply);
+  if (transportFilter) filtered = filtered.filter(i => detectTransport(i.content || '') === transportFilter);
   const ignoredCount = inquiries.filter(i => ignoredIds.includes(i.id)).length;
 
   return (
@@ -156,6 +170,30 @@ export default function InquiriesPage() {
           </button>
         ))}
       </div>
+
+      {/* ── 运输类型筛选 ── */}
+      {transportTypes.length > 0 && (
+        <div className="flex gap-1.5 mb-3 flex-wrap">
+          <button onClick={() => setTransportFilter('')}
+            className={`text-[10px] font-bold px-3 py-1.5 rounded-full border transition-all ${
+              !transportFilter ? 'bg-slate-800 text-white border-slate-800' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
+            }`}>
+            {lang === 'en' ? 'All' : '全部'}
+          </button>
+          {transportTypes.map(t => {
+            const count = inquiries.filter(i => detectTransport(i.content || '') === t && !ignoredIds.includes(i.id)).length;
+            return (
+              <button key={t} onClick={() => setTransportFilter(transportFilter === t ? '' : t)}
+                className={`text-[10px] font-bold px-3 py-1.5 rounded-full border transition-all ${
+                  transportFilter === t ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
+                }`}>
+                {t === '空运' ? '✈️' : t === '海运' ? '🚢' : t === '陆运' ? '🚛' : t === '快递' ? '📦' : t === '双清包税' ? '🌍' : '📋'} {t}
+                <span className="ml-1 text-slate-400">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* ── 列表 ── */}
       {loading ? (
