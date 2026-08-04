@@ -747,6 +747,10 @@ export default function DashboardPage() {
         {(isForwarder || isAdmin) && (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <BannerCard icon={Package} title={lang === 'en' ? '📊 Report Space' : '📊 上报舱位余量'}
+                subtitle={lang === 'en' ? 'Report today remaining space — peers find you first' : '每天报一次今日剩余，同行查库存时你排第一'}
+                badge={lang === 'en' ? 'Daily' : '每日必做'} color="green"
+                onClick={() => navigate('/admin/files?tab=entry')} />
               <BannerCard icon={MessageSquare} title={lang === 'en' ? 'Inquiries' : '询盘管理'} subtitle={lang === 'en' ? 'Manage trader inquiries' : '统一管理外贸询价'} badge="📋" color="indigo" onClick={() => navigate('/admin/inquiries')} />
               <BannerCard icon={Users} title={lang === 'en' ? 'Customers' : '客户关系'} subtitle={lang === 'en' ? 'Track relationships' : '收券/询价客户追踪'} badge="👥" color="teal" onClick={() => navigate('/admin/customer-relations')} />
               <BannerCard icon={FileUp} title={lang === 'en' ? 'My Posts' : '我的发布'} subtitle={lang === 'en' ? 'Published cargo spaces' : '查看已发布舱位记录'} badge="📦" color="sky" onClick={() => navigate('/admin/my-posts')} />

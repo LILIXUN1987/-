@@ -682,6 +682,17 @@ export default function CategoryQueryPanel({ showOnly, initialKeyword }: Categor
                           )}
                         </div>
                       </div>
+                      {/* 舱位余量标识 */}
+                      <div className="flex items-center gap-2 mt-1 mb-1">
+                        <span className="text-[10px] bg-green-50 text-green-700 border border-green-200 rounded-full px-2 py-0.5 font-medium">
+                          ✅ {item.created_at && new Date(item.created_at).toDateString() === new Date().toDateString()
+                            ? (item.notes?.match(/件数\d+件|(\d+)CBM|(\d+)KG/) ? '今日已报·有位' : '今日在线')
+                            : '在线'}
+                        </span>
+                        {item.created_at && new Date(item.created_at).toDateString() === new Date().toDateString() && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" title="今日上报" />
+                        )}
+                      </div>
                       <p className="text-xs text-gray-600 leading-relaxed">{item.notes}</p>
                       {/* 如果有舱位来源公司标记，高亮展示 */}
                       {item.notes && item.notes.includes('【来源：') && (

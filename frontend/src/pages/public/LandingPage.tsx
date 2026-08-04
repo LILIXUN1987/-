@@ -30,39 +30,38 @@ const ROLES: RoleIntro[] = [
   {
     key: 'forwarder',
     icon: '🚢',
-    titleZh: '货运代理',
-    titleEn: 'Freight Forwarder',
-    subtitleZh: '发布舱位、获取询价、管理客户关系',
-    subtitleEn: 'Post cargo spaces, get inquiries, manage client relations',
+    titleZh: '货运代理（庄家 / 一代 / 二代）',
+    titleEn: 'Freight Forwarder / Carrier',
+    subtitleZh: '上报每日剩余舱位，部署雷达锁定客户，同行来查库存时你排第一',
+    subtitleEn: 'Report daily remaining space, deploy radar to lock customers, rank #1 when peers search',
     color: 'from-blue-500 to-cyan-600',
     features: [
-      { zh: 'AI 智能解析：粘贴文字秒变结构化舱位数据，支持空运/海运/陆运/快递', en: 'AI parsing: Paste text → structured cargo data in seconds' },
-      { zh: '精准推送：用户搜索航线时自动匹配您的舱位，站内信+邮件双重通知', en: 'Auto-push: Matched to user searches, notified via inbox + email' },
-      { zh: '客户关系：查看谁看过您的推广、谁询过价，建立自己的客户网络', en: 'CRM: See who viewed your posts, who inquired, build your client network' },
-      { zh: '数据看板：浏览量、询价量、转化率一目了然，按航线维度分析效果', en: 'Dashboard: Views, inquiries, conversion rates by route' },
-      { zh: '报关券生态：订阅月费即可获赠报关券，赠送给外贸客户抵扣报关费，裂变拉新', en: 'Coupon ecosystem: Subscribe → get coupons → gift to traders to offset customs fees' },
-      { zh: '海外合作商：与海外 DDP 代理建立合作关系，积累信用分，拓展全球网络', en: 'Overseas partners: Cooperate with DDP agents, build credit score, expand globally' },
+      { zh: '📊 上报舱位余量：每天报一次今日剩余，同行一搜就能看到——你是在线庄家', en: '📊 Report remaining space: Update daily, peers find you instantly when they search' },
+      { zh: '📡 部署雷达：设置优势航线，有人搜索立即通知——拦截客户于竞争对手之前', en: '📡 Deploy radar: Set your routes, get notified the moment someone searches' },
+      { zh: '👥 反向匹配：输入港口代码，找到所有搜索过此航线的外贸用户——你是猎人不是猎物', en: '👥 Reverse match: Find traders searching your routes — you are the hunter now' },
+      { zh: '🔍 客户雷达：谁看过你的舱位、谁询过价，一目了然', en: '🔍 Customer radar: See who viewed and inquired — full visibility' },
+      { zh: '🎫 报关券裂变：订阅获券→赠送外贸客户→客户回来查舱位→形成闭环', en: '🎫 Coupon flywheel: Subscribe → gift to traders → they come back to search → closed loop' },
     ],
-    ctaZh: '注册货代账号 · 30天免费体验',
-    ctaEn: 'Register as Forwarder · 30-Day Free Trial',
+    ctaZh: '注册庄家账号 · 30天免费 · 今日上报舱位',
+    ctaEn: 'Register as Carrier · 30-Day Free · Report Space Today',
   },
   {
     key: 'trader',
     icon: '🌏',
-    titleZh: '外贸行业',
-    titleEn: 'Trader / Importer',
-    subtitleZh: '搜索全球舱位、接收报关券、免费询价',
-    subtitleEn: 'Search cargo spaces, receive coupons, inquire for free',
+    titleZh: '外贸行业（工厂 / 贸易公司）',
+    titleEn: 'Trader / Importer / Factory',
+    subtitleZh: '查哪个庄家有舱——JFK 还有没有位？一扫就知道，免费',
+    subtitleEn: 'Check which carrier has space — JFK still available? Scan to find out. Free.',
     color: 'from-emerald-500 to-teal-600',
     features: [
-      { zh: '免费查舱位：按航线、港口、航司搜索货代发布的实时舱位与特价', en: 'Free search: Search real-time cargo spaces by route, port, airline' },
-      { zh: '收报关券：货代赠送的报关券直接到您的券包，报关时抵扣费用', en: 'Receive coupons: Get customs coupons from forwarders, redeem for savings' },
-      { zh: '一键询价：填写货物信息即可向匹配的货代发起询价，对方站内信+邮件秒收', en: 'One-click inquiry: Submit cargo details, matching forwarders notified instantly' },
-      { zh: '避雷查询：搜索货代公司名即可查看是否有投诉记录', en: 'Company lookup: Search forwarder names to check complaint history' },
-      { zh: '社区律师：免费向注册律师咨询国际物流法律问题', en: 'Community lawyer: Free legal consultation on logistics disputes' },
+      { zh: '🔍 查舱位库存：JFK/LAX/FRA 哪个庄家有舱？输入代码秒查实时余量', en: '🔍 Check space inventory: Which carrier has JFK space? Scan to find out instantly' },
+      { zh: '🎫 收报关券：庄家赠送的报关券直接入账，报关时抵扣真金白银', en: '🎫 Get coupons: Carriers gift you coupons for customs savings — real money off' },
+      { zh: '📩 一键询价：填货量即可向多个庄家询价，让他们报着比', en: '📩 One-click inquiry: Submit cargo details, get quotes from multiple carriers to compare' },
+      { zh: '🛡️ 避雷查询：搜公司名查口碑，合作前先看看有没有被投诉过', en: '🛡️ Company lookup: Check complaint history before trusting a carrier' },
+      { zh: '⚖️ 免费法律咨询：向注册律师咨询国际物流纠纷问题', en: '⚖️ Free legal: Consult registered lawyers on logistics disputes' },
     ],
-    ctaZh: '注册外贸账号 · 永久免费',
-    ctaEn: 'Register as Trader · Free Forever',
+    ctaZh: '注册外贸账号 · 永久免费 · 立即查舱',
+    ctaEn: 'Register as Trader · Free Forever · Search Now',
   },
   {
     key: 'overseas_agent',
@@ -202,7 +201,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-2.5">
             <img src="/logo.svg" alt="Logo" className="w-9 h-9 rounded-xl" />
             <span className="text-lg font-bold text-gray-900 tracking-tight">
-              {t('123共享外贸物流社区', '123 Cargo Community')}
+              {t('123查舱位——全球舱位实时库存', '123 Cargo Radar — Live Space Inventory')}
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -242,19 +241,19 @@ export default function LandingPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100/80 text-blue-700 text-sm font-medium mb-6">
             <Zap className="w-4 h-4" />
-            {t('国际物流行业首个全角色社区平台', 'The first all-role community platform for international logistics')}
+            {t('货代 · 庄家 · 一代 · 二代 · 外贸——全在一个平台', 'Forwarders · Traders · Agents — All on One Platform')}
           </div>
           <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight leading-tight mb-6">
-            {t('外贸物流', 'Global Trade Logistics')}
+            {t('查全球舱位', 'Check Global Cargo')}
             <br />
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              {t('一站式协作社区', 'All-in-One Collaboration Hub')}
+              {t('实时库存——哪个庄家有舱，一扫就知道', 'Live Inventory — Find Who Has Space Instantly')}
             </span>
           </h1>
           <p className="max-w-2xl mx-auto text-lg text-gray-500 leading-relaxed mb-10">
             {t(
-              '货代发布舱位、外贸查询运价、海外代理对接DDP、报关行投放优惠券、律师免费咨询——八个角色在一个平台内互通协作，让国际物流更高效、更透明。',
-              'Forwarders post cargo, traders search rates, overseas agents offer DDP, brokers contribute coupons, lawyers consult — 8 roles collaborating on one platform for more efficient and transparent global logistics.'
+              '庄家每天上报剩余舱位，同行实时查库存找舱。你不是在看广告——你是在看哪个庄家现在有舱位。JFK 还有没有位？一扫就知道。',
+              'Carriers report daily remaining space. Forwarders check live inventory. Not browsing ads — checking who has space RIGHT NOW. JFK still available? Scan to find out.'
             )}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
