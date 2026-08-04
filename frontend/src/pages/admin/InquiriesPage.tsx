@@ -125,6 +125,28 @@ export default function InquiriesPage() {
   const [transportFilter, setTransportFilter] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [batchBusy, setBatchBusy] = useState(false);
+
+  const toggleSelect = (id: string) => {
+    setSelected(prev => { const next = new Set(prev); next.has(id) ? next.delete(id) : next.add(id); return next; });
+  };
+  const toggleAll = () => {
+    if (selected.size === filtered.length) setSelected(new Set());
+    else setSelected(new Set(filtered.map(i => i.id)));
+  };
+  const batchIgnore = () => {
+    selected.forEach(id => ignoreInquiry(id));
+    setIgnoredIds(getIgnored());
+    setSelected(new Set());
+    toast.success(lang === 'en' ? `Ignored ${selected.size} items` : `已忽略 ${selected.size} 条`);
+  };
+  const batchMarkRead = async () => {
+    setBatchBusy(true);
+    try { await client.put('/messages/read-all'); toast.success(lang === 'en' ? 'Marked as read' : '已标记为已读'); fetch(); setSelected(new Set()); }
+    catch { toast.error(lang === 'en' ? 'Failed' : '操作失败'); }
+    setBatchBusy(false);
+  };
 
   // 运输类型检测 + 统计
   function detectTransport(content: string): string {
@@ -218,6 +240,25 @@ export default function InquiriesPage() {
         </span>
       </div>
 
+      {/* ── 批量操作栏 ── */}
+      {selected.size > 0 && (
+        <div className="sticky top-0 z-20 bg-indigo-50 border-2 border-indigo-300 rounded-xl px-4 py-3 mb-4 flex items-center gap-3 shadow-lg">
+          <span className="text-sm font-bold text-indigo-800">
+            {lang === 'en' ? `${selected.size} selected` : `已选 ${selected.size} 条`}
+          </span>
+          <button onClick={batchIgnore} className="text-xs font-bold text-slate-600 bg-white hover:bg-slate-50 rounded-lg px-3 py-2 border border-slate-200 transition-colors">
+            {lang === 'en' ? '🗑 Batch Ignore' : '🗑 批量忽略'}
+          </button>
+          <button onClick={batchMarkRead} disabled={batchBusy} className="text-xs font-bold text-indigo-700 bg-white hover:bg-indigo-50 rounded-lg px-3 py-2 border border-indigo-200 transition-colors">
+            {batchBusy ? <Loader2 className="w-3 h-3 animate-spin inline mr-1" /> : null}
+            {lang === 'en' ? '✓ Mark All Read' : '✓ 全部标记已读'}
+          </button>
+          <button onClick={() => setSelected(new Set())} className="text-xs text-slate-400 hover:text-slate-600 ml-auto">
+            {lang === 'en' ? 'Cancel' : '取消选择'}
+          </button>
+        </div>
+      )}
+
       {/* ── 列表 ── */}
       {loading ? (
         <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-slate-300" /></div>
@@ -231,17 +272,25 @@ export default function InquiriesPage() {
         </div>
       ) : (
         <div className="space-y-3">
+          {/* 全选 */}
+          <label className="flex items-center gap-2 px-1 cursor-pointer text-xs text-slate-500 hover:text-slate-700">
+            <input type="checkbox" checked={selected.size === filtered.length && filtered.length > 0} onChange={toggleAll} className="w-4 h-4 rounded accent-indigo-500" />
+            {lang === 'en' ? 'Select all' : '全选'} ({filtered.length})
+          </label>
           {filtered.map((item) => {
             const cargo = parseInquiryContent(item.content || '');
             const hasReply = item.hasReply;
             return (
-              <div key={item.id} className={`relative bg-white rounded-xl border p-4 transition-all hover:shadow-md ${
+              <div key={item.id} className={`relative bg-white rounded-xl border transition-all hover:shadow-md ${
                 hasReply ? 'border-slate-100' : 'border-red-200 shadow-sm shadow-red-50'
               }`}>
                 {/* 左侧状态条 */}
                 <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-xl ${hasReply ? 'bg-slate-200' : 'bg-red-500'}`} />
 
-                <div className="pl-3">
+                <div className="flex items-start gap-3 p-4">
+                  <input type="checkbox" checked={selected.has(item.id)} onChange={() => toggleSelect(item.id)}
+                    className="w-4 h-4 rounded accent-indigo-500 mt-1 flex-shrink-0" />
+                  <div className="flex-1 min-w-0 pl-0">
                   {/* 头部：状态 + 发送方 */}
                   <div className="flex items-center justify-between gap-2 mb-2">
                     <div className="flex items-center gap-2 min-w-0">
@@ -323,6 +372,7 @@ export default function InquiriesPage() {
                     </a>
                     <Star className="w-3.5 h-3.5 text-slate-300 hover:text-amber-400 cursor-pointer transition-colors" />
                   </div>
+                </div>
                 </div>
               </div>
             );
