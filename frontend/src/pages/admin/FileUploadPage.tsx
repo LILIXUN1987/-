@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import TextCargoInput from '../../components/admin/TextCargoInput';
 import { cargoApi } from '../../api/cargo.api';
@@ -24,6 +25,7 @@ type TabKey = 'overview' | 'entry' | 'query' | 'quote';
 
 export default function FileUploadPage() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const lang = useAuthStore((s) => s.lang);
   const rc = getRoleChecks(user?.role);
@@ -49,6 +51,7 @@ export default function FileUploadPage() {
   const handleTabChange = (tab: TabKey) => {
     setActiveTab(tab);
     setShowTabHint(false);
+    navigate(`/admin/files?tab=${tab}`, { replace: true });
   };
 
   const { data: stats } = useQuery({
