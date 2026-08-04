@@ -133,38 +133,41 @@ export default function CustomerFinderPage() {
             {lang === 'en' ? 'Get priority alerts when someone searches your subscribed ports' : '订阅你的优势港口——有人搜索时优先推送'}
           </span>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          {subscribedPorts.length > 0 && (
-            <div className="flex flex-wrap gap-2 flex-1 min-w-0">
-              {subscribedPorts.map(p => (
-                <span key={p} className="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 rounded-full px-3 py-1.5 text-xs font-bold text-amber-800">
-                  📡 {p}
-                  <button onClick={() => unsubscribe(p)} disabled={subLoading} className="text-amber-400 hover:text-red-500 transition-colors ml-0.5">✕</button>
-                </span>
-              ))}
-            </div>
-          )}
-          <div className="flex items-center gap-2">
-            <input
-              className="w-24 px-3 py-1.5 text-sm font-bold border-2 border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 bg-amber-50 placeholder:text-amber-300 uppercase"
-              placeholder="JFK"
-              maxLength={3}
-              value={subPort}
-              onChange={e => setSubPort(e.target.value.toUpperCase())}
-              onKeyDown={e => { if (e.key === 'Enter' && subPort.length === 3) { subscribe(subPort); setSubPort(''); } }}
-            />
-            <button
-              onClick={() => { subscribe(subPort); setSubPort(''); }}
-              disabled={subLoading || subPort.length < 3}
-              className="text-xs font-bold bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition-colors flex-shrink-0">
-              {subLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
-              {lang === 'en' ? 'Subscribe' : '订阅'}
-            </button>
-          </div>
+        {/* 全球主要枢纽港口——一键订阅 */}
+        <div className="flex flex-wrap gap-1.5 mb-2">
+          {['JFK','LAX','ORD','MIA','ATL','LHR','FRA','AMS','CDG','MAD','DXB','SIN','HKG','NRT','ICN','SYD','GRU','JNB'].map(p => {
+            const isSubbed = subscribedPorts.includes(p);
+            return (
+              <button key={p} onClick={() => isSubbed ? unsubscribe(p) : subscribe(p)} disabled={subLoading}
+                className={`text-xs font-bold px-2.5 py-1.5 rounded-full border transition-all ${
+                  isSubbed
+                    ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
+                    : 'bg-white border-slate-200 text-slate-500 hover:border-amber-300 hover:text-amber-700'
+                }`}>
+                {isSubbed ? '📡' : '＋'} {p}
+              </button>
+            );
+          })}
         </div>
-        {subscribedPorts.length === 0 && !subPort && (
-          <p className="text-xs text-slate-400 mt-2">{lang === 'en' ? 'No ports subscribed yet. Enter a port code above to subscribe.' : '尚未订阅港口。在上方输入三字码订阅——有人搜索时优先推送给你。'}</p>
-        )}
+
+        {/* 自定义输入 */}
+        <div className="flex items-center gap-2">
+          <input
+            className="w-28 px-3 py-1.5 text-sm font-bold border-2 border-dashed border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 bg-white placeholder:text-amber-300 uppercase"
+            placeholder={lang === 'en' ? 'Other port...' : '其他港口...'}
+            maxLength={3}
+            value={subPort}
+            onChange={e => setSubPort(e.target.value.toUpperCase())}
+            onKeyDown={e => { if (e.key === 'Enter' && subPort.length === 3) { subscribe(subPort); setSubPort(''); } }}
+          />
+          <button
+            onClick={() => { subscribe(subPort); setSubPort(''); }}
+            disabled={subLoading || subPort.length < 3 || subscribedPorts.length >= 10}
+            className="text-xs font-bold bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-white px-4 py-1.5 rounded-lg transition-colors">
+            ＋ {lang === 'en' ? 'Add' : '添加'}
+          </button>
+          <span className="text-[10px] text-slate-400">{subscribedPorts.length}/10</span>
+        </div>
       </div>
 
       {/* ── 搜索区 ── */}
