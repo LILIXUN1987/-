@@ -832,16 +832,16 @@ export const messagesController = {
           .count('* as total')
           .first();
 
-        // 其他代理回复情况：这个发件人最近7天发了多少询价，有多少代理已回复
-        const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+        // 其他代理回复情况：按公司去重，只显示不同的代理，不重复显示聊天记录
         const otherReplies = await db('messages')
           .join('users', 'messages.sender_id', 'users.id')
-          .where('messages.receiver_id', msg.sender_id)  // 发件人收到的回复
+          .where('messages.receiver_id', msg.sender_id)
           .where('messages.created_at', '>', msg.created_at)
-          .whereNot('messages.sender_id', userId)  // 排除当前用户自己的回复
+          .whereNot('messages.sender_id', userId)
           .where('users.role', 'forwarder')
-          .select('users.company_name', 'users.display_name', 'messages.created_at')
-          .orderBy('messages.created_at', 'desc')
+          .select('users.company_name', 'users.display_name', db.raw('MAX(messages.created_at) as created_at'))
+          .groupBy('messages.sender_id')
+          .orderBy('created_at', 'desc')
           .limit(5) as any[];
 
         // 这个发件人最近7天联系了多少代理
