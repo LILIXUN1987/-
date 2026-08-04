@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import client from '../../api/client';
-import { Search, Loader2, Users, MapPin, MessageSquare, Clock, TrendingUp, Target, Shield, Zap, Award } from 'lucide-react';
+import { Search, Loader2, Users, MapPin, MessageSquare, Clock, TrendingUp, Target, Shield, Zap, Award, Globe } from 'lucide-react';
 
 interface Searcher {
   user_id: string;
@@ -248,18 +248,60 @@ export default function CustomerFinderPage() {
         </div>
       )}
 
-      {/* ── 底部认证入口（长期战略） ── */}
-      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border-2 border-amber-200 p-4 text-center">
-        <p className="text-sm font-bold text-amber-800">
-          {lang === 'en'
-            ? '🌍 Are you an overseas agent? Join JC TRANS / WCA certification to be discovered by radar!'
-            : '🌍 你是海外代理？加入 JC TRANS / WCA 认证，让雷达发现你！'}
-        </p>
-        <p className="text-xs text-amber-600 mt-1">
-          {lang === 'en'
-            ? 'Certified agents appear first in radar results — more inquiries, more deals.'
-            : '认证代理在雷达结果中优先展示——更多询价，更多订单。'}
-        </p>
+      {/* ── 认证联盟入口 ── */}
+      <div>
+        <h3 className="text-sm font-bold text-slate-700 mb-3">
+          {lang === 'en' ? '🏅 Join Certification Network — Get Discovered by Radar' : '🏅 加入认证联盟——让雷达优先发现你'}
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* WCA */}
+          <a href="/admin/profile" className="group bg-white rounded-xl border-2 border-amber-200 p-5 hover:border-amber-400 hover:shadow-lg hover:shadow-amber-100 transition-all text-left">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform">
+              <Award className="w-5 h-5 text-white" />
+            </div>
+            <h4 className="text-sm font-black text-slate-900">WCA</h4>
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              {lang === 'en'
+                ? 'World Cargo Alliance — global network of vetted forwarders. Certified members rank first in radar.'
+                : '世界货运联盟——全球认证货代网络。认证会员在雷达中优先展示，获得更多曝光。'}
+            </p>
+            <span className="inline-block mt-3 text-xs font-bold text-amber-600 group-hover:text-amber-700">
+              {lang === 'en' ? 'Apply Certification →' : '申请认证 →'}
+            </span>
+          </a>
+
+          {/* JC TRANS */}
+          <a href="/admin/profile" className="group bg-white rounded-xl border-2 border-indigo-200 p-5 hover:border-indigo-400 hover:shadow-lg hover:shadow-indigo-100 transition-all text-left">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform">
+              <Shield className="w-5 h-5 text-white" />
+            </div>
+            <h4 className="text-sm font-black text-slate-900">JC TRANS</h4>
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              {lang === 'en'
+                ? 'China\'s largest forwarding network — connect with thousands of verified Chinese forwarders & traders.'
+                : '中国最大货代联盟——对接数千家认证中国货代和外贸企业，雷达数据互通。'}
+            </p>
+            <span className="inline-block mt-3 text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
+              {lang === 'en' ? 'Apply Certification →' : '申请认证 →'}
+            </span>
+          </a>
+
+          {/* OTHER Network */}
+          <a href="/admin/profile" className="group bg-white rounded-xl border-2 border-emerald-200 p-5 hover:border-emerald-400 hover:shadow-lg hover:shadow-emerald-100 transition-all text-left">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform">
+              <Globe className="w-5 h-5 text-white" />
+            </div>
+            <h4 className="text-sm font-black text-slate-900">{lang === 'en' ? 'Other Network' : '其他联盟'}</h4>
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              {lang === 'en'
+                ? 'FIATA, IATA, WCA, JC Trans or your local forwarder network — all welcome. Get certified and get discovered.'
+                : 'FIATA、IATA、WCA、JC TRANS 或你的本地货代联盟——全部欢迎。认证后雷达优先展示。'}
+            </p>
+            <span className="inline-block mt-3 text-xs font-bold text-emerald-600 group-hover:text-emerald-700">
+              {lang === 'en' ? 'Apply Certification →' : '申请认证 →'}
+            </span>
+          </a>
+        </div>
       </div>
     </div>
   );
