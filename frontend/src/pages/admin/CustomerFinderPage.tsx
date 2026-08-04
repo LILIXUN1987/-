@@ -150,6 +150,18 @@ export default function CustomerFinderPage() {
           })}
         </div>
 
+        {/* 自定义已订阅港口 */}
+        {subscribedPorts.filter(p => !['JFK','LAX','ORD','MIA','ATL','LHR','FRA','AMS','CDG','MAD','DXB','SIN','HKG','NRT','ICN','SYD','GRU','JNB'].includes(p)).length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            {subscribedPorts.filter(p => !['JFK','LAX','ORD','MIA','ATL','LHR','FRA','AMS','CDG','MAD','DXB','SIN','HKG','NRT','ICN','SYD','GRU','JNB'].includes(p)).map(p => (
+              <span key={p} className="inline-flex items-center gap-1 bg-amber-500 text-white rounded-full px-2.5 py-1 text-xs font-bold">
+                {p}
+                <button onClick={() => unsubscribe(p)} disabled={subLoading} className="text-amber-200 hover:text-white ml-0.5">✕</button>
+              </span>
+            ))}
+          </div>
+        )}
+
         {/* 自定义输入 */}
         <div className="flex items-center gap-2">
           <input
