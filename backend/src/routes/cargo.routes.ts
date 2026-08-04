@@ -124,7 +124,26 @@ router.get('/public-search', async (req, res) => {
       .orderBy('created_at', 'desc')
       .limit(10) as any[];
     const searcherCount = activities.length;
-    // 查是否有认证用户搜索过
+
+    // 订阅该港口的人数
+    const subCount = await db('users')
+      .where('subscribed_ports', 'like', `%${q}%`)
+      .where('status', 'approved')
+      .count('* as total')
+      .first() as any;
+
+    // 该港口近期有多少代理通过站内信联系了货主
+    const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+    const contactCount = await db('messages')
+      .where('created_at', '>=', weekAgo)
+      .where(function() {
+        this.where('content', 'like', `%${q}%`);
+      })
+      .whereNot('sender_id', null)
+      .count('* as total')
+      .first() as any;
+
+    // 是否有认证用户搜索过
     const certifiedSearch = activities.some((a: any) => a.user_id);
 
     res.json({
@@ -132,6 +151,8 @@ router.get('/public-search', async (req, res) => {
       total: data.length,
       activity: {
         recentSearches: searcherCount,
+        subscriberCount: Number((subCount as any)?.total || 0),
+        agentContacts: Number((contactCount as any)?.total || 0),
         hasCertifiedSearcher: certifiedSearch,
         sampleActivities: activities.slice(0, 3).map((a: any) => ({
           keyword: a.keyword?.substring(0, 30),

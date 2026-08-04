@@ -154,7 +154,9 @@ export default function SearchPage() {
               {total > 0 && (
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-slate-400 hidden sm:inline">
-                    🔔 已有 {(Math.floor(Math.random() * 300) + 100)} 人订阅 {query} 港口
+                    {activity?.subscriberCount > 0
+                      ? `🔔 已有 ${activity.subscriberCount} 人订阅 ${query} 港口`
+                      : `🔔 订阅 ${query} 港口，新舱位秒通知`}
                   </span>
                 </div>
               )}
@@ -233,7 +235,7 @@ export default function SearchPage() {
                 </div>
                 {/* 社交证明 */}
                 <p className="text-xs text-blue-200 mb-4">
-                  🔴 {query.toUpperCase()} 航线近24h被搜索 {activity?.recentSearches || '多'} 次——注册后即可联系所有发布舱位的货代
+                  🔴 {query.toUpperCase()} 航线近24h被搜索 {activity?.recentSearches || 0} 次{activity?.agentContacts > 0 ? ` · 近7天已有 ${activity.agentContacts} 次代理联系庄家` : ''}——注册后即可查看并联系
                 </p>
                 <button onClick={handleRegister}
                   className="px-8 py-3 bg-gradient-to-r from-blue-400 to-cyan-400 hover:from-blue-300 hover:to-cyan-300 text-blue-900 font-black text-base rounded-xl transition-all shadow-lg shadow-blue-500/30">
