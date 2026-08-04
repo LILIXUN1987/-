@@ -39,6 +39,8 @@ export default function ProfilePage() {
   const phoneRef = useRef<HTMLInputElement>(null);
   const jcRef = useRef<HTMLInputElement>(null);
   const wcaRef = useRef<HTMLInputElement>(null);
+  const allianceNameRef = useRef<HTMLSelectElement>(null);
+  const allianceIdRef = useRef<HTMLInputElement>(null);
   const bioRef = useRef<HTMLTextAreaElement>(null);
   const companyRef = useRef<HTMLInputElement>(null);
   const [displayName, setDisplayName] = useState(user?.display_name || '');
@@ -163,6 +165,8 @@ export default function ProfilePage() {
       fd.append('phone', phoneRef.current?.value || '');
       fd.append('jc_trans_id', jcRef.current?.value || '');
       fd.append('wca_id', wcaRef.current?.value || '');
+      fd.append('alliance_name', allianceNameRef.current?.value || '');
+      fd.append('alliance_id', allianceIdRef.current?.value || '');
       fd.append('bio', bioRef.current?.value || '');
 
       const newCompany = companyRef.current?.value || '';
@@ -346,6 +350,41 @@ export default function ProfilePage() {
               <textarea className="input-field w-full min-h-[100px] text-sm resize-none" placeholder={t(ProfileT.lawyerBioPlaceholder, lang)} ref={bioRef} defaultValue={user?.bio || ''} />
             </div>
           )}
+
+          {/* ── 联盟认证会员号 ── */}
+          <div className="border-t border-gray-100 pt-4 mt-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Award className="w-4 h-4 text-amber-500" />
+              <h3 className="text-sm font-medium text-gray-700">{lang === 'en' ? 'Alliance Membership' : '联盟认证会员号'}</h3>
+            </div>
+            <p className="text-xs text-gray-400 mb-3">
+              {lang === 'en'
+                ? 'Enter your WCA / JC TRANS / FIATA / IATA or other network membership ID to get verified and rank higher in radar results.'
+                : '填写你的 WCA / JC TRANS / FIATA / IATA 或其他货代联盟的会员号，认证后在雷达中优先展示。'}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs font-medium text-gray-500 mb-1 block">
+                  {lang === 'en' ? 'Alliance / Network Name' : '联盟名称'}
+                </label>
+                <select className="input-field text-sm w-full" ref={allianceNameRef} defaultValue={user?.alliance_name || ''}>
+                  <option value="">{lang === 'en' ? '-- Select --' : '-- 请选择 --'}</option>
+                  <option value="WCA">WCA (World Cargo Alliance)</option>
+                  <option value="JC_TRANS">JC TRANS (锦程物流网)</option>
+                  <option value="FIATA">FIATA</option>
+                  <option value="IATA">IATA</option>
+                  <option value="WCA_DG">WCA Dangerous Goods</option>
+                  <option value="OTHER">{lang === 'en' ? 'Other Network' : '其他联盟'}</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-500 mb-1 block">
+                  {lang === 'en' ? 'Membership ID / Number' : '会员号'}
+                </label>
+                <input className="input-field text-sm w-full" ref={allianceIdRef} placeholder={lang === 'en' ? 'e.g. WCA-12345' : '如：WCA-12345'} defaultValue={user?.alliance_id || ''} />
+              </div>
+            </div>
+          </div>
 
           {/* 企业认证（仅货代） */}
           {user?.role === 'forwarder' && (

@@ -58,6 +58,8 @@ export interface UserPublic {
   email_verified?: number;
   jc_trans_id?: string;
   wca_id?: string;
+  alliance_name?: string;
+  alliance_id?: string;
   trial_end?: string;
   referral_code?: string;
   role?: UserRole;
