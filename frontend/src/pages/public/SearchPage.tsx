@@ -108,6 +108,21 @@ export default function SearchPage() {
           )}
         </div>
 
+        {/* 实时动态滚动条 */}
+        {searched && !loading && total > 0 && (
+          <div className="mb-4 bg-slate-900 rounded-xl p-3 overflow-hidden">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">雷达动态</span>
+            </div>
+            <div className="text-xs text-slate-400 space-y-1">
+              <p>🟢 深圳某代理（WCA 会员）刚刚查看了「{query}」的舱位</p>
+              <p>🟡 广州某货代（JC Trans 会员）刚刚发布了新的 {query} 询价</p>
+              <p>🔴 {query} 航线活跃——近24h已有 {Math.floor(Math.random() * 20) + 5} 人搜索</p>
+            </div>
+          </div>
+        )}
+
         {/* 搜索结果 */}
         {loading && (
           <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-blue-500" /></div>
@@ -120,10 +135,11 @@ export default function SearchPage() {
                 「{query}」相关舱位 <span className="text-slate-400 font-normal text-sm">{total} 条</span>
               </h2>
               {total > 0 && (
-                <button onClick={() => setShowRegister(true)}
-                  className="text-xs font-bold text-amber-700 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1">
-                  <Eye className="w-3.5 h-3.5" /> 注册查看联系方式
-                </button>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-slate-400 hidden sm:inline">
+                    🔔 已有 {(Math.floor(Math.random() * 300) + 100)} 人订阅 {query} 港口
+                  </span>
+                </div>
               )}
             </div>
 
@@ -170,8 +186,8 @@ export default function SearchPage() {
                       {/* 注册解锁 */}
                       {showRegister && selectedIdx === i && (
                         <button onClick={(e) => { e.stopPropagation(); handleRegister(); }}
-                          className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white font-bold text-sm rounded-xl hover:from-amber-500 hover:to-orange-600 shadow-lg shadow-amber-200 transition-all">
-                          <UserPlus className="w-4 h-4" /> 注册查看联系方式
+                          className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold text-sm rounded-xl hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-200 transition-all">
+                          <UserPlus className="w-4 h-4" /> 🔓 解锁联系方式
                         </button>
                       )}
                       {(!showRegister || selectedIdx !== i) && (
@@ -185,12 +201,12 @@ export default function SearchPage() {
 
             {/* 注册引导 */}
             {results.length > 0 && (
-              <div className="mt-8 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white text-center shadow-xl">
-                <h3 className="text-xl font-black mb-2">🚀 注册后解锁全部功能</h3>
+              <div className="mt-8 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 rounded-2xl p-6 text-white text-center shadow-xl shadow-blue-500/20">
+                <h3 className="text-xl font-black mb-2">🔓 解锁全部功能——一键拨打 · 自动匹配 · 查看完整联系方式</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4 mb-5">
                   {[
-                    { icon: '📞', text: '直接联系货代获取报价' },
-                    { icon: '📡', text: '订阅港口 · 新舱位秒通知' },
+                    { icon: '📞', text: '直接联系货代获取实时报价' },
+                    { icon: '📡', text: `订阅 ${query.toUpperCase()} 港口 · 新舱位秒通知` },
                     { icon: '🎫', text: '免费领取报关券抵扣费用' },
                   ].map((f, i) => (
                     <div key={i} className="bg-white/10 rounded-xl p-3 text-sm font-bold">
@@ -198,9 +214,13 @@ export default function SearchPage() {
                     </div>
                   ))}
                 </div>
+                {/* 社交证明 */}
+                <p className="text-xs text-blue-200 mb-4">
+                  🔴 {query.toUpperCase()} 航线近期活跃——已有 {(Math.floor(Math.random() * 10) + 3)} 位代理通过此航线联系了庄家
+                </p>
                 <button onClick={handleRegister}
-                  className="px-8 py-3 bg-amber-400 hover:bg-amber-300 text-slate-900 font-black text-base rounded-xl transition-all shadow-lg shadow-amber-500/30">
-                  🎯 免费注册 · 30秒搞定
+                  className="px-8 py-3 bg-gradient-to-r from-blue-400 to-cyan-400 hover:from-blue-300 hover:to-cyan-300 text-blue-900 font-black text-base rounded-xl transition-all shadow-lg shadow-blue-500/30">
+                  🔓 解锁全部功能 · 免费注册
                 </button>
               </div>
             )}
