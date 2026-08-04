@@ -116,7 +116,29 @@ router.get('/public-search', async (req, res) => {
       is_newbie: !!r.is_newbie,
     }));
 
-    res.json({ data, total: data.length });
+    // 近24h该港口搜索动态
+    const yesterday = new Date(Date.now() - 86400000).toISOString();
+    const activities = await db('search_logs')
+      .where('keyword', 'like', `%${q}%`)
+      .where('created_at', '>=', yesterday)
+      .orderBy('created_at', 'desc')
+      .limit(10) as any[];
+    const searcherCount = activities.length;
+    // 查是否有认证用户搜索过
+    const certifiedSearch = activities.some((a: any) => a.user_id);
+
+    res.json({
+      data,
+      total: data.length,
+      activity: {
+        recentSearches: searcherCount,
+        hasCertifiedSearcher: certifiedSearch,
+        sampleActivities: activities.slice(0, 3).map((a: any) => ({
+          keyword: a.keyword?.substring(0, 30),
+          time: a.created_at,
+        })),
+      },
+    });
   } catch (err: any) { res.status(500).json({ error: err.message }); }
 });
 

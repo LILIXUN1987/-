@@ -25,6 +25,7 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<CargoItem[]>([]);
   const [total, setTotal] = useState(0);
+  const [activity, setActivity] = useState<any>(null);
   const [showRegister, setShowRegister] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -44,6 +45,7 @@ export default function SearchPage() {
       const res = await client.get('/cargo-spaces/public-search', { params: { q: kw } });
       setResults(res.data.data || []);
       setTotal(res.data.total || 0);
+      setActivity(res.data.activity || null);
       // 更新URL
       const url = new URL(window.location.href);
       url.searchParams.set('q', kw);
@@ -109,16 +111,31 @@ export default function SearchPage() {
         </div>
 
         {/* 实时动态滚动条 */}
-        {searched && !loading && total > 0 && (
+        {searched && !loading && activity && (
           <div className="mb-4 bg-slate-900 rounded-xl p-3 overflow-hidden">
             <div className="flex items-center gap-2 mb-2">
               <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">雷达动态</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">雷达动态 · 实时数据</span>
             </div>
             <div className="text-xs text-slate-400 space-y-1">
-              <p>🟢 深圳某代理（WCA 会员）刚刚查看了「{query}」的舱位</p>
-              <p>🟡 广州某货代（JC Trans 会员）刚刚发布了新的 {query} 询价</p>
-              <p>🔴 {query} 航线活跃——近24h已有 {Math.floor(Math.random() * 20) + 5} 人搜索</p>
+              {activity.recentSearches > 0 ? (
+                <>
+                  <p>🔴 「{query}」近24h被搜索 <span className="text-white font-bold">{activity.recentSearches} 次</span>——航线活跃</p>
+                  {activity.sampleActivities?.map((a: any, i: number) => (
+                    <p key={i} className="text-slate-500">
+                      🕐 {new Date(a.time).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })} 有人搜索「{a.keyword}」
+                    </p>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <p>🟢 近24h暂无搜索记录——抢先发布舱位，成为第一个被找到的货代</p>
+                  <p>🟡 发布舱位后，搜索此港口的用户会第一时间看到你</p>
+                </>
+              )}
+              {activity.hasCertifiedSearcher && (
+                <p className="text-amber-400">⭐ 其中有认证会员搜索——质量更高</p>
+              )}
             </div>
           </div>
         )}
@@ -216,7 +233,7 @@ export default function SearchPage() {
                 </div>
                 {/* 社交证明 */}
                 <p className="text-xs text-blue-200 mb-4">
-                  🔴 {query.toUpperCase()} 航线近期活跃——已有 {(Math.floor(Math.random() * 10) + 3)} 位代理通过此航线联系了庄家
+                  🔴 {query.toUpperCase()} 航线近24h被搜索 {activity?.recentSearches || '多'} 次——注册后即可联系所有发布舱位的货代
                 </p>
                 <button onClick={handleRegister}
                   className="px-8 py-3 bg-gradient-to-r from-blue-400 to-cyan-400 hover:from-blue-300 hover:to-cyan-300 text-blue-900 font-black text-base rounded-xl transition-all shadow-lg shadow-blue-500/30">
