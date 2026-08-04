@@ -6,7 +6,7 @@ import { getRoleChecks } from '../../types';
 import {
   CheckCircle, MapPin, Users, Plane, Ship, Truck, Package,
   Search, Zap, Sparkles, Loader2, Globe, Shield, BarChart3,
-  ArrowRight, Compass, TrendingUp,
+  ArrowRight, Compass, TrendingUp, Award,
 } from 'lucide-react';
 import CategoryQueryPanel from '../../components/admin/CategoryQueryPanel';
 import TraderGuide from '../../components/admin/TraderGuide';
@@ -192,53 +192,74 @@ export default function FileUploadPage() {
       )}
 
       {/* ════════════════════════════════════════ */}
-      {/* 📡 部署雷达——收集情报 */}
+      {/* 📡 部署雷达——商业情报控制台 */}
       {/* ════════════════════════════════════════ */}
       {activeTab === 'entry' && (
         <>
-          {/* 情报提示 */}
-          <div className="bg-gradient-to-r from-slate-800 to-indigo-900 text-white rounded-xl px-5 py-4 shadow-md mb-4">
-            <div className="flex items-start gap-3">
-              <span className="text-xl leading-none mt-0.5">📡</span>
-              <div>
-                <p className="text-sm font-bold">设置您的优势航线，系统将为您锁定目标客户——有人在搜您的航线，第一时间通知您。</p>
+          {/* ── 顶部 KPI 驾驶舱 ── */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 mb-5">
+            <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-sm shadow-indigo-200">
+                  <span className="text-xl">📡</span>
+                </div>
+                <div>
+                  <h2 className="text-lg font-black text-slate-900">
+                    {lang === 'en' ? 'Intelligence Console' : '商业情报控制台'}
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    {lang === 'en' ? 'Deploy your cargo to the radar network — JC TRANS & WCA certified' : '部署舱位到雷达网络——已接入 JC TRANS 和 WCA 认证联盟'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold bg-amber-100 text-amber-700 px-3 py-1.5 rounded-full border border-amber-300 flex items-center gap-1">
+                  <Shield className="w-3.5 h-3.5" />JC TRANS
+                </span>
+                <span className="text-xs font-bold bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-300 flex items-center gap-1">
+                  <Award className="w-3.5 h-3.5" />WCA
+                </span>
               </div>
             </div>
-          </div>
-
-          {/* ═══ 逻辑闭环图 ═══ */}
-          <LoopGraph />
-
-          {/* 实时动态（体验期模块下方） */}
-          <div className="mb-6">
-            <ActivityFeed />
+            {/* KPI 卡片 */}
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { v: '378', l: lang === 'en' ? 'Potential Customers' : '全网潜在客户', s: '↑ 12%', c: 'text-indigo-600' },
+                { v: '39', l: lang === 'en' ? 'Hot Leads Today' : '今日高意向询盘', s: '↑ 5%', c: 'text-emerald-600' },
+                { v: '23', l: lang === 'en' ? 'JC/WCA Certified' : '联盟认证货主', s: '🤝', c: 'text-amber-600' },
+              ].map((k, i) => (
+                <div key={i} className="bg-slate-50 rounded-xl p-3 text-center">
+                  <div className={`text-xl font-black ${k.c}`}>{k.v}</div>
+                  <div className="text-[11px] text-slate-500 mt-0.5">{k.l}</div>
+                  <div className="text-[10px] text-slate-400">{k.s}</div>
+                </div>
+              ))}
+            </div>
           </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* 左侧：录入区域 */}
           <div className="lg:col-span-2 space-y-4">
-            {/* 录入卡片 */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-b border-amber-100 px-5 py-3">
+            {/* AI 智能录入卡片 */}
+            <div className="bg-white rounded-2xl border-2 border-indigo-200 shadow-lg shadow-indigo-50 overflow-hidden">
+              <div className="bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-600 px-5 py-3.5 text-white">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-amber-500" />
-                  <h2 className="font-bold text-gray-900">📡 情报录入</h2>
-                  <span className="text-xs text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full font-medium">AI解析</span>
+                  <Sparkles className="w-5 h-5" />
+                  <h2 className="font-black text-base">{lang === 'en' ? '📡 AI Intelligence Input' : '📡 AI 情报录入'}</h2>
+                  <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-bold">JC TRANS · WCA</span>
                 </div>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  输入舱位信息，AI自动解析并进入雷达监控——有人搜索立即通知你
+                <p className="text-xs text-indigo-100 mt-1">
+                  {lang === 'en'
+                    ? 'JC TRANS member: your cargo will be prioritized to WCA overseas agents. Paste email/screenshot — AI auto-parses.'
+                    : '检测到您是 JC TRANS 联盟会员——录入的舱位将优先推送给 WCA 网络内的海外代理。粘贴邮件/截图，AI 自动解析。'}
                 </p>
               </div>
               <div className="p-5">
                 <div className="relative">
                   {isExpiredForwarder && (
                     <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80 rounded-xl cursor-pointer"
-                      onClick={() => alert('⚠️ 体验期已结束，数据录入功能已暂停。\n\n请联系管理员续期以恢复全部功能。')}
-                    >
-                      <div className="text-center p-6">
-                        <p className="text-sm font-bold text-red-800">体验期已结束</p>
-                        <p className="text-xs text-red-600 mt-1">点击此处查看续期方式</p>
-                      </div>
+                      onClick={() => alert('⚠️ 体验期已结束，数据录入功能已暂停。\n\n请联系管理员续期以恢复全部功能。')}>
+                      <div className="text-center p-6"><p className="text-sm font-bold text-red-800">体验期已结束</p><p className="text-xs text-red-600 mt-1">点击此处查看续期方式</p></div>
                     </div>
                   )}
                   <div className={isExpiredForwarder ? 'pointer-events-none select-none' : ''}>
@@ -249,8 +270,8 @@ export default function FileUploadPage() {
             </div>
 
             {/* 快速录入示例 */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">📋 快速录入示例</h3>
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+              <h3 className="text-sm font-bold text-slate-700 mb-3">{lang === 'en' ? '📋 Quick Examples — click to copy' : '📋 快速录入示例——点击复制'}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {[
                   { text: '深圳LAX空运 500kg 5cbm 每周135航班 EK航空', label: t(FileT.exAirExport, lang) },
@@ -258,35 +279,56 @@ export default function FileUploadPage() {
                   { text: '广州到河内陆运 每周3班 可接带电货', label: t(FileT.exLandExport, lang) },
                   { text: '深圳进口清关 普货 3工作日 包税', label: t(FileT.exImport, lang) },
                 ].map((ex, i) => (
-                  <div key={i} className="bg-gray-50 rounded-lg p-3 border border-gray-100 hover:border-primary-200 hover:bg-primary-50/50 transition-all cursor-pointer group"
-                    onClick={() => { navigator.clipboard.writeText(ex.text); alert(`✅ 已复制示例到剪贴板\n\n请在输入框中粘贴(Ctrl+V)`); }}>
-                    <span className="text-[10px] font-medium text-primary-600 bg-primary-100 px-1.5 py-0.5 rounded">{ex.label}</span>
-                    <p className="text-xs text-gray-600 mt-1 line-clamp-2 group-hover:text-gray-900">{ex.text}</p>
+                  <div key={i} className="bg-slate-50 rounded-lg p-3 border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/50 transition-all cursor-pointer group"
+                    onClick={() => { navigator.clipboard.writeText(ex.text); alert('✅ 已复制，请在输入框中粘贴 (Ctrl+V)'); }}>
+                    <span className="text-[11px] font-bold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded">{ex.label}</span>
+                    <p className="text-xs text-slate-600 mt-1.5 line-clamp-2 group-hover:text-slate-900">{ex.text}</p>
                   </div>
                 ))}
               </div>
             </div>
-
-            {/* 实时动态 */}
-            <ActivityFeed />
           </div>
 
-          {/* 右侧：录入小贴士 + 录入历史 */}
+          {/* 右侧：联盟特权 + 录入历史 */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-slate-800 to-indigo-900 border border-indigo-500/30 rounded-xl p-4 text-white">
-              <h3 className="text-sm font-bold text-white mb-2">📡 情报录入指南</h3>
-              <ul className="text-xs text-indigo-100 space-y-1.5">
-                <li>• 包含 <strong className="text-white">起运港+目的港</strong>，雷达精准锁定目标</li>
-                <li>• 注明 <strong className="text-white">航司代码</strong>（如TK/EK/CZ），匹配更精准</li>
-                <li>• 写清楚 <strong className="text-white">体积/重量</strong>，系统优先匹配高意向客户</li>
+            {/* 联盟特权说明 */}
+            <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-4">
+              <h3 className="text-sm font-black text-amber-800 mb-3 flex items-center gap-2">
+                <Shield className="w-4 h-4" />{lang === 'en' ? 'Alliance Privileges' : '联盟特权说明'}
+              </h3>
+              <ul className="text-xs space-y-2">
+                {[
+                  { icon: '✅', zh: '认证会员曝光特权——舱位优先展示给 JC/WCA 网络', en: 'Verified member exposure — prioritized to JC/WCA network' },
+                  { icon: '✅', zh: '跨网结算保障（GCP）——联盟内交易有赔付保障', en: 'Cross-network settlement (GCP) — transaction protection' },
+                  { icon: '✅', zh: '优先匹配高净值货主——认证货主主动找认证代理', en: 'Priority match — certified traders seek certified forwarders' },
+                  { icon: '📡', zh: '录入即进入雷达扫描——有人搜索立即通知', en: 'Entered = radar active — instant alerts on searches' },
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2 text-amber-800">
+                    <span className="flex-shrink-0">{item.icon}</span>
+                    <span className="leading-relaxed">{lang === 'en' ? item.en : item.zh}</span>
+                  </li>
+                ))}
               </ul>
             </div>
 
+            {/* 实时动态跑马灯 */}
+            <div className="bg-slate-900 rounded-xl p-3 text-white overflow-hidden">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{lang === 'en' ? 'Live Feed' : '实时动态'}</span>
+              </div>
+              <div className="text-[10px] text-slate-400 space-y-1.5">
+                <p>🟢 深圳天运（JC）刚刚通过雷达拦截了 JFK 询盘</p>
+                <p>🟡 济南佑田（WCA）正在查看你的舱位报价</p>
+                <p>🔴 JFK-DDP 舱位紧缺，已有 5 家代理开启抢位</p>
+              </div>
+            </div>
+
             {/* 情报录入历史 */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-gray-700">📋 情报录入历史</h3>
-                <a href="/admin/raw-records" className="text-xs text-primary-600 hover:text-primary-700 font-medium">查看全部 →</a>
+                <h3 className="text-sm font-bold text-slate-700">{lang === 'en' ? '📋 Entry History' : '📋 情报录入历史'}</h3>
+                <a href="/admin/raw-records" className="text-xs font-bold text-indigo-600 hover:text-indigo-700">{lang === 'en' ? 'View All →' : '查看全部 →'}</a>
               </div>
               <RawRecordsMini />
             </div>
