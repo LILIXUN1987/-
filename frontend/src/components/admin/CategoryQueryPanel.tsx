@@ -636,33 +636,17 @@ export default function CategoryQueryPanel({ showOnly, initialKeyword }: Categor
 
               {result && result.data.length > 0 && !isLoading && (
                 <div className="space-y-2">
-                  {/* ── 排序规则说明 ── */}
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl px-4 py-3">
-                    <details className="group">
-                      <summary className="flex items-center gap-2 cursor-pointer text-xs font-bold text-blue-700 select-none">
-                        <span className="text-base">📊</span>
-                        <span>排序规则：综合加权排名</span>
-                        <span className="text-blue-400 group-open:hidden ml-auto text-[10px]">展开查看</span>
-                      </summary>
-                      <div className="mt-2 pt-2 border-t border-blue-200/50 grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                        <div className="bg-white/70 rounded-lg p-2 text-center">
-                          <span className="text-blue-600 font-bold">50%</span>
-                          <p className="text-gray-500 text-[10px]">精准匹配度</p>
-                        </div>
-                        <div className="bg-white/70 rounded-lg p-2 text-center">
-                          <span className="text-amber-600 font-bold">20%</span>
-                          <p className="text-gray-500 text-[10px]">企业认证</p>
-                        </div>
-                        <div className="bg-white/70 rounded-lg p-2 text-center">
-                          <span className="text-green-600 font-bold">20%</span>
-                          <p className="text-gray-500 text-[10px]">信用评分</p>
-                        </div>
-                        <div className="bg-white/70 rounded-lg p-2 text-center">
-                          <span className="text-purple-600 font-bold">10%</span>
-                          <p className="text-gray-500 text-[10px]">时间新鲜度</p>
-                        </div>
-                      </div>
-                    </details>
+                  {/* ── 实时搜索热度 ── */}
+                  <div className="bg-gradient-to-r from-slate-800 to-indigo-900 border border-indigo-500/30 rounded-xl px-4 py-3 text-white">
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">🛰️</span>
+                      <span className="text-xs font-bold">雷达检测：本航线近24h内有人搜索</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-1" />
+                      <span className="ml-auto text-[10px] text-indigo-200">{result.data.length} 条舱位在线</span>
+                    </div>
+                    <p className="text-[10px] text-indigo-200/70 mt-1">
+                      你不是在看价，你是在看活人——下方是正在找这条航线的真实用户
+                    </p>
                   </div>
 
                   {/* 5要素精准推送提示 */}

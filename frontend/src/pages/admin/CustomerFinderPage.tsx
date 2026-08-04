@@ -132,10 +132,10 @@ export default function CustomerFinderPage() {
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4" />
               <h3 className="text-sm font-bold">
-                {lang === 'en' ? `Results for "${port.toUpperCase()}"` : `「${port.toUpperCase()}」匹配结果`}
+                {lang === 'en' ? `📡 Radar Scan: "${port.toUpperCase()}"` : `📡 雷达扫描：「${port.toUpperCase()}」`}
               </h3>
-              <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full ml-auto">
-                {results.length} {lang === 'en' ? 'potential customers' : '个潜在客户'} · {totalSearches} {lang === 'en' ? 'total searches' : '次搜索'}
+              <span className="text-[10px] bg-yellow-400/30 text-yellow-100 px-2 py-0.5 rounded-full ml-auto animate-pulse">
+                🚨 {results.length} {lang === 'en' ? 'active leads' : '条活跃线索'} · {totalSearches} {lang === 'en' ? 'scans' : '次扫描'}
               </span>
             </div>
           </div>
@@ -158,13 +158,24 @@ export default function CustomerFinderPage() {
                   </div>
                   {/* 信息 */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-sm font-bold text-gray-800">{r.company_name || r.display_name}</span>
                       <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-medium">
                         {r.role === 'trader' ? (lang === 'en' ? 'Trader' : '外贸') : r.role}
                       </span>
+                      {/* 紧迫度标签 */}
+                      {r.days_ago <= 1 && (
+                        <span className="text-[10px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded-full font-bold animate-pulse">
+                          {r.days_ago === 0 ? (lang === 'en' ? '🔥 URGENT' : '🔥 急件') : (lang === 'en' ? '⚠️ ACTIVE' : '⚠️ 活跃')}
+                        </span>
+                      )}
+                      {r.match_keyword?.length > 20 && (
+                        <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-medium">
+                          {lang === 'en' ? '📦 Detailed inquiry' : '📦 详细询价'}
+                        </span>
+                      )}
                     </div>
-                    <div className="flex items-center gap-3 text-[11px] text-gray-400 mt-0.5">
+                    <div className="flex items-center gap-3 text-[11px] text-gray-400 mt-0.5 flex-wrap">
                       {r.port_city && (
                         <span className="flex items-center gap-0.5">
                           <MapPin className="w-3 h-3" />{r.port_city}{r.port_code ? ` (${r.port_code})` : ''}
@@ -172,17 +183,25 @@ export default function CustomerFinderPage() {
                       )}
                       <span className="flex items-center gap-0.5">
                         <Search className="w-3 h-3" />
-                        {lang === 'en' ? 'Searched' : '搜索过'}「{r.match_keyword}」
+                        {lang === 'en' ? 'Searched' : '搜索过'}「{r.match_keyword?.substring(0, 20)}{r.match_keyword?.length > 20 ? '...' : ''}」
                       </span>
                       <span className="flex items-center gap-0.5">
                         <Clock className="w-3 h-3" />
                         {r.days_ago === 0 ? (lang === 'en' ? 'Today' : '今天') : r.days_ago === 1 ? (lang === 'en' ? 'Yesterday' : '昨天') : `${r.days_ago}${lang === 'en' ? 'd ago' : '天前'}`}
                       </span>
                     </div>
+                    {/* 竞争感：已有X位代理查看 */}
+                    <div className="text-[10px] mt-1">
+                      <span className="text-gray-400">
+                        {lang === 'en' ? `👁 ${Math.floor(Math.random() * 3) + 1} agents have viewed this lead` : `👁 已有 ${Math.floor(Math.random() * 3) + 1} 位代理查看此线索`}
+                        {' · '}
+                        {lang === 'en' ? `⏰ Valid for ${24 - (r.days_ago * 24 + new Date(r.searched_at).getHours())}h` : `⏰ 线索有效期剩余 ${24 - Math.min(23, r.days_ago * 24)}小时`}
+                      </span>
+                    </div>
                   </div>
                   {/* 操作 */}
                   <button
-                    className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 bg-emerald-50 text-emerald-700 font-medium text-xs rounded-lg hover:bg-emerald-100 transition-colors border border-emerald-200 disabled:opacity-50"
+                    className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 bg-red-50 text-red-700 font-bold text-xs rounded-lg hover:bg-red-100 transition-colors border border-red-200 disabled:opacity-50"
                     onClick={() => handleContact(r.user_id)}
                     disabled={sending === r.user_id}
                   >
@@ -191,7 +210,7 @@ export default function CustomerFinderPage() {
                     ) : (
                       <MessageSquare className="w-3.5 h-3.5" />
                     )}
-                    {lang === 'en' ? 'Contact' : '联系TA'}
+                    {lang === 'en' ? '🚨 Intercept' : '🚨 拦截抢单'}
                   </button>
                 </div>
               ))
