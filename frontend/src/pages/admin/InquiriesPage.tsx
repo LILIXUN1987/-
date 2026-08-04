@@ -153,8 +153,8 @@ export default function InquiriesPage() {
           <MessageSquare className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-slate-900">{lang === 'en' ? 'Inquiry Management' : '询盘管理'}</h1>
-          <p className="text-xs text-slate-400 mt-0.5">{lang === 'en' ? 'Reply to trader inquiries — don\'t let leads slip' : '统一回复外贸询价——别让商机溜走'}</p>
+          <h1 className="text-2xl font-bold text-slate-900">{lang === 'en' ? 'Inquiry Management' : '询盘管理'}</h1>
+          <p className="text-sm text-slate-400 mt-0.5">{lang === 'en' ? 'Reply to trader inquiries — don\'t let leads slip' : '统一回复外贸询价——别让商机溜走'}</p>
         </div>
       </div>
 
@@ -166,7 +166,7 @@ export default function InquiriesPage() {
           { key: 'all' as const, label: lang === 'en' ? 'All' : '全部', count: inquiries.length, dot: 'bg-slate-400' },
         ].map(f => (
           <button key={f.key} onClick={() => setFilter(f.key)}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-bold rounded-lg transition-all ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-bold rounded-lg transition-all ${
               filter === f.key ? 'bg-white shadow-sm text-slate-800' : 'text-slate-500 hover:text-slate-700'
             }`}>
             <span className={`w-2 h-2 rounded-full ${f.dot}`} />
@@ -179,7 +179,7 @@ export default function InquiriesPage() {
       {transportTypes.length > 0 && (
         <div className="flex gap-1.5 mb-3 flex-wrap">
           <button onClick={() => setTransportFilter('')}
-            className={`text-[10px] font-bold px-3 py-1.5 rounded-full border transition-all ${
+            className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-all ${
               !transportFilter ? 'bg-slate-800 text-white border-slate-800' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
             }`}>
             {lang === 'en' ? 'All' : '全部'}
@@ -188,7 +188,7 @@ export default function InquiriesPage() {
             const count = inquiries.filter(i => detectTransport(i.content || '') === t && !ignoredIds.includes(i.id)).length;
             return (
               <button key={t} onClick={() => setTransportFilter(transportFilter === t ? '' : t)}
-                className={`text-[10px] font-bold px-3 py-1.5 rounded-full border transition-all ${
+                className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-all ${
                   transportFilter === t ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
                 }`}>
                 {t === '空运' ? '✈️' : t === '海运' ? '🚢' : t === '陆运' ? '🚛' : t === '快递' ? '📦' : t === '双清包税' ? '🌍' : '📋'} {t}
@@ -203,10 +203,10 @@ export default function InquiriesPage() {
       <div className="flex items-center gap-2 mb-3">
         <Calendar className="w-3.5 h-3.5 text-slate-400" />
         <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
-          className="text-[11px] px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-200 text-slate-600" />
+          className="text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-200 text-slate-600" />
         <span className="text-xs text-slate-300">—</span>
         <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
-          className="text-[11px] px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-200 text-slate-600" />
+          className="text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-200 text-slate-600" />
         {(dateFrom || dateTo) && (
           <button onClick={() => { setDateFrom(''); setDateTo(''); }}
             className="text-[10px] text-slate-400 hover:text-red-500 px-2 py-1">
@@ -245,31 +245,31 @@ export default function InquiriesPage() {
                   {/* 头部：状态 + 发送方 */}
                   <div className="flex items-center justify-between gap-2 mb-2">
                     <div className="flex items-center gap-2 min-w-0">
-                      <a href={`/company/${item.senderId}`} target="_blank" className="text-sm font-bold text-slate-900 hover:text-indigo-600 hover:underline truncate">
+                      <a href={`/company/${item.senderId}`} target="_blank" className="text-base font-bold text-slate-900 hover:text-indigo-600 hover:underline truncate">
                         {item.senderCompany || item.senderName}
                       </a>
                       {hasReply ? (
-                        <span className="flex items-center gap-1 text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">
+                        <span className="flex items-center gap-1 text-xs font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">
                           <CheckCircle className="w-3 h-3" />{lang === 'en' ? 'Replied' : '已回复'}
                           {item.replyCount > 0 && <span className="text-slate-300">· {item.replyCount}</span>}
                         </span>
                       ) : (
-                        <span className="flex items-center gap-1 text-[10px] font-black text-red-600 bg-red-50 px-2 py-0.5 rounded-full animate-pulse">
+                        <span className="flex items-center gap-1 text-xs font-black text-red-600 bg-red-50 px-2 py-0.5 rounded-full animate-pulse">
                           <AlertCircle className="w-3 h-3" />{lang === 'en' ? 'AWAITING' : '待回复'}
                         </span>
                       )}
                     </div>
-                    <span className="text-[11px] text-slate-400 flex-shrink-0">{item.senderName} · {timeAgo(item.createdAt)}</span>
+                    <span className="text-xs text-slate-400 flex-shrink-0">{item.senderName} · {timeAgo(item.createdAt)}</span>
                   </div>
 
                   {/* 核心货物信息——结构化展示 */}
                   <div className={`flex items-center gap-2 flex-wrap mb-2 ${hasReply ? '' : 'bg-red-50/50 -mx-1 px-1 py-1 rounded-lg'}`}>
-                    {cargo.origin && <span className="text-sm font-black text-slate-900">📍 {cargo.origin}</span>}
+                    {cargo.origin && <span className="text-base font-black text-slate-900">📍 {cargo.origin}</span>}
                     {(cargo.pieces || cargo.weight || cargo.volume) && <span className="text-slate-300">|</span>}
-                    {cargo.pieces && <span className="text-sm font-bold text-slate-800">{cargo.pieces}{lang === 'en' ? 'pcs' : '件'}</span>}
-                    {cargo.weight && <span className="text-sm font-bold text-slate-800">{cargo.weight}KG</span>}
-                    {cargo.volume && <span className="text-sm font-bold text-slate-800">{cargo.volume}CBM</span>}
-                    {cargo.goods && <span className="text-xs text-slate-500">{cargo.goods}</span>}
+                    {cargo.pieces && <span className="text-base font-bold text-slate-800">{cargo.pieces}{lang === 'en' ? 'pcs' : '件'}</span>}
+                    {cargo.weight && <span className="text-base font-bold text-slate-800">{cargo.weight}KG</span>}
+                    {cargo.volume && <span className="text-base font-bold text-slate-800">{cargo.volume}CBM</span>}
+                    {cargo.goods && <span className="text-sm text-slate-500">{cargo.goods}</span>}
                   </div>
 
                   {/* 原始内容折叠 */}
@@ -281,7 +281,7 @@ export default function InquiriesPage() {
                   {/* 竞争信息：其他代理回复 */}
                   {(item.otherReplies?.length || 0) > 0 && (
                     <div className="mt-2 pt-2 border-t border-amber-100">
-                      <p className="text-[10px] font-bold text-amber-700 mb-1">
+                      <p className="text-xs font-bold text-amber-700 mb-1">
                         ⚠️ {lang === 'en' ? 'Competitors have replied:' : '已有其他代理回复：'}
                       </p>
                       <div className="flex flex-wrap gap-1">
