@@ -68,6 +68,8 @@ export default function ConsigneePoolPage() {
   const [importText, setImportText] = useState('');
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [batchMode, setBatchMode] = useState(false);
+  const [emailModal, setEmailModal] = useState(false);
+  const [emailRecipient, setEmailRecipient] = useState({ name: '', email: '', port: '' });
   const [bindAgentId, setBindAgentId] = useState<string | null>(null);
   const [bindSearch, setBindSearch] = useState('');
 
@@ -451,6 +453,103 @@ export default function ConsigneePoolPage() {
           </div>
         </>
       )}
+
+      {/* ── 唤醒邮件模板 ── */}
+      <div className="bg-white rounded-2xl border-2 border-indigo-200 p-5 mt-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-black text-slate-800 flex items-center gap-2">
+            <Send className="w-4 h-4 text-indigo-500" />📧 唤醒邮件模板
+          </h3>
+          <button onClick={() => setEmailModal(!emailModal)}
+            className="text-xs font-bold text-indigo-600 hover:text-indigo-700">
+            {emailModal ? '收起预览' : '展开预览'}
+          </button>
+        </div>
+
+        {emailModal && (
+          <div className="space-y-4">
+            {/* 快速发送测试 */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <input className="text-xs px-3 py-2 border border-slate-200 rounded-lg w-40" placeholder="直客名称" value={emailRecipient.name}
+                onChange={e => setEmailRecipient(p => ({ ...p, name: e.target.value }))} />
+              <input className="text-xs px-3 py-2 border border-slate-200 rounded-lg w-48" placeholder="邮箱地址" value={emailRecipient.email}
+                onChange={e => setEmailRecipient(p => ({ ...p, email: e.target.value }))} />
+              <input className="text-xs px-3 py-2 border border-slate-200 rounded-lg w-20" placeholder="港口" value={emailRecipient.port}
+                onChange={e => setEmailRecipient(p => ({ ...p, port: e.target.value }))} />
+              <button className="text-xs font-bold bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+                <Send className="w-3 h-3 inline mr-1" />发送测试邮件
+              </button>
+            </div>
+
+            {/* 邮件预览 */}
+            <div className="border border-slate-200 rounded-xl overflow-hidden">
+              <div className="bg-slate-50 px-4 py-2 border-b border-slate-200">
+                <span className="text-xs font-bold text-slate-500">Subject: Supply Chain Optimization for {emailRecipient.name || '[Company Name]'} — From China</span>
+              </div>
+              <div className="p-5 text-sm leading-relaxed space-y-4 max-h-[500px] overflow-y-auto bg-white">
+                <p>Dear {emailRecipient.name || '[Contact Name]'},</p>
+
+                <p>I hope this email finds you well. My name is [Sender Name] from <strong>123cargo</strong>, a logistics platform backed by <strong>JC TRANS and WCA certified networks</strong> with over 15 years of China export experience.</p>
+
+                <p>Through our trade database, we noticed that your company has been <strong>importing goods from China via {emailRecipient.port || '[Port]'}</strong> on a regular basis. Typically, these shipments are arranged on Prepaid terms by your Chinese suppliers.</p>
+
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 my-3">
+                  <p className="font-bold text-amber-800">💡 Value Proposition</p>
+                  <p className="text-amber-700 text-sm mt-1">Have you considered converting to <strong>DDP (Delivered Duty Paid)</strong> or taking control of the destination handling yourself? Our analysis shows this typically saves <strong>10-15% on total logistics costs</strong> while giving you full visibility and control.</p>
+                </div>
+
+                <p><strong>What we offer:</strong></p>
+                <ul className="list-disc pl-5 space-y-1 text-slate-700">
+                  <li>Access to <strong>JC TRANS / WCA certified local agents</strong> at the destination port for customs clearance + last-mile delivery</li>
+                  <li>Transparent, competitive rates from multiple forwarders — <strong>you compare and choose</strong></li>
+                  <li>Full shipment visibility from China warehouse to your door</li>
+                  <li>No obligation — we simply connect you with qualified partners</li>
+                </ul>
+
+                <p>If you are open to exploring how to optimize your Asia supply chain, I would be happy to arrange a <strong>15-minute introductory call</strong> at your convenience.</p>
+
+                <p>Best regards,<br/>
+                <strong>[Sender Name]</strong><br/>
+                123cargo · JC TRANS & WCA Certified Network<br/>
+                {emailRecipient.port ? `${emailRecipient.port} Route Specialist` : 'Global Logistics Platform'}</p>
+
+                <hr className="border-slate-100" />
+                <p className="text-[11px] text-slate-400">This message is sent based on publicly available trade data analysis. If you prefer not to receive future communications, simply reply "Unsubscribe" and we will remove you immediately.</p>
+              </div>
+            </div>
+
+            {/* 中文版 */}
+            <details className="cursor-pointer">
+              <summary className="text-xs text-slate-400 hover:text-slate-600">📋 查看中文版本</summary>
+              <div className="border border-slate-200 rounded-xl overflow-hidden mt-2">
+                <div className="bg-slate-50 px-4 py-2 border-b border-slate-200">
+                  <span className="text-xs font-bold text-slate-500">主题：关于贵司从中国进口的供应链优化 —— {emailRecipient.name || '[公司名]'}</span>
+                </div>
+                <div className="p-5 text-sm leading-relaxed space-y-4 bg-white max-h-[500px] overflow-y-auto">
+                  <p>{emailRecipient.name || '[联系人]'} 您好，</p>
+                  <p>我是来自 <strong>123cargo</strong> 的 [发件人姓名]。我们是依托 <strong>JC TRANS 和 WCA 双认证网络</strong>、拥有 15 年中国出口物流经验的社区平台。</p>
+                  <p>我们的贸易数据库注意到，贵司在过去几年中<strong>频繁从中国通过 {emailRecipient.port || '[港口]'} 进口货物</strong>。通常这些货物由中国供应商以 Prepaid（运费预付）方式安排物流。</p>
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 my-3">
+                    <p className="font-bold text-amber-800">💡 价值建议</p>
+                    <p className="text-amber-700 text-sm mt-1">贵司是否考虑过将贸易条款转为 <strong>DDP（完税后交货）</strong>，或自行管理目的港清关与派送？数据显示这通常能<strong>节省 10-15% 综合物流成本</strong>，同时提升贵司对供应链的控制力和透明度。</p>
+                  </div>
+                  <p><strong>我们提供的服务：</strong></p>
+                  <ul className="list-disc pl-5 space-y-1 text-slate-700">
+                    <li>对接目的港 <strong>JC TRANS / WCA 认证本地代理</strong>，负责清关和最后一公里派送</li>
+                    <li>多家货代透明竞价——<strong>您比价后选择最优方案</strong></li>
+                    <li>从中国仓库到贵司门口，全程可视化追踪</li>
+                    <li>完全免费对接，无任何绑定义务</li>
+                  </ul>
+                  <p>如贵司有兴趣了解如何优化亚洲供应链，我可以安排一次 <strong>15 分钟的简短沟通</strong>。</p>
+                  <p>此致<br/><strong>[发件人姓名]</strong><br/>123cargo · JC TRANS & WCA 认证网络</p>
+                  <hr className="border-slate-100" />
+                  <p className="text-[11px] text-slate-400">本邮件基于公开贸易数据发送。如不希望收到后续邮件，回复"退订"即可。</p>
+                </div>
+              </div>
+            </details>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
