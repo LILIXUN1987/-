@@ -123,6 +123,8 @@ export default function InquiriesPage() {
   const repliedCount = inquiries.filter(i => i.hasReply).length;
   const [ignoredIds, setIgnoredIds] = useState<string[]>(getIgnored());
   const [transportFilter, setTransportFilter] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
 
   // 运输类型检测 + 统计
   function detectTransport(content: string): string {
@@ -139,6 +141,8 @@ export default function InquiriesPage() {
   if (filter === 'unreplied') filtered = filtered.filter(i => !i.hasReply);
   else if (filter === 'replied') filtered = filtered.filter(i => i.hasReply);
   if (transportFilter) filtered = filtered.filter(i => detectTransport(i.content || '') === transportFilter);
+  if (dateFrom) filtered = filtered.filter(i => i.createdAt >= dateFrom);
+  if (dateTo) filtered = filtered.filter(i => i.createdAt <= dateTo + 'T23:59:59');
   const ignoredCount = inquiries.filter(i => ignoredIds.includes(i.id)).length;
 
   return (
@@ -194,6 +198,25 @@ export default function InquiriesPage() {
           })}
         </div>
       )}
+
+      {/* ── 时间范围 ── */}
+      <div className="flex items-center gap-2 mb-3">
+        <Calendar className="w-3.5 h-3.5 text-slate-400" />
+        <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
+          className="text-[11px] px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-200 text-slate-600" />
+        <span className="text-xs text-slate-300">—</span>
+        <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
+          className="text-[11px] px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-200 text-slate-600" />
+        {(dateFrom || dateTo) && (
+          <button onClick={() => { setDateFrom(''); setDateTo(''); }}
+            className="text-[10px] text-slate-400 hover:text-red-500 px-2 py-1">
+            {lang === 'en' ? 'Clear' : '清除'}
+          </button>
+        )}
+        <span className="text-[10px] text-slate-400 ml-auto">
+          {filtered.length}{lang === 'en' ? ' results' : ' 条结果'}
+        </span>
+      </div>
 
       {/* ── 列表 ── */}
       {loading ? (
