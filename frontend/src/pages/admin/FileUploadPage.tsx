@@ -404,8 +404,14 @@ export default function FileUploadPage() {
             </div>
           </div>
 
-          {/* ═══ 业务流程 ═══ */}
-          <LoopGraph />
+          {/* ═══ 业务流程（紧凑） ═══ */}
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 px-4 py-3 mb-6 text-center">
+            <p className="text-sm font-bold text-blue-800">
+              {lang === 'en'
+                ? '📡 ① Enter a port code → ② Radar scans all forwarder posts → ③ See who has cargo space → ④ Contact directly'
+                : '📡 ① 输入港口代码 → ② 雷达扫描所有货代舱位 → ③ 查看谁有舱 → ④ 一键联系询价'}
+            </p>
+          </div>
 
           {/* ═══ 实时动态 ═══ */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -556,7 +562,6 @@ export default function FileUploadPage() {
               <p className="text-sm font-bold">发布需求后，系统将通知已部署雷达的货代——他们会主动联系你报价。</p>
             </div>
           </div>
-          <LoopGraph />
           <QuotePage />
         </>
       )}
