@@ -235,20 +235,39 @@ export default function DashboardPage() {
       </div>
 
       {/* ═══ 第二层：待办中心 ═══ */}
-      <div className="bg-blue-50/50 rounded-xl border border-blue-100 p-4 mb-4">
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-sm font-bold text-gray-700">⚡ {lang === 'en' ? 'Action Center' : '待办中心'}</span>
-          <button onClick={() => navigate('/admin/inbox')} className="text-xs text-gray-500 hover:text-blue-600">
-            📩 {unreadCount > 0 ? <span className="font-bold text-red-500">{unreadCount} {lang === 'en' ? 'unread' : '条未读'}</span> : (lang === 'en' ? 'Inbox' : '站内信')}
+      <div className="bg-gradient-to-r from-blue-50 via-sky-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-sm p-4 mb-4">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-lg">👆</span>
+          <span className="text-sm font-bold text-gray-800">{lang === 'en' ? 'Action Center' : '待办中心'}</span>
+          <span className="text-[10px] text-gray-400">{lang === 'en' ? '— click to handle' : '— 点击处理'}</span>
+        </div>
+        <div className="flex items-center gap-3 flex-wrap">
+          <button onClick={() => navigate('/admin/inbox')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all shadow-sm hover:shadow-md ${
+              unreadCount > 0
+                ? 'bg-red-50 border-2 border-red-300 text-red-700 hover:bg-red-100 animate-pulse'
+                : 'bg-white border border-gray-200 text-gray-600 hover:border-blue-300'
+            }`}>
+            <span className="text-lg">📩</span>
+            <span>{lang === 'en' ? 'Inbox' : '站内信'}</span>
+            {unreadCount > 0 && (
+              <span className="bg-red-500 text-white text-xs font-black rounded-full min-w-[22px] h-5 flex items-center justify-center px-1.5">{unreadCount > 99 ? '99+' : unreadCount}</span>
+            )}
+            {unreadCount > 0 && <span className="text-red-400 text-xs">👈</span>}
           </button>
           {(isForwarder || isAdmin) && (
-            <button onClick={() => navigate('/admin/inquiries')} className="text-xs text-gray-500 hover:text-blue-600">
-              📋 {lang === 'en' ? 'Inquiries' : '询盘管理'}
+            <button onClick={() => navigate('/admin/inquiries')}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-white border border-gray-200 text-gray-600 hover:border-blue-300 hover:shadow-md transition-all">
+              <span className="text-lg">📋</span>
+              <span>{lang === 'en' ? 'Inquiries' : '询盘管理'}</span>
             </button>
           )}
           {(isForwarder || isAdmin) && (
-            <button onClick={() => navigate('/admin/customer-finder')} className="text-xs text-gray-500 hover:text-emerald-600 font-medium">
-              🎯 {lang === 'en' ? 'Radar Scan' : '雷达扫描'}
+            <button onClick={() => navigate('/admin/customer-finder')}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-white border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50 hover:shadow-md transition-all">
+              <span className="text-lg">🎯</span>
+              <span>{lang === 'en' ? 'Radar Scan' : '雷达扫描'}</span>
+              <span className="text-emerald-400 text-xs">👈</span>
             </button>
           )}
         </div>
