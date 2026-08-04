@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader2, CheckCircle, AlertCircle, Package, Plane, Ship, Truck, FileText, Clock, MessageSquare, X, Sparkles, Zap, Bot, Wand2, Rocket, Users, Megaphone } from 'lucide-react';
 import client from '../../api/client';
+import { useAuthStore } from '../../store/authStore';
 import dayjs from 'dayjs';
 
 interface ParsedRow {
@@ -63,6 +64,8 @@ function saveHistory(item: HistoryItem) {
 }
 
 export default function TextCargoInput({ onInserted }: { onInserted: () => void }) {
+  const user = useAuthStore((s) => s.user);
+  const isAdmin = user?.role === 'admin';
   const [category, setCategory] = useState<string>('空运出口');
   const [text, setText] = useState('');
   const [sourceCompanies, setSourceCompanies] = useState<Array<{ name: string; id: string }>>([]);
@@ -382,7 +385,8 @@ export default function TextCargoInput({ onInserted }: { onInserted: () => void 
             </div>
           </div>
 
-          {/* ── 舱位来源公司 ── */}
+          {/* ── 舱位来源公司（仅管理员） ── */}
+          {isAdmin && (
           <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200/60 rounded-2xl p-4">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-base">🏢</span>
@@ -466,6 +470,7 @@ export default function TextCargoInput({ onInserted }: { onInserted: () => void 
                 : '💡 选择公司后，用户搜索匹配此舱位时，选中公司都会收到站内信+邮件通知。'}
             </p>
           </div>
+          )}
 
           {/* ── 操作按钮 ── */}
           <div className="flex items-center justify-between gap-3 pt-1">
