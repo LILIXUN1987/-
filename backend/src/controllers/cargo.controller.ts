@@ -401,7 +401,7 @@ export const cargoController = {
 
           // ── 零匹配结果 → 只发 express 邮箱，存入需求看板 ──
           if (pushedCount === 0 && deduped.length === 0) {
-            try { const { sendInquiryNotification } = await import('../services/email.service'); await sendInquiryNotification('express@tiangaocargo.com', '未匹配询价', senderDisplayName, keyword as string); } catch {}
+            try { const { sendInquiryNotification } = await import('../services/email.service'); await sendInquiryNotification('express@tiangaocargo.com', '未匹配询价', senderDisplayName, keyword as string, 'zh', filePath); } catch {}
           }
         } catch (pushErr) {
           logger.error('需求推送失败:', pushErr);

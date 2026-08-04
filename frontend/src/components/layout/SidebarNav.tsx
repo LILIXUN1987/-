@@ -76,6 +76,7 @@ export function useNavItems() {
     ...(FEATURES.INBOX ? [{ to: '/admin/inbox', label: t(AdminT.inbox, lang), icon: Mail }] : []),
     { to: '/admin/files', label, icon: FileUp },
     ...(rc.isForwarder || rc.isAdmin || rc.isLawyer || rc.isInspector || rc.isInsurer ? [{ to: '/admin/subscribe', label: lang === 'en' ? '💳 Subscribe' : '💳 开通月费', icon: Gift }] : []),
+    ...(rc.isForwarder || rc.isAdmin ? [{ to: '/admin/consignee-pool', label: lang === 'en' ? '🌍 Direct Customers' : '🌍 海外直客唤醒', icon: Globe }] : []),
     ...(rc.isForwarder || rc.isAdmin ? [{ to: '/admin/coupons', label: lang === 'en' ? '🎫 Coupons' : '🎫 报关券', icon: Gift }] : []),
     ...(rc.isForwarder || rc.isAdmin || rc.isTrader ? [{ to: '/admin/broker-directory', label: lang === 'en' ? '🏢 Brokers' : '🏢 报关行', icon: Building2 }] : []),
     ...(rc.isForwarder || rc.isAdmin ? [
