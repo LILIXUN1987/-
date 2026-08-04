@@ -260,22 +260,25 @@ export default function InboxPage() {
   return (
     <div>
       {/* ── 页面标题 ── */}
-      <div className="flex items-center gap-3 mb-4">
-        <Mail className="w-7 h-7 text-primary-600" />
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-sm shadow-indigo-200">
+          <Mail className="w-5 h-5 text-white" />
+        </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t(InboxT.title, lang)}</h1>
+          <h1 className="text-xl font-bold text-slate-900">{t(InboxT.title, lang)}</h1>
+          <p className="text-xs text-slate-400 mt-0.5">{lang === 'en' ? 'Business Opportunity Hub' : '商机管理中心 · 你的私人雷达收件箱'}</p>
         </div>
       </div>
 
       {/* ── 选项卡 ── */}
-      <div className="flex gap-1 mb-4 bg-gray-100 rounded-lg p-1">
+      <div className="flex gap-1 mb-4 bg-slate-100/80 rounded-xl p-1">
         {(['inbox', 'inquiries'] as const).map((tab) => (
           <button
             key={tab}
-            className={`flex-1 py-2.5 text-sm font-medium rounded-md transition-colors ${
+            className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 ${
               activeTab === tab
-                ? 'bg-white shadow-sm text-primary-700'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'bg-white shadow-sm shadow-slate-200/50 text-slate-800'
+                : 'text-slate-400 hover:text-slate-600'
             }`}
             onClick={() => { setActiveTab(tab); setChatWith(null); }}
           >
