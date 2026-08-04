@@ -66,12 +66,12 @@ export default function CustomerFinderPage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {lang === 'en' ? '🎯 Find Potential Customers' : '🎯 反向匹配潜在客户'}
+            {lang === 'en' ? '📡 Reverse Radar — Intercept Customers' : '📡 反向雷达——拦截潜在客户'}
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">
             {lang === 'en'
-              ? 'Enter a port code to discover traders who searched for it — your potential customers!'
-              : '输入你的优势港口代码，发现搜索过该港口的外贸用户——他们就是你的潜在客户！'}
+              ? 'Enter a port code. The radar reveals who searched for it. Intercept before competitors do.'
+              : '输入港口代码，雷达立即显示谁在搜这条航线。在竞争对手之前拦截他们！'}
           </p>
         </div>
       </div>
@@ -207,13 +207,13 @@ export default function CustomerFinderPage() {
             <TrendingUp className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
             <div>
               <h4 className="text-sm font-bold text-emerald-800 mb-1">
-                {lang === 'en' ? '💡 How it works' : '💡 使用说明'}
+                {lang === 'en' ? '📡 How the Radar Works' : '📡 雷达使用说明'}
               </h4>
               <ul className="space-y-1 text-xs text-emerald-700">
-                <li>{lang === 'en' ? '• Enter a port code where you have cargo space (e.g. JFK)' : '• 输入你有舱位的港口代码（如 JFK）'}</li>
-                <li>{lang === 'en' ? '• System finds all traders who searched for that port' : '• 系统找出所有搜索过该港口的外贸用户'}</li>
-                <li>{lang === 'en' ? '• You can directly contact them via platform message' : '• 你可以通过站内信直接联系他们'}</li>
-                <li>{lang === 'en' ? '• These are your potential customers — reach out before competitors do!' : '• 这些用户就是你的潜在客户——在竞争对手之前联系他们！'}</li>
+                <li>{lang === 'en' ? '• Enter a port code (e.g. JFK) — the radar scans all search records' : '• 输入港口代码（如 JFK）——雷达扫描所有搜索记录'}</li>
+                <li>{lang === 'en' ? '• Instantly reveals who is looking for that route' : '• 立即显示谁在寻找这条航线的舱位'}</li>
+                <li>{lang === 'en' ? '• One-click intercept — send inquiry before competitors even know' : '• 一键拦截——在竞争对手反应过来之前联系TA'}</li>
+                <li>{lang === 'en' ? '• Every hit is a potential deal — don\'t let it slip away!' : '• 每一个雷达信号都是潜在订单——别让它溜走！'}</li>
               </ul>
             </div>
           </div>

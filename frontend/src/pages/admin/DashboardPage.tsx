@@ -214,6 +214,11 @@ export default function DashboardPage() {
               <span className="text-[11px] bg-white/20 px-2 py-0.5 rounded-full">{roleLabel}</span>
               {data?.user?.is_newbie && <span className="text-[11px] bg-amber-400/30 text-amber-200 px-2 py-0.5 rounded-full">{lang === 'en' ? 'Newbie' : '🌟 新手'}</span>}
             </p>
+            {!isTrader && !isOverseasAgent && !isLawyer && !isRestricted && (
+              <p className="text-xs text-white/60 mt-1.5 italic">
+                {lang === 'en' ? '📡 Your Private Radar — don\'t miss who is looking for your routes' : '📡 你的私人雷达系统——盯紧谁在找你的舱位，别让单子被抢走'}
+              </p>
+            )}
           </div>
           <div className="hidden sm:flex items-stretch gap-3">
             {[
@@ -242,8 +247,8 @@ export default function DashboardPage() {
           <div className="relative overflow-hidden py-2 px-3" style={{ maskImage: 'linear-gradient(to right, transparent, black 20px, black calc(100% - 20px), transparent)' }}>
             <div className="flex items-center gap-2 px-2 mb-2">
               <Activity className="w-3.5 h-3.5 text-blue-500" />
-              <span className="text-xs font-bold text-gray-600">{lang === 'en' ? '🔍 Users Searching for Rates' : '🔍 用户在寻找舱位价格'}</span>
-              <span className="text-[10px] text-gray-300">{lang === 'en' ? 'Click to view details & contact' : '点击查看详情并联系'}</span>
+              <span className="text-xs font-bold text-gray-600">{lang === 'en' ? '🛰️ Radar Scan — Active Searchers' : '🛰️ 实时雷达扫描——这些用户正在找舱位'}</span>
+              <span className="text-[10px] text-gray-300">{lang === 'en' ? 'Click to intercept & contact' : '点击拦截并联系TA，抢在竞争对手前面'}</span>
               <span className="text-[10px] text-gray-300 ml-auto">{data.recentActivities.length}{lang === 'en' ? ' items' : '条'}</span>
             </div>
             <div className={`dash-scroll-loop${marqueePaused ? ' dash-scroll-paused' : ''}`}>
@@ -279,14 +284,14 @@ export default function DashboardPage() {
                   </div>
                   <p className="text-xs text-gray-600">
                     {lang === 'en'
-                      ? `This trader/potential customer searched for "${selectedActivity.keyword}" — they are actively looking for rates on this route. Reach out now!`
-                      : `该用户搜索了「${selectedActivity.keyword}」相关航线——说明对方正在寻找此航线的舱位和价格，可以主动联系报价！`}
+                      ? `🚨 Radar hit! "${selectedActivity.keyword}" — this trader is actively looking for rates on this route. Intercept before your competitors do!`
+                      : `🚨 雷达信号捕获！「${selectedActivity.keyword}」——该用户正在寻找此航线舱位，立即拦截联系，别让竞争对手抢走这个客户！`}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <button className="px-3 py-1.5 text-xs text-gray-500 hover:text-gray-700 border border-gray-200 rounded-lg hover:bg-white transition-all"
                     onClick={() => { setSelectedActivity(null); setMarqueePaused(false); }}>
-                    {lang === 'en' ? 'Close' : '关闭'}
+                    {lang === 'en' ? 'Ignore' : '忽略'}
                   </button>
                   <button className="px-4 py-1.5 bg-blue-600 text-white font-bold text-xs rounded-lg hover:bg-blue-700 transition-all flex items-center gap-1.5 disabled:opacity-50"
                     disabled={contactingId === selectedActivity.name}
@@ -295,16 +300,16 @@ export default function DashboardPage() {
                       try {
                         await client.post('/messages', {
                           receiver_id: selectedActivity.user_id,
-                          content: `您好，我注意到您在社区搜索了「${selectedActivity.keyword}」的航线价格。我们公司有这条航线的舱位资源，如果您还需要报价，欢迎随时联系我！`,
+                          content: `您好，我们的雷达系统显示您搜索了「${selectedActivity.keyword}」的航线。我们正好有这条航线的舱位，价格有竞争力——方便发您报价参考吗？`,
                         });
-                        alert(lang === 'en' ? '✅ Message sent!' : '✅ 站内信已发送！');
+                        alert(lang === 'en' ? '✅ Intercepted! Message sent!' : '✅ 拦截成功！站内信已发送');
                       } catch {
                         alert(lang === 'en' ? '❌ Failed' : '❌ 发送失败');
                       }
                       setContactingId(null);
                     }}>
                     <MessageSquare className="w-3.5 h-3.5" />
-                    {lang === 'en' ? 'Contact Company' : '联系TA报价'}
+                    {lang === 'en' ? '🚨 Intercept' : '🚨 拦截抢单'}
                   </button>
                 </div>
               </div>
@@ -486,7 +491,7 @@ export default function DashboardPage() {
         <div className="mb-4"><div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-primary-100 overflow-hidden">
           <div className="flex items-center gap-2 px-4 pt-3 pb-0">
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{lang === 'en' ? 'PUBLISHED RATES' : '系统已发布舱位价格'}</span>
+            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{lang === 'en' ? '📡 PUBLISHED SIGNALS' : '📡 已发布舱位信号'}</span>
             <span className="text-[10px] text-gray-400">{lang === 'en' ? 'Click to view details' : '点击查看详情并联系'}</span>
             <span className="text-[10px] text-gray-400 font-medium ml-auto">{latestItems.length}{lang === 'en' ? ' posts' : '条舱位'}</span>
           </div>
@@ -570,7 +575,7 @@ export default function DashboardPage() {
         <div className="mb-4"><div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-amber-100 overflow-hidden">
           <div className="flex items-center gap-2 px-4 pt-3 pb-0">
             <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{lang === 'en' ? 'USERS SEARCHING' : '用户在寻找舱位价格'}</span>
+            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{lang === 'en' ? '🛰️ RADAR SIGNALS' : '🛰️ 雷达扫描信号'}</span>
             <span className="text-[10px] text-gray-400 font-medium ml-auto">{recentSearches.length}{lang === 'en' ? ' inquiries' : '条搜索记录'}</span>
           </div>
           <div className="relative overflow-hidden py-3 px-2">
@@ -648,19 +653,19 @@ export default function DashboardPage() {
       {(isForwarder || !isOverseasAgent) && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {(isForwarder || isAdmin) && (
-            <BannerCard icon={FileUp} title={lang === 'en' ? 'Post Cargo' : '发布舱位'}
-              subtitle={lang === 'en' ? 'AI auto-parses, 3 seconds' : 'AI一键录入，3秒搞定'}
-              badge={lang === 'en' ? 'Free' : '免费'} color="blue"
+            <BannerCard icon={FileUp} title={lang === 'en' ? '📡 Emit Signal' : '📡 发射信号'}
+              subtitle={lang === 'en' ? 'Post cargo, enter the radar' : '发布舱位，进入雷达系统'}
+              badge={lang === 'en' ? 'Be Seen' : '让客户找到你'} color="blue"
               onClick={() => navigate('/admin/files?tab=entry')} />
           )}
           {!isOverseasAgent && (
-            <BannerCard icon={Search} title={lang === 'en' ? 'Search Cargo' : '查舱位'}
-              subtitle={lang === 'en' ? 'Enter port code, instant results' : '输入港口代码，秒查全球舱位'}
+            <BannerCard icon={Search} title={lang === 'en' ? '🔍 Scan Market' : '🔍 扫描市场'}
+              subtitle={lang === 'en' ? 'Find rates & compare prices' : '搜索全球舱位，比价找最优'}
               badge={lang === 'en' ? 'Free' : '免费'} color="emerald"
               onClick={() => navigate('/admin/files?tab=query')} />
           )}
           {!isOverseasAgent && !(FEATURES.AUDIT_MODE && !rc.isAdmin) && (
-            <BannerCard icon={MessageSquare} title={lang === 'en' ? 'Inquire' : '物流询价'}
+            <BannerCard icon={MessageSquare} title={lang === 'en' ? '📩 Send Inquiry' : '📩 发起询价'}
               subtitle={lang === 'en' ? 'Forwarders quote directly' : '货代在线报价，比打电话快10倍'}
               badge={lang === 'en' ? 'Free' : '免费'} color="orange"
               onClick={() => navigate('/admin/quote')} />
@@ -668,53 +673,55 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* ═══ 🎯 反向匹配客户 — 社区核心亮点（仅货代） ═══ */}
+      {/* ═══ 📡 雷达核心：反向匹配客户（仅货代） ═══ */}
       {(isForwarder || isAdmin) && (
         <button
           onClick={() => navigate('/admin/customer-finder')}
           className="w-full group relative overflow-hidden rounded-2xl mb-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5"
         >
-          {/* 背景 */}
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700" />
-          {/* 纹理 */}
-          <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'radial-gradient(circle at 25% 50%, white 1px, transparent 1px), radial-gradient(circle at 75% 50%, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+          {/* 雷达扫描背景 */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900" />
+          {/* 雷达网格纹理 */}
+          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+          {/* 雷达扫描线 */}
+          <div className="absolute top-0 left-1/2 w-1 h-full bg-gradient-to-b from-transparent via-emerald-400 to-transparent opacity-20 -translate-x-1/2" style={{ animation: 'radar-sweep 3s ease-in-out infinite' }} />
           {/* 光效 */}
-          <div className="absolute -top-20 -right-10 w-64 h-64 bg-yellow-400 rounded-full blur-[120px] opacity-20 group-hover:opacity-30 transition-opacity" />
-          <div className="absolute -bottom-10 left-10 w-48 h-48 bg-emerald-300 rounded-full blur-[80px] opacity-15 group-hover:opacity-25 transition-opacity" />
+          <div className="absolute -top-20 -right-10 w-64 h-64 bg-emerald-400 rounded-full blur-[120px] opacity-15 group-hover:opacity-25 transition-opacity" />
+          <div className="absolute -bottom-10 left-10 w-48 h-48 bg-cyan-400 rounded-full blur-[80px] opacity-10 group-hover:opacity-20 transition-opacity" />
 
           <div className="relative p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-5">
-            {/* 图标 */}
-            <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center flex-shrink-0 shadow-xl group-hover:scale-105 transition-transform duration-300">
-              <span className="text-4xl">🎯</span>
+            {/* 雷达图标 */}
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center flex-shrink-0 shadow-xl shadow-emerald-500/30 group-hover:scale-105 transition-transform duration-300">
+              <span className="text-4xl">📡</span>
             </div>
 
             {/* 文字 */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-bold bg-yellow-400/30 text-yellow-200 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                  {lang === 'en' ? '⭐ Core Feature' : '⭐ 社区核心亮点'}
+                <span className="text-[10px] font-bold bg-emerald-500/30 text-emerald-200 px-2 py-0.5 rounded-full animate-pulse">
+                  {lang === 'en' ? '📡 RADAR ACTIVE' : '📡 雷达运行中'}
                 </span>
-                <span className="text-[10px] font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">
-                  {lang === 'en' ? 'Exclusive' : '独家功能'}
+                <span className="text-[10px] font-bold bg-white/10 text-white/70 px-2 py-0.5 rounded-full">
+                  {lang === 'en' ? 'Your Private Radar' : '你的私人雷达'}
                 </span>
               </div>
               <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">
-                {lang === 'en' ? '🎯 Reverse Match — Find Your Customers' : '🎯 反向匹配客户 — 被动变主动'}
+                {lang === 'en' ? '📡 Reverse Radar — Intercept Customers Before Competitors' : '📡 反向雷达——在竞争对手之前拦截客户'}
               </h2>
               <p className="text-sm text-emerald-100 mt-2 max-w-2xl leading-relaxed">
                 {lang === 'en'
-                  ? 'Got cargo space at JFK? Enter the port code to instantly discover traders who searched for it. Reach out before competitors — turn their search into your deal!'
-                  : '你有 JFK 的舱位？输入港口代码，立即看到所有搜索过该港口的外贸用户。在竞争对手之前主动联系——把他们的搜索变成你的订单！'}
+                  ? 'Enter any port code. The radar instantly reveals who searched for it. Don\'t let competitors steal your deals — every second someone is looking for your route.'
+                  : '输入港口代码，雷达立即显示谁在找这条航线。别看别人抢走你的单——每一秒都有人在搜索你的舱位。'}
               </p>
 
               {/* 亮点标签 */}
               <div className="flex flex-wrap gap-2 mt-3">
                 {[
-                  { icon: '🔍', text: lang === 'en' ? 'Find active searchers' : '找到活跃搜索用户' },
-                  { icon: '📩', text: lang === 'en' ? 'One-click contact' : '一键联系报价' },
-                  { icon: '📊', text: lang === 'en' ? 'Real search data' : '真实搜索数据' },
+                  { icon: '🛰️', text: lang === 'en' ? 'Real-time radar scan' : '实时雷达扫描' },
+                  { icon: '🚨', text: lang === 'en' ? 'Intercept & contact' : '拦截抢单' },
+                  { icon: '📊', text: lang === 'en' ? 'Live search data' : '实时搜索数据' },
                 ].map((item, i) => (
-                  <span key={i} className="text-[10px] bg-white/15 text-white px-2.5 py-1 rounded-full backdrop-blur">
+                  <span key={i} className="text-[10px] bg-white/10 text-white/80 px-2.5 py-1 rounded-full backdrop-blur">
                     {item.icon} {item.text}
                   </span>
                 ))}
@@ -722,13 +729,14 @@ export default function DashboardPage() {
             </div>
 
             {/* CTA */}
-            <div className="flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-xl bg-white text-emerald-700 font-black text-sm shadow-xl shadow-emerald-900/30 group-hover:bg-yellow-400 group-hover:text-emerald-900 transition-all group-hover:scale-105">
-              <span>{lang === 'en' ? 'Try Now' : '立即体验'}</span>
+            <div className="flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-xl bg-emerald-400 text-slate-900 font-black text-sm shadow-xl shadow-emerald-500/30 group-hover:bg-yellow-400 transition-all group-hover:scale-105">
+              <span>{lang === 'en' ? '🚨 Scan Now' : '🚨 立即扫描'}</span>
               <span className="text-xl group-hover:translate-x-1 transition-transform">→</span>
             </div>
           </div>
         </button>
       )}
+      <style>{`@keyframes radar-sweep { 0%,100% { left:0% } 50% { left:100% } }`}</style>
 
       {/* ═══ 全部功能快捷入口 ═══ */}
       <div className="mb-6 space-y-4">
@@ -815,7 +823,7 @@ export default function DashboardPage() {
       {/* ═══ 数据查询：6大分类（货代/外贸可见） ═══ */}
       {!isOverseasAgent && !isLawyer && !isRestricted && (
         <div className="mb-6 space-y-4">
-          <SectionTitle icon={<Search className="w-4 h-4 text-primary-500" />} title={lang === 'en' ? '📊 Data Query' : '📊 数据查询'} />
+          <SectionTitle icon={<Search className="w-4 h-4 text-primary-500" />} title={lang === 'en' ? '🔍 Scan Market' : '🔍 扫描市场——看看大家都在找什么'} />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <BannerCard icon={Zap} title={lang === 'en' ? 'Express Inquiry' : '快速询价'}
               subtitle={lang === 'en' ? 'AI-powered instant rate inquiry' : '输入需求，AI秒级匹配舱位报价'}
