@@ -192,16 +192,16 @@ export default function FileUploadPage() {
       )}
 
       {/* ════════════════════════════════════════ */}
-      {/* ✏️ 货代发布舱位与特价 */}
+      {/* 📡 部署雷达——收集情报 */}
       {/* ════════════════════════════════════════ */}
       {activeTab === 'entry' && (
         <>
-          {/* 鼓励提示 */}
-          <div className="bg-orange-500 text-white rounded-xl px-5 py-4 shadow-md mb-4">
+          {/* 情报提示 */}
+          <div className="bg-gradient-to-r from-slate-800 to-indigo-900 text-white rounded-xl px-5 py-4 shadow-md mb-4">
             <div className="flex items-start gap-3">
-              <span className="text-xl leading-none mt-0.5">💡</span>
+              <span className="text-xl leading-none mt-0.5">📡</span>
               <div>
-                <p className="text-sm font-bold">您发布的舱位与特价越多，③ 用户寻舱位与特价 和 ④ 用户主动发需求 就越能第一时间推送给您，获得更多询价机会！</p>
+                <p className="text-sm font-bold">设置您的优势航线，系统将为您锁定目标客户——有人在搜您的航线，第一时间通知您。</p>
               </div>
             </div>
           </div>
@@ -222,11 +222,11 @@ export default function FileUploadPage() {
               <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-b border-amber-100 px-5 py-3">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-amber-500" />
-                  <h2 className="font-bold text-gray-900">AI 智能录入</h2>
-                  <span className="text-xs text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full font-medium">Beta</span>
+                  <h2 className="font-bold text-gray-900">📡 情报录入</h2>
+                  <span className="text-xs text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full font-medium">AI解析</span>
                 </div>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  用自然语言描述舱位信息，AI 自动解析为标准格式
+                  输入舱位信息，AI自动解析并进入雷达监控——有人搜索立即通知你
                 </p>
               </div>
               <div className="p-5">
@@ -273,19 +273,19 @@ export default function FileUploadPage() {
 
           {/* 右侧：录入小贴士 + 录入历史 */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
-              <h3 className="text-sm font-bold text-blue-800 mb-2">💡 录入小贴士</h3>
-              <ul className="text-xs text-blue-700 space-y-1.5">
-                <li>• 包含 <strong>起运港+目的港</strong> 解析更准确</li>
-                <li>• 注明 <strong>航司代码</strong>（如TK/EK/CZ）让查询更精准</li>
-                <li>• 写清楚 <strong>体积/重量</strong> 方便客户匹配</li>
+            <div className="bg-gradient-to-br from-slate-800 to-indigo-900 border border-indigo-500/30 rounded-xl p-4 text-white">
+              <h3 className="text-sm font-bold text-white mb-2">📡 情报录入指南</h3>
+              <ul className="text-xs text-indigo-100 space-y-1.5">
+                <li>• 包含 <strong className="text-white">起运港+目的港</strong>，雷达精准锁定目标</li>
+                <li>• 注明 <strong className="text-white">航司代码</strong>（如TK/EK/CZ），匹配更精准</li>
+                <li>• 写清楚 <strong className="text-white">体积/重量</strong>，系统优先匹配高意向客户</li>
               </ul>
             </div>
 
-            {/* 录入历史记录 */}
+            {/* 情报录入历史 */}
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-gray-700">📋 我的录入历史</h3>
+                <h3 className="text-sm font-semibold text-gray-700">📋 情报录入历史</h3>
                 <a href="/admin/raw-records" className="text-xs text-primary-600 hover:text-primary-700 font-medium">查看全部 →</a>
               </div>
               <RawRecordsMini />
@@ -296,7 +296,7 @@ export default function FileUploadPage() {
       )}
 
       {/* ════════════════════════════════════════ */}
-      {/* 🔍 用户寻舱位与特价（社区已存在） */}
+      {/* 👁 实时监控——看看谁在搜索你的航线 */}
       {/* ════════════════════════════════════════ */}
       {activeTab === 'query' && (
         <div className="space-y-6">
@@ -508,7 +508,7 @@ export default function FileUploadPage() {
           <div className="bg-orange-500 text-white rounded-xl px-5 py-4 shadow-md mb-4">
             <div className="flex items-start gap-3">
               <span className="text-xl leading-none mt-0.5">💡</span>
-              <p className="text-sm font-bold">您发布需求后，将由系统中 ② 货代发布舱位与特价 模块中的货代为您报价，请耐心等待</p>
+              <p className="text-sm font-bold">发布需求后，系统将通知已部署雷达的货代——他们会主动联系你报价。</p>
             </div>
           </div>
           <LoopGraph />

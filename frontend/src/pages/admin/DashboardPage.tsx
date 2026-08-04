@@ -653,20 +653,20 @@ export default function DashboardPage() {
       {(isForwarder || !isOverseasAgent) && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {(isForwarder || isAdmin) && (
-            <BannerCard icon={FileUp} title={lang === 'en' ? '📡 Emit Signal' : '📡 发射信号'}
-              subtitle={lang === 'en' ? 'Post cargo, enter the radar' : '发布舱位，进入雷达系统'}
-              badge={lang === 'en' ? 'Be Seen' : '让客户找到你'} color="blue"
+            <BannerCard icon={FileUp} title={lang === 'en' ? '📡 Deploy Radar' : '📡 部署雷达'}
+              subtitle={lang === 'en' ? 'Set routes, system locks targets' : '设置优势航线，系统锁定目标客户'}
+              badge={lang === 'en' ? 'Intelligence' : '情报收集'} color="blue"
               onClick={() => navigate('/admin/files?tab=entry')} />
           )}
           {!isOverseasAgent && (
-            <BannerCard icon={Search} title={lang === 'en' ? '🔍 Scan Market' : '🔍 扫描市场'}
-              subtitle={lang === 'en' ? 'Find rates & compare prices' : '搜索全球舱位，比价找最优'}
-              badge={lang === 'en' ? 'Free' : '免费'} color="emerald"
+            <BannerCard icon={Search} title={lang === 'en' ? '👁 Live Monitor' : '👁 实时监控'}
+              subtitle={lang === 'en' ? 'See who is searching right now' : '不是在看价——是在看活人，看谁在找你的航线'}
+              badge={lang === 'en' ? 'Live' : '实时'} color="emerald"
               onClick={() => navigate('/admin/files?tab=query')} />
           )}
           {!isOverseasAgent && !(FEATURES.AUDIT_MODE && !rc.isAdmin) && (
-            <BannerCard icon={MessageSquare} title={lang === 'en' ? '📩 Send Inquiry' : '📩 发起询价'}
-              subtitle={lang === 'en' ? 'Forwarders quote directly' : '货代在线报价，比打电话快10倍'}
+            <BannerCard icon={MessageSquare} title={lang === 'en' ? '📩 Get Quotes' : '📩 坐等报价'}
+              subtitle={lang === 'en' ? 'Post demand, forwarders bid' : '发布需求，多家货代主动报价——坐着等就行'}
               badge={lang === 'en' ? 'Free' : '免费'} color="orange"
               onClick={() => navigate('/admin/quote')} />
           )}
