@@ -1,4 +1,5 @@
 import { useState } from 'react';
+// InquiryTab v3 — 询盘商机管理重构 2026-08-04
 import { Loader2, Mail, MessageSquare, Phone, Star, Clock, AlertCircle, CheckCircle2, Search, Filter } from 'lucide-react';
 import { formatTime } from '../../../utils/time';
 import { InquiryItem } from '../../../api/messages.api';

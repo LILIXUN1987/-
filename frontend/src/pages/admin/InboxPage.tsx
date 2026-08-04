@@ -5,6 +5,7 @@ import { useUnreadStore } from '../../store/unreadStore';
 import { messagesApi, Conversation, Message, InquiryItem } from '../../api/messages.api';
 import { FEATURES } from '../../config/features';
 import { Mail, Loader2, Trash2, AlertTriangle } from 'lucide-react';
+// v2 - 询盘管理重构 2026-08-04
 import ReviewDialog from '../../components/common/ReviewDialog';
 import { isBusinessRole } from '../../types';
 import { InboxT, t, Lang } from '../../i18n';
