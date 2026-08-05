@@ -149,6 +149,31 @@ export default function DashboardPage() {
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
   const [marqueePaused, setMarqueePaused] = useState(false);
   const [contactingId, setContactingId] = useState<string | null>(null);
+  const [quoteTarget, setQuoteTarget] = useState<any>(null);
+  const [quoteForm, setQuoteForm] = useState({ airline: '', flightNo: '', price: '', priceUnit: '/CBM', transit: '', validUntil: '', note: '' });
+  const [quoteSending, setQuoteSending] = useState(false);
+
+  const handleQuoteSend = async () => {
+    if (!quoteForm.price.trim()) { alert(lang === 'en' ? 'Please enter price' : '请输入报价'); return; }
+    setQuoteSending(true);
+    const sig = (user as any)?.signature || '';
+    const defaultSig = [user?.display_name, user?.company_name, user?.phone].filter(Boolean).join(' · ');
+    const lines = ['📋 正式报价', '',
+      '航线：' + (quoteTarget?.keyword?.substring(0, 20) || ''),
+      quoteForm.airline ? '航司：' + quoteForm.airline + (quoteForm.flightNo ? ' ' + quoteForm.flightNo : '') : '',
+      '报价：¥' + quoteForm.price.trim() + quoteForm.priceUnit,
+      quoteForm.transit ? '时效：' + quoteForm.transit + '天' : '',
+      quoteForm.validUntil ? '有效期至：' + quoteForm.validUntil : '',
+      quoteForm.note ? '备注：' + quoteForm.note : '',
+      '', sig || defaultSig,
+    ].filter(Boolean).join('\n');
+    try {
+      await client.post('/messages', { receiver_id: quoteTarget.user_id, content: lines });
+      alert(lang === 'en' ? '✅ Quote sent!' : '✅ 报价已发送！');
+      setQuoteTarget(null);
+    } catch { alert(lang === 'en' ? 'Failed' : '发送失败'); }
+    setQuoteSending(false);
+  };
   const [selectedCargo, setSelectedCargo] = useState<any>(null);
   const [cargoPaused, setCargoPaused] = useState(false);
 
@@ -343,23 +368,10 @@ export default function DashboardPage() {
                     onClick={() => { setSelectedActivity(null); setMarqueePaused(false); }}>
                     {lang === 'en' ? 'Ignore' : '忽略'}
                   </button>
-                  <button className="px-4 py-1.5 bg-blue-600 text-white font-bold text-xs rounded-lg hover:bg-blue-700 transition-all flex items-center gap-1.5 disabled:opacity-50"
-                    disabled={contactingId === selectedActivity.name}
-                    onClick={async () => {
-                      setContactingId(selectedActivity.name);
-                      try {
-                        await client.post('/messages', {
-                          receiver_id: selectedActivity.user_id,
-                          content: `您好，我们的雷达系统显示您搜索了「${selectedActivity.keyword}」的航线。我们正好有这条航线的舱位，价格有竞争力——方便发您报价参考吗？`,
-                        });
-                        alert(lang === 'en' ? '✅ Intercepted! Message sent!' : '✅ 拦截成功！站内信已发送');
-                      } catch {
-                        alert(lang === 'en' ? '❌ Failed' : '❌ 发送失败');
-                      }
-                      setContactingId(null);
-                    }}>
+                  <button className="px-4 py-1.5 bg-blue-600 text-white font-bold text-xs rounded-lg hover:bg-blue-700 transition-all flex items-center gap-1.5"
+                    onClick={() => { setQuoteTarget(selectedActivity); setQuoteForm({ airline: '', flightNo: '', price: '', priceUnit: '/CBM', transit: '', validUntil: '', note: '' }); }}>
                     <MessageSquare className="w-3.5 h-3.5" />
-                    {lang === 'en' ? '🚨 Intercept' : '🚨 拦截抢单'}
+                    {lang === 'en' ? '📋 Quote & Intercept' : '📋 报价拦截'}
                   </button>
                 </div>
               </div>
@@ -911,6 +923,12 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/* ═══ 报价弹窗 ═══ */}
+      {quoteTarget && (
+        <QuoteModal target={quoteTarget} form={quoteForm} setForm={setQuoteForm} sending={quoteSending}
+          onSend={handleQuoteSend} onClose={() => setQuoteTarget(null)} lang={lang} />
+      )}
+
       {/* ═══ 主内容: 两列 ═══ */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
         {/* ─── 左列 ─── */}
@@ -1107,6 +1125,50 @@ export default function DashboardPage() {
             </div>
           )}
 
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** 报价弹窗（Dashboard雷达滚动条） */
+function QuoteModal({ target, form, setForm, sending, onSend, onClose, lang }: any) {
+  const user = useAuthStore((s) => s.user);
+  const sig = (user as any)?.signature || '';
+  const defaultSig = [(user as any)?.display_name, (user as any)?.company_name, (user as any)?.phone].filter(Boolean).join(' · ');
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="sticky top-0 bg-white border-b border-slate-200 p-5 flex items-center justify-between">
+          <div><h3 className="text-lg font-black text-slate-900">{lang === 'en' ? '📋 Send Quote' : '📋 发送报价'}</h3>
+            <p className="text-xs text-slate-500 mt-0.5">→ {target?.company || target?.name} · {target?.keyword?.substring(0, 20)}</p></div>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 text-xl">✕</button>
+        </div>
+        <div className="p-5 space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Airline' : '航司'}</label>
+              <input className="input-field text-sm w-full" placeholder="e.g. EK/CZ/TK" value={form.airline} onChange={e => setForm({...form, airline: e.target.value.toUpperCase()})} /></div>
+            <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Flight No.' : '航班号'}</label>
+              <input className="input-field text-sm w-full" placeholder="e.g. EK303" value={form.flightNo} onChange={e => setForm({...form, flightNo: e.target.value})} /></div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Price *' : '报价 *'}</label>
+              <input className="input-field text-sm w-full font-bold" placeholder="e.g. 12.5" value={form.price} onChange={e => setForm({...form, price: e.target.value})} /></div>
+            <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Unit' : '单位'}</label>
+              <select className="input-field text-sm w-full" value={form.priceUnit} onChange={e => setForm({...form, priceUnit: e.target.value})}><option value="/CBM">/CBM</option><option value="/KG">/KG</option><option value="/票">/票</option></select></div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Transit (days)' : '时效（天）'}</label>
+              <input className="input-field text-sm w-full" placeholder="e.g. 5" value={form.transit} onChange={e => setForm({...form, transit: e.target.value})} /></div>
+            <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Valid Until' : '有效期至'}</label>
+              <input className="input-field text-sm w-full" type="date" value={form.validUntil} onChange={e => setForm({...form, validUntil: e.target.value})} /></div>
+          </div>
+          <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Note' : '备注'}</label>
+            <textarea className="input-field text-sm w-full min-h-[60px] resize-none" placeholder={lang === 'en' ? 'e.g. Including docs fee' : '如：含文件费'} value={form.note} onChange={e => setForm({...form, note: e.target.value})} /></div>
+          <button onClick={onSend} disabled={sending || !form.price.trim()}
+            className="w-full py-3 bg-red-600 text-white font-black text-base rounded-xl hover:bg-red-700 disabled:opacity-50 transition-all shadow-lg">
+            {sending ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : (lang === 'en' ? '🚀 Send Quote & Intercept' : '🚀 发送报价 · 拦截抢单')}
+          </button>
         </div>
       </div>
     </div>

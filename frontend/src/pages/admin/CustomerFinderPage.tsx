@@ -22,6 +22,7 @@ export default function CustomerFinderPage() {
   const user = useAuthStore((s) => s.user);
   const lang = useAuthStore((s) => s.lang);
   const sig = (user as any)?.signature || '';
+  const defaultSig = [(user as any)?.display_name, (user as any)?.company_name, (user as any)?.phone].filter(Boolean).join(' · ');
   const [port, setPort] = useState('');
   const [days, setDays] = useState(90);
   const [loading, setLoading] = useState(false);
@@ -87,7 +88,7 @@ export default function CustomerFinderPage() {
       quoteForm.transit ? '时效：' + quoteForm.transit + '天' : '',
       quoteForm.validUntil ? '有效期至：' + quoteForm.validUntil : '',
       quoteForm.note ? '备注：' + quoteForm.note : '',
-      '', sig ? sig : '——通过123cargo雷达系统自动匹配',
+      '', sig || defaultSig,
     ].filter(Boolean).join('\n');
     try {
       await client.post('/messages', { receiver_id: quoteModal.user_id, content: lines });
