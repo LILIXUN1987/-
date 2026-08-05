@@ -267,7 +267,13 @@ export default function DashboardPage() {
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-white border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50 hover:shadow-md transition-all">
               <span className="text-lg">🎯</span>
               <span>{lang === 'en' ? 'Radar Scan' : '雷达扫描'}</span>
-              <span className="text-emerald-400 text-xs">👈</span>
+            </button>
+          )}
+          {(isForwarder || isAdmin) && (
+            <button onClick={() => navigate('/admin/customer-finder')}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-white border-2 border-amber-300 text-amber-700 hover:bg-amber-50 hover:shadow-md transition-all">
+              <span className="text-lg">📡</span>
+              <span>{lang === 'en' ? 'Port Subs' : '港口订阅'}</span>
             </button>
           )}
         </div>
@@ -797,8 +803,6 @@ export default function DashboardPage() {
               <BannerCard icon={Globe} title={lang === 'en' ? 'DDP' : '海外DDP'} subtitle={lang === 'en' ? 'Door-to-door overseas' : '海外代理门到门报价'} badge="🌍" color="indigo" onClick={() => navigate('/admin/ddp')} />
               <BannerCard icon={Handshake} title={lang === 'en' ? 'Partners' : '海外合作商'} subtitle={lang === 'en' ? 'Overseas partners network' : '管理和对接海外代理'} badge="🤝" color="green" onClick={() => navigate('/admin/overseas-partners')} />
               <BannerCard icon={AlertTriangle} title={lang === 'en' ? 'DG Agent' : '危险品代理'} subtitle={lang === 'en' ? 'Dangerous goods specialists' : '危品运输专家入驻'} badge="☣️" color="red" onClick={() => navigate('/admin/dg-become-agent')} />
-              <BannerCard icon={FileText} title={lang === 'en' ? 'Price Tables' : '价格表'} subtitle={lang === 'en' ? 'Download & compare rates' : '下载运价表对比报价'} badge="📊" color="purple" onClick={() => navigate('/admin/price-tables')} />
-              <BannerCard icon={Bookmark} title={lang === 'en' ? 'Directory' : '展会通讯录'} subtitle={lang === 'en' ? '3000+ contacts' : '3000+ 同行名录'} badge="📇" color="violet" onClick={() => navigate('/admin/card-directory')} />
               <BannerCard icon={Gift} title={lang === 'en' ? 'Subscribe' : '开通月费'} subtitle={lang === 'en' ? '19.9/mo' : '19.9/月 报关券+更多权益'} badge="💳" color="fuchsia" onClick={() => navigate('/admin/subscribe')} />
               <BannerCard icon={Mail} title={lang === 'en' ? 'Inbox' : '站内信'} subtitle={lang === 'en' ? 'Real-time messages' : '实时沟通与报价回复'} badge={unreadCount > 0 ? String(unreadCount) : '📩'} color="cyan" onClick={() => navigate('/admin/inbox')} />
               <BannerCard icon={Shield} title={lang === 'en' ? 'Company Lookup' : '货代避雷针'} subtitle={lang === 'en' ? 'Check reviews' : '合作前查口碑'} badge="🆓" color="rose" onClick={() => navigate('/admin/complaints')} />
@@ -814,14 +818,10 @@ export default function DashboardPage() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <BannerCard icon={Gift} title={lang === 'en' ? 'My Coupons' : '我的券包'} subtitle={lang === 'en' ? 'Coupons from forwarders' : '货代送的报关券'} badge="🎫" color="pink" onClick={() => navigate('/admin/coupon-wallet')} />
-              <BannerCard icon={Scale} title={lang === 'en' ? 'Port Lawyers' : '口岸律师'} subtitle={lang === 'en' ? 'Legal services for logistics' : '合同审核·货代纠纷·法律咨询'} badge="⚖️" color="amber" onClick={() => navigate('/admin/lawyers')} />
               <BannerCard icon={Search} title={lang === 'en' ? 'Inspection & Cert' : '检测认证'} subtitle={lang === 'en' ? 'Inspection & compliance' : '验货·质检·合规认证'} badge="🔬" color="teal" onClick={() => navigate('/admin/inspector-directory')} />
               <BannerCard icon={Shield} title={lang === 'en' ? 'Cargo Insurance' : '运输保险'} subtitle={lang === 'en' ? 'Cargo & liability insurance' : '货运险·责任险·在线投保'} badge="🛡️" color="rose" onClick={() => navigate('/admin/insurer-directory')} />
               <BannerCard icon={Mail} title={lang === 'en' ? 'Inbox' : '站内信'} subtitle={lang === 'en' ? 'Real-time messages' : '实时沟通与报价回复'} badge={unreadCount > 0 ? String(unreadCount) : '📩'} color="cyan" onClick={() => navigate('/admin/inbox')} />
               <BannerCard icon={Shield} title={lang === 'en' ? 'Company Lookup' : '货代避雷针'} subtitle={lang === 'en' ? 'Check reviews' : '合作前查口碑'} badge="🆓" color="rose" onClick={() => navigate('/admin/complaints')} />
-              <BannerCard icon={FileText} title={lang === 'en' ? 'Price Tables' : '价格表'} subtitle={lang === 'en' ? 'Download & compare rates' : '下载运价表对比报价'} badge="📊" color="purple" onClick={() => navigate('/admin/price-tables')} />
-              <BannerCard icon={Bookmark} title={lang === 'en' ? 'Directory' : '展会通讯录'} subtitle={lang === 'en' ? '3000+ contacts' : '3000+ 同行名录'} badge="📇" color="violet" onClick={() => navigate('/admin/card-directory')} />
-              <BannerCard icon={Bookmark} title={lang === 'en' ? 'Tools' : '工具箱'} subtitle={lang === 'en' ? 'HS code, exchange rate & more' : '海关编码·汇率·时差查询'} badge="🔧" color="teal" onClick={() => navigate('/admin/tools')} />
               <BannerCard icon={MapPin} title={lang === 'en' ? '📡 Activate Radar' : '📡 开启港口监控'} subtitle={lang === 'en' ? 'Deploy radar on your ports, get alerts when searched' : '部署雷达到你优势港口，有人搜索立即知道'} badge="📡" color="blue" onClick={() => navigate('/admin/profile')} />
               <BannerCard icon={Search} title={lang === 'en' ? 'Find Partners' : '搜同行 · 找公司'} subtitle={lang === 'en' ? 'Search companies & contacts in the community' : '搜公司名、联系人，直达同行主页'} badge="🔍" color="indigo" onClick={() => { const el = document.getElementById('search-sec'); if (el) { el.scrollIntoView({ behavior: 'smooth' }); } }} />
             </div>

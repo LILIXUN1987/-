@@ -91,15 +91,12 @@ export function useNavItems() {
     { to: '/admin/insurer-directory', label: lang === 'en' ? '🛡️ Insurance' : '🛡️ 运输保险', icon: Shield },
     ...(rc.isTrader ? [] : [{ to: '/admin/overseas-partners', label: lang === 'en' ? 'Overseas Partners' : '我的海外合作商', icon: Handshake }]),
     ...(rc.isTrader ? [] : [{ to: '/admin/ddp', label: t(AdminT.ddp, lang), icon: Globe }]),
-    ...(rc.isTrader ? [] : [{ to: '/admin/card-directory', label: lang === 'en' ? 'Directory' : '展会通讯录', icon: Users }]),
     { to: '/admin/company-profile', label: lang === 'en' ? '🏢 Company Page' : '🏢 公司主页', icon: Building2 },
     { to: '/admin/profile', label: t(AdminT.profile, lang), icon: User },
   ];
 
   const toolsItems = rc.isLawyer ? [] : [
-    { to: "/admin/price-tables", label: rc.isTrader ? (lang === "en" ? "Price Table" : "运价表") : (lang === "en" ? "Price Tables" : "货代价格表"), icon: FileText },
     { to: "/admin/tools", label: lang === "en" ? "🔧 Toolbox" : "🔧 工具箱", icon: Bookmark },
-    { to: "/admin/card-directory", label: lang === "en" ? "Directory" : "展会通讯录", icon: Users },
   ];
 
   const forwarderItems: any[] = rc.isTrader ? [
@@ -112,7 +109,6 @@ export function useNavItems() {
 
   const communityItems = FEATURES.AUDIT_MODE ? [] : [
     ...(isOverseasAgent ? [] : [{ to: '/admin/complaints', label: lang === 'en' ? '🔍 Company Lookup' : '🛡️ 货代避雷针', icon: MessageSquare, yellow: true }]),
-    { to: '/admin/suggestions', label: lang === 'en' ? 'Suggestions' : '群友建议与问题解答', icon: PenSquare },
   ];
 
   const adminItems = rc.isAdmin ? [
@@ -126,7 +122,7 @@ export function useNavItems() {
 
   // 网安审核模式
   if (FEATURES.AUDIT_MODE && !rc.isAdmin) {
-    const keepPaths = ['/admin/dashboard', '/admin/files', '/admin/price-tables', '/admin/card-directory', '/admin/subscribe', '/admin/coupons', '/admin/coupon-wallet'];
+    const keepPaths = ['/admin/dashboard', '/admin/files', '/admin/subscribe', '/admin/coupons', '/admin/coupon-wallet'];
     return {
       mainItems: mainItems.filter((item: any) => keepPaths.includes(item.to)),
       forwarderItems: forwarderItems.filter((item: any) => keepPaths.includes(item.to)),
