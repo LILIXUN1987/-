@@ -710,12 +710,6 @@ export default function DashboardPage() {
       {/* ── 核心业务：3列大Banner ── */}
       {(isForwarder || !isOverseasAgent) && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-          {(isForwarder || isAdmin) && (
-            <BannerCard icon={FileUp} title={lang === 'en' ? '📡 Deploy Radar' : '📡 部署雷达'}
-              subtitle={lang === 'en' ? 'Set routes, system locks targets' : '设置优势航线，系统锁定目标客户'}
-              badge={lang === 'en' ? 'Intelligence' : '情报收集'} color="blue"
-              onClick={() => navigate('/admin/files?tab=entry')} />
-          )}
           {!isOverseasAgent && (
             <BannerCard icon={Search} title={lang === 'en' ? '👁 Live Monitor' : '👁 实时监控'}
               subtitle={lang === 'en' ? 'See who is searching right now' : '不是在看价——是在看活人，看谁在找你的航线'}
