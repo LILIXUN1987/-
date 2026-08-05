@@ -31,8 +31,6 @@ const AdminRenewPage = lazy(() => import('./pages/admin/AdminRenewPage'));
 const AdminImportPage = lazy(() => import('./pages/admin/AdminImportPage'));
 const CompanyVerificationPage = lazy(() => import('./pages/admin/CompanyVerificationPage'));
 const PriceTablePage = lazy(() => import('./pages/admin/PriceTablePage'));
-const DgAgentDirectoryPage = lazy(() => import('./pages/admin/DgAgentDirectoryPage'));
-const DgBecomeAgentPage = lazy(() => import('./pages/admin/DgBecomeAgentPage'));
 const InspectorDirectoryPage = lazy(() => import('./pages/admin/InspectorDirectoryPage'));
 const InsurerDirectoryPage = lazy(() => import('./pages/admin/InsurerDirectoryPage'));
 const DgReviewPage = lazy(() => import('./pages/admin/DgReviewPage'));
@@ -148,8 +146,6 @@ export default function App() {
             <Route path="/admin/suggestions" element={<SuggestionPage />} />
             <Route path="/admin/inbox" element={<InboxPage />} />
             <Route path="/admin/price-tables" element={<PriceTablePage />} />
-            <Route path="/admin/dg-agent-directory" element={<DgAgentDirectoryPage />} />
-            <Route path="/admin/dg-become-agent" element={<DgBecomeAgentPage />} />
             <Route path="/admin/inspector-directory" element={<InspectorDirectoryPage />} />
             <Route path="/admin/insurer-directory" element={<InsurerDirectoryPage />} />
             <Route path="/admin/dg-review" element={<ProtectedRoute requiredRole="admin"><DgReviewPage /></ProtectedRoute>} />

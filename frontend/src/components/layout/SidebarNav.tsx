@@ -85,8 +85,6 @@ export function useNavItems() {
       { to: '/admin/my-posts', label: lang === 'en' ? '📦 My Posts' : '📦 我的发布', icon: FileUp },
       { to: '/admin/frequent-partners', label: lang === 'en' ? '⭐ Partners' : '⭐ 常往来合作商', icon: Star },
     ] : []),
-    ...(rc.isForwarder || rc.isAdmin ? [{ to: '/admin/dg-become-agent', label: lang === 'en' ? '☣️ Become DG Agent' : '☣️ 成为危险品代理', icon: AlertTriangle }] : []),
-    { to: '/admin/dg-agent-directory', label: lang === 'en' ? '🏢 DG Agent Directory' : '🏢 危险品代理黄页', icon: Building2 },
     { to: '/admin/inspector-directory', label: lang === 'en' ? '🔬 Inspection' : '🔬 检测认证', icon: Search },
     { to: '/admin/insurer-directory', label: lang === 'en' ? '🛡️ Insurance' : '🛡️ 运输保险', icon: Shield },
     ...(rc.isTrader ? [] : [{ to: '/admin/overseas-partners', label: lang === 'en' ? 'Overseas Partners' : '我的海外合作商', icon: Handshake }]),
