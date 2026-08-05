@@ -195,7 +195,7 @@ export default function FileUploadPage() {
       )}
 
       {/* ════════════════════════════════════════ */}
-      {/* 📡 部署雷达——商业情报控制台 */}
+      {/* 🤝 航线资源互换站 */}
       {/* ════════════════════════════════════════ */}
       {activeTab === 'entry' && (
         <>
@@ -208,10 +208,10 @@ export default function FileUploadPage() {
                 </div>
                 <div>
                   <h2 className="text-lg font-black text-slate-900">
-                    {lang === 'en' ? 'Intelligence Console' : '商业情报控制台'}
+                    {lang === 'en' ? '🤝 Route Exchange Hub' : '🤝 航线资源互换站'}
                   </h2>
                   <p className="text-xs text-slate-500">
-                    {lang === 'en' ? 'Deploy your cargo to the radar network — JC TRANS & WCA certified' : '部署舱位到雷达网络——已接入 JC TRANS 和 WCA 认证联盟'}
+                    {lang === 'en' ? 'Share your capacity — get matched with direct customers & overseas agent services' : '发布您的优势运力，换取平台精准直客匹配与海外代理托管服务'}
                   </p>
                 </div>
               </div>

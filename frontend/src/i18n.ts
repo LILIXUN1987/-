@@ -297,7 +297,7 @@ export const FileT = {
   statLand: { zh: '陆运信息', en: 'Land Freight' },
   // Tab 卡片
   tabOverview: { zh: '总览', en: 'Overview' },
-  tabEntry: { zh: '📡 部署雷达（情报录入）', en: '📡 Deploy Radar' },
+  tabEntry: { zh: '🤝 互换优势航线', en: '🤝 Swap Routes' },
   tabQuery: { zh: '👁 实时监控（看谁在搜）', en: '👁 Live Monitor' },
   tabQuote: { zh: '📩 发布需求等报价', en: '📩 Request Quotes' },
   tabDescOverview: { zh: '雷达总览与动态', en: 'Radar & Activity' },
