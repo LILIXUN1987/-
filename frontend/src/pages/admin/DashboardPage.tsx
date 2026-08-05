@@ -5,13 +5,12 @@ import client from '../../api/client';
 import { useAuthStore } from '../../store/authStore';
 import { getRoleChecks } from '../../types';
 import {
-  BarChart3, TrendingUp, Search, Users, Gift,
-  FileUp, Plane, Truck, Package, Eye, Activity,
-  Sparkles, MapPin, Loader2, FileText,
-  Handshake, AlertTriangle, Bookmark, Globe,
+  TrendingUp, Search, Users, Gift,
+  FileUp, Plane, Truck, Package, Activity,
+  Sparkles, MapPin, Loader2,
+  Handshake, Bookmark, Globe,
   Shield, Mail, MessageSquare, Scale, Star,
   Zap, Ship,
-  Target,
   Building2,
 } from 'lucide-react';
 import { useUnreadStore } from '../../store/unreadStore';
@@ -371,9 +370,9 @@ export default function DashboardPage() {
                 badge={lang === 'en' ? 'Earn Leads' : '获取商机'} color="blue"
                 onClick={() => navigate('/admin/files?tab=entry')} />
             )}
-            <BannerCard icon={Search} title={lang === 'en' ? '👁 Live Monitor' : '👁 实时监控'}
-              subtitle={lang === 'en' ? 'See who is searching now' : '看谁在搜你的航线'}
-              badge={lang === 'en' ? 'Live' : '实时'} color="emerald"
+            <BannerCard icon={Search} title={lang === 'en' ? '🌍 Global Search' : '🌍 全球找舱位'}
+              subtitle={lang === 'en' ? 'Search cargo spaces worldwide' : '全球航线一键搜，哪个庄家有舱一看便知'}
+              badge={lang === 'en' ? 'Search' : '搜索'} color="emerald"
               onClick={() => navigate('/admin/files?tab=query')} />
             {!(FEATURES.AUDIT_MODE && !rc.isAdmin) && (
               <BannerCard icon={MessageSquare} title={lang === 'en' ? '📩 Get Quotes' : '📩 坐等报价'}
