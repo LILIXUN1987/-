@@ -360,27 +360,59 @@ export default function DashboardPage() {
         </button>
       )}
 
-      {/* ── 核心业务：3列大Banner ── */}
+      {/* ── 核心功能区：2行×4列 ── */}
       {(!isOverseasAgent) && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-          {(isForwarder || isAdmin) && (
-            <BannerCard icon={Package} title={lang === 'en' ? '🤝 Swap Routes' : '🤝 互换优势航线'}
-              subtitle={lang === 'en' ? 'Share capacity, get matched with customers' : '亮出运力，换取精准直客匹配'}
-              badge={lang === 'en' ? 'Earn Leads' : '获取商机'} color="blue"
-              onClick={() => navigate('/admin/files?tab=entry')} />
-          )}
-          {!isOverseasAgent && (
+        <div className="space-y-3 mb-4">
+          {/* 第一行 */}
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            {(isForwarder || isAdmin) && (
+              <BannerCard icon={Package} title={lang === 'en' ? '🤝 Swap Routes' : '🤝 互换航线'}
+                subtitle={lang === 'en' ? 'Share capacity, get matched' : '亮出运力，换取直客匹配'}
+                badge={lang === 'en' ? 'Earn Leads' : '获取商机'} color="blue"
+                onClick={() => navigate('/admin/files?tab=entry')} />
+            )}
             <BannerCard icon={Search} title={lang === 'en' ? '👁 Live Monitor' : '👁 实时监控'}
-              subtitle={lang === 'en' ? 'See who is searching right now' : '不是在看价——是在看活人，看谁在找你的航线'}
+              subtitle={lang === 'en' ? 'See who is searching now' : '看谁在搜你的航线'}
               badge={lang === 'en' ? 'Live' : '实时'} color="emerald"
               onClick={() => navigate('/admin/files?tab=query')} />
-          )}
-          {!isOverseasAgent && !(FEATURES.AUDIT_MODE && !rc.isAdmin) && (
-            <BannerCard icon={MessageSquare} title={lang === 'en' ? '📩 Get Quotes' : '📩 坐等报价'}
-              subtitle={lang === 'en' ? 'Post demand, forwarders bid' : '发布需求，多家货代主动报价——坐着等就行'}
-              badge={lang === 'en' ? 'Free' : '免费'} color="orange"
-              onClick={() => navigate('/admin/quote')} />
-          )}
+            {!(FEATURES.AUDIT_MODE && !rc.isAdmin) && (
+              <BannerCard icon={MessageSquare} title={lang === 'en' ? '📩 Get Quotes' : '📩 坐等报价'}
+                subtitle={lang === 'en' ? 'Post demand, forwarders bid' : '发布需求，货代主动来找你'}
+                badge={lang === 'en' ? 'Free' : '免费'} color="orange"
+                onClick={() => navigate('/admin/quote')} />
+            )}
+            {(isForwarder || isAdmin) && (
+              <BannerCard icon={MessageSquare} title={lang === 'en' ? '📋 Inquiries' : '📋 询盘管理'}
+                subtitle={lang === 'en' ? 'Manage trader inquiries' : '统一回复外贸询价'}
+                badge="📋" color="indigo"
+                onClick={() => navigate('/admin/inquiries')} />
+            )}
+          </div>
+          {/* 第二行 */}
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            {(isForwarder || isAdmin) && (
+              <BannerCard icon={FileUp} title={lang === 'en' ? '📦 My Posts' : '📦 我的发布'}
+                subtitle={lang === 'en' ? 'Published cargo spaces' : '查看已发布舱位记录'}
+                badge="📦" color="sky"
+                onClick={() => navigate('/admin/my-posts')} />
+            )}
+            {!isTrader && (
+              <BannerCard icon={Globe} title={lang === 'en' ? '🌍 DDP' : '🌍 海外DDP'}
+                subtitle={lang === 'en' ? 'Door-to-door overseas' : '海外代理门到门报价'}
+                badge="🌍" color="indigo"
+                onClick={() => navigate('/admin/ddp')} />
+            )}
+            {!isTrader && (
+              <BannerCard icon={Truck} title={lang === 'en' ? '🚚 Port Services' : '🚚 口岸服务'}
+                subtitle={lang === 'en' ? 'Trucking, warehousing' : '拖车·仓储·报关·熏蒸'}
+                badge="🚚" color="orange"
+                onClick={() => navigate('/admin/port-services')} />
+            )}
+            <BannerCard icon={Shield} title={lang === 'en' ? '🛡️ Company Lookup' : '🛡️ 货代避雷针'}
+              subtitle={lang === 'en' ? 'Check reviews before trust' : '合作前查口碑'}
+              badge="🆓" color="rose"
+              onClick={() => navigate('/admin/complaints')} />
+          </div>
         </div>
       )}
 
