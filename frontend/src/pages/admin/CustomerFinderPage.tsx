@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import client from '../../api/client';
-import { Search, Loader2, Users, MapPin, MessageSquare, Clock, TrendingUp, Target, Shield, Zap, Award, Globe, Bell } from 'lucide-react';
+import { Search, Loader2, Users, MapPin, MessageSquare, Clock, TrendingUp, Target, Shield, Zap, Award, Globe, Bell, X } from 'lucide-react';
 
 interface Searcher {
   user_id: string;
@@ -26,7 +26,9 @@ export default function CustomerFinderPage() {
   const [results, setResults] = useState<Searcher[]>([]);
   const [totalSearches, setTotalSearches] = useState(0);
   const [searched, setSearched] = useState(false);
-  const [sending, setSending] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
+  const [quoteModal, setQuoteModal] = useState<any>(null);
+  const [quoteForm, setQuoteForm] = useState({ airline: '', flightNo: '', price: '', priceUnit: '/CBM', transit: '', validUntil: '', note: '' });
   const [subscribedPorts, setSubscribedPorts] = useState<string[]>([]);
   const [subLoading, setSubLoading] = useState(false);
   const [subPort, setSubPort] = useState('');
@@ -68,13 +70,29 @@ export default function CustomerFinderPage() {
     setLoading(false);
   };
 
-  const handleContact = async (userId: string) => {
-    setSending(userId);
+  const openQuote = (r: any) => {
+    setQuoteModal(r);
+    setQuoteForm({ airline: '', flightNo: '', price: '', priceUnit: '/CBM', transit: '', validUntil: '', note: '' });
+  };
+
+  const sendQuote = async () => {
+    if (!quoteForm.price.trim()) { alert(lang === 'en' ? 'Please enter price' : '请输入报价'); return; }
+    setSending(true);
+    const lines = ['📋 正式报价', '',
+      '航线：' + port.toUpperCase(),
+      quoteForm.airline ? '航司：' + quoteForm.airline + (quoteForm.flightNo ? ' ' + quoteForm.flightNo : '') : '',
+      '报价：¥' + quoteForm.price.trim() + quoteForm.priceUnit,
+      quoteForm.transit ? '时效：' + quoteForm.transit + '天' : '',
+      quoteForm.validUntil ? '有效期至：' + quoteForm.validUntil : '',
+      quoteForm.note ? '备注：' + quoteForm.note : '',
+      '', '——通过123cargo雷达系统自动匹配', '如有兴趣请联系我进一步沟通。',
+    ].filter(Boolean).join('\n');
     try {
-      await client.post('/messages', { receiver_id: userId, content: `您好，我通过JC TRANS联盟雷达系统注意到您搜索过「${port.toUpperCase()}」航线。我们公司这条线有固定舱位，价格有竞争力——方便发您报价参考吗？` });
-      alert(lang === 'en' ? '✅ Message sent!' : '✅ 站内信已发送！');
+      await client.post('/messages', { receiver_id: quoteModal.user_id, content: lines });
+      alert(lang === 'en' ? '✅ Quote sent! The client will see your detailed offer.' : '✅ 报价已发送！对方会看到你的详细报价信息。');
+      setQuoteModal(null);
     } catch { alert(lang === 'en' ? 'Failed' : '发送失败'); }
-    setSending(null);
+    setSending(false);
   };
 
   const timeAgo = (t: string) => {
@@ -336,15 +354,67 @@ export default function CustomerFinderPage() {
                     </div>
                   </div>
                   {/* 操作 */}
-                  <button onClick={() => handleContact(r.user_id)} disabled={sending === r.user_id}
-                    className="flex-shrink-0 flex items-center gap-1.5 px-5 py-2.5 bg-red-50 text-red-700 font-black text-sm rounded-xl hover:bg-red-100 transition-all border-2 border-red-200 disabled:opacity-50 group-hover:scale-105 shadow-sm">
-                    {sending === r.user_id ? <Loader2 className="w-4 h-4 animate-spin" /> : <MessageSquare className="w-4 h-4" />}
-                    {lang === 'en' ? 'INTERCEPT' : '拦截抢单'}
+                  <button onClick={() => openQuote(r)}
+                    className="flex-shrink-0 flex items-center gap-1.5 px-5 py-2.5 bg-red-50 text-red-700 font-black text-sm rounded-xl hover:bg-red-100 transition-all border-2 border-red-200 group-hover:scale-105 shadow-sm">
+                    <MessageSquare className="w-4 h-4" />
+                    {lang === 'en' ? 'QUOTE & INTERCEPT' : '报价拦截'}
                   </button>
                 </div>
               );
               })
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ── 报价弹窗 ── */}
+      {quoteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setQuoteModal(null)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="sticky top-0 bg-white border-b border-slate-200 p-5 flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-black text-slate-900">{lang === 'en' ? '📋 Send Quote' : '📋 发送报价'}</h3>
+                <p className="text-xs text-slate-500 mt-0.5">→ {quoteModal.company_name || quoteModal.display_name} · {port.toUpperCase()}</p>
+              </div>
+              <button onClick={() => setQuoteModal(null)} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
+            </div>
+            <div className="p-5 space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Airline' : '航司'}</label>
+                  <input className="input-field text-sm w-full" placeholder={lang === 'en' ? 'e.g. EK/CZ/TK' : '如：EK/CZ/TK'} value={quoteForm.airline}
+                    onChange={e => setQuoteForm(f => ({ ...f, airline: e.target.value.toUpperCase() }))} /></div>
+                <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Flight No.' : '航班号'}</label>
+                  <input className="input-field text-sm w-full" placeholder="e.g. EK303" value={quoteForm.flightNo}
+                    onChange={e => setQuoteForm(f => ({ ...f, flightNo: e.target.value }))} /></div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Price *' : '报价 *'}</label>
+                  <input className="input-field text-sm w-full font-bold" placeholder="e.g. 12.5" value={quoteForm.price}
+                    onChange={e => setQuoteForm(f => ({ ...f, price: e.target.value }))} /></div>
+                <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Unit' : '单位'}</label>
+                  <select className="input-field text-sm w-full" value={quoteForm.priceUnit}
+                    onChange={e => setQuoteForm(f => ({ ...f, priceUnit: e.target.value }))}>
+                    <option value="/CBM">/CBM</option><option value="/KG">/KG</option><option value="/票">/票</option></select></div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Transit (days)' : '时效（天）'}</label>
+                  <input className="input-field text-sm w-full" placeholder="e.g. 5" value={quoteForm.transit}
+                    onChange={e => setQuoteForm(f => ({ ...f, transit: e.target.value }))} /></div>
+                <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Valid Until' : '有效期至'}</label>
+                  <input className="input-field text-sm w-full" type="date" value={quoteForm.validUntil}
+                    onChange={e => setQuoteForm(f => ({ ...f, validUntil: e.target.value }))} /></div>
+              </div>
+              <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Note' : '备注'}</label>
+                <textarea className="input-field text-sm w-full min-h-[60px] resize-none" placeholder={lang === 'en' ? 'e.g. Including docs fee, valid for 7 days' : '如：含文件费，7天有效'} value={quoteForm.note}
+                  onChange={e => setQuoteForm(f => ({ ...f, note: e.target.value }))} /></div>
+              <div className="bg-amber-50 rounded-xl p-3 text-xs text-amber-700">
+                {lang === 'en' ? '💡 Your quote will be sent as a structured message. The client sees your airline, price, and validity — more professional, higher conversion.' : '💡 报价将以格式化消息发送，对方能看到航司、价格和有效期——比泛泛打招呼专业得多，成交率更高。'}
+              </div>
+              <button onClick={sendQuote} disabled={sending || !quoteForm.price.trim()}
+                className="w-full py-3 bg-red-600 text-white font-black text-base rounded-xl hover:bg-red-700 disabled:opacity-50 transition-all shadow-lg">
+                {sending ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : (lang === 'en' ? '🚀 Send Quote & Intercept' : '🚀 发送报价 · 拦截抢单')}
+              </button>
+            </div>
           </div>
         </div>
       )}
