@@ -182,6 +182,9 @@ export default function DashboardPage() {
   };
   const [selectedCargo, setSelectedCargo] = useState<any>(null);
   const [cargoPaused, setCargoPaused] = useState(false);
+  const [inquiryTarget, setInquiryTarget] = useState<any>(null);
+  const [inquiryForm, setInquiryForm] = useState({ pieces: '', weight: '', volume: '', note: '' });
+  const [inquirySending, setInquirySending] = useState(false);
 
   useEffect(() => {
     client.get("/cargo-spaces/trending").then(r => {
@@ -614,22 +617,9 @@ export default function DashboardPage() {
                     {lang === 'en' ? 'Close' : '关闭'}
                   </button>
                   <button className="px-4 py-1.5 bg-primary-600 text-white font-bold text-xs rounded-lg hover:bg-primary-700 transition-all flex items-center gap-1.5"
-                    onClick={async () => {
-                      setContactingId(selectedCargo.id);
-                      try {
-                        await client.post('/messages', {
-                          receiver_id: selectedCargo.user_id,
-                          content: `您好，我看到您在社区发布了「${selectedCargo.origin_port}→${selectedCargo.dest_port}」的舱位信息（¥${selectedCargo.price_per_cbm || '--'}/CBM），我对这条航线很感兴趣，请发详细报价给我。`,
-                        });
-                        alert(lang === 'en' ? '✅ Inquiry sent!' : '✅ 询价已发送！');
-                      } catch {
-                        alert(lang === 'en' ? '❌ Failed' : '❌ 发送失败');
-                      }
-                      setContactingId(null);
-                    }}
-                    disabled={contactingId === selectedCargo.id}>
+                    onClick={() => { setInquiryTarget(selectedCargo); setInquiryForm({ pieces: '', weight: '', volume: '', note: '' }); }}>
                     <MessageSquare className="w-3.5 h-3.5" />
-                    {lang === 'en' ? 'Inquire Now' : '立即询价'}
+                    {lang === 'en' ? '📋 Inquire Now' : '📋 立即询价'}
                   </button>
                 </div>
               </div>
@@ -933,6 +923,58 @@ export default function DashboardPage() {
       {quoteTarget && (
         <QuoteModal target={quoteTarget} form={quoteForm} setForm={setQuoteForm} sending={quoteSending}
           onSend={handleQuoteSend} onClose={() => setQuoteTarget(null)} lang={lang} />
+      )}
+
+      {/* ═══ 询价弹窗 ═══ */}
+      {inquiryTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setInquiryTarget(null)}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="sticky top-0 bg-white border-b border-slate-200 p-5 flex items-center justify-between">
+              <div><h3 className="text-lg font-black text-slate-900">{lang === 'en' ? '📋 Send Inquiry' : '📋 发送询价'}</h3>
+                <p className="text-xs text-slate-500 mt-0.5">{inquiryTarget.origin_port || '?'} → {inquiryTarget.dest_port || '?'} · {inquiryTarget.company_name || ''}</p></div>
+              <button onClick={() => setInquiryTarget(null)} className="text-slate-400 hover:text-slate-600 text-xl">✕</button>
+            </div>
+            <div className="p-5 space-y-4">
+              <div className="bg-slate-50 rounded-xl p-3 text-sm text-slate-600">
+                <p>航线：{inquiryTarget.origin_port || '?'} → {inquiryTarget.dest_port || '?'}</p>
+                {inquiryTarget.price_per_cbm && <p>参考价：¥{inquiryTarget.price_per_cbm}/CBM</p>}
+                {inquiryTarget.price_per_kg && <p>参考价：¥{inquiryTarget.price_per_kg}/KG</p>}
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Pieces' : '件数'}</label>
+                  <input className="input-field text-sm w-full" placeholder="e.g. 5" value={inquiryForm.pieces} onChange={e => setInquiryForm(f => ({ ...f, pieces: e.target.value }))} /></div>
+                <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Weight (KG)' : '毛重(KG)'}</label>
+                  <input className="input-field text-sm w-full" placeholder="e.g. 500" value={inquiryForm.weight} onChange={e => setInquiryForm(f => ({ ...f, weight: e.target.value }))} /></div>
+                <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Volume (CBM)' : '体积(CBM)'}</label>
+                  <input className="input-field text-sm w-full" placeholder="e.g. 2.5" value={inquiryForm.volume} onChange={e => setInquiryForm(f => ({ ...f, volume: e.target.value }))} /></div>
+              </div>
+              <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Note' : '备注'}</label>
+                <textarea className="input-field text-sm w-full min-h-[60px] resize-none" placeholder={lang === 'en' ? 'Cargo details, timeline, special requirements...' : '货物详情、时间要求、特殊需求...'} value={inquiryForm.note} onChange={e => setInquiryForm(f => ({ ...f, note: e.target.value }))} /></div>
+              <button onClick={async () => {
+                setInquirySending(true);
+                const sig = (user as any)?.signature || '';
+                const defaultSig = [user?.display_name, user?.company_name, user?.phone].filter(Boolean).join(' · ');
+                const lines = ['📦 询价请求', '',
+                  '航线：' + (inquiryTarget.origin_port || '?') + ' → ' + (inquiryTarget.dest_port || '?'),
+                  inquiryForm.pieces ? '件数：' + inquiryForm.pieces + '件' : '',
+                  inquiryForm.weight ? '毛重：' + inquiryForm.weight + 'KG' : '',
+                  inquiryForm.volume ? '体积：' + inquiryForm.volume + 'CBM' : '',
+                  inquiryForm.note ? '备注：' + inquiryForm.note : '',
+                  '', sig || defaultSig,
+                ].filter(Boolean).join('\n');
+                try {
+                  await client.post('/messages', { receiver_id: inquiryTarget.user_id, content: lines });
+                  alert(lang === 'en' ? '✅ Inquiry sent!' : '✅ 询价已发送！');
+                  setInquiryTarget(null);
+                } catch { alert(lang === 'en' ? 'Failed' : '发送失败'); }
+                setInquirySending(false);
+              }} disabled={inquirySending}
+                className="w-full py-3 bg-primary-600 text-white font-black text-base rounded-xl hover:bg-primary-700 disabled:opacity-50 transition-all shadow-lg">
+                {inquirySending ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : (lang === 'en' ? '📩 Send Inquiry' : '📩 发送询价')}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* ═══ 主内容: 两列 ═══ */}
