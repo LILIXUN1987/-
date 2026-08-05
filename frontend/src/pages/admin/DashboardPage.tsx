@@ -213,9 +213,15 @@ export default function DashboardPage() {
             <p className="text-sm text-gray-500">{data?.user?.company_name || ''} · {roleLabel}{data?.user?.is_newbie ? ' · 🌟 新手' : ''}</p>
           </div>
           {!isTrader && !isOverseasAgent && !isLawyer && !isRestricted && (
-            <span className="text-xs text-gray-400 italic hidden sm:block">
-              📡 {lang === 'en' ? 'Radar active — don\'t miss your next deal' : '雷达运行中——别错过下一个客户'}
-            </span>
+            <div className="flex items-center gap-2 bg-gradient-to-r from-red-50 to-amber-50 border-2 border-red-200 rounded-xl px-4 py-2.5 mt-2 animate-pulse">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
+              </span>
+              <span className="text-sm font-black text-red-600">
+                📡 {lang === 'en' ? 'RADAR ACTIVE — Don\'t miss your next deal!' : '雷达运行中——别错过下一个客户！'}
+              </span>
+            </div>
           )}
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
