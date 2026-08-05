@@ -107,7 +107,9 @@ export const messagesController = {
       });
 
       // 判断是否发送邮件通知：用户开启了「全部消息邮件通知」或这是首次对话
-      const shouldEmail = (receiver as any)?.notify_all_messages_email || isFirstMessage;
+      // 结构化报价/询价（拦截抢单）始终发邮件——商机不能错过
+      const isBusinessMsg = /📋\s*正式报价|📦\s*询价请求/.test(finalContent);
+      const shouldEmail = isBusinessMsg || (receiver as any)?.notify_all_messages_email || isFirstMessage;
 
       if (shouldEmail && (receiver as any)?.email && (receiver as any)?.email_verified) {
         try {
