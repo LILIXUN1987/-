@@ -41,14 +41,22 @@ export const quoteController = {
       const senderName = senderUser?.display_name || '用户';
       const senderCompany = senderUser?.company_name || '';
 
+      const { sendNewMessageNotification } = await import('../services/email.service');
       for (const fwd of matchingCargos) {
         if (fwd.id === req.user!.id) continue; // 不给自己发
         try {
+          const content = `📬 新的询价通知\n\n${senderCompany} ${senderName} 正在寻找至「${dest}」的物流方案。\n货源地：${origin}\n包装：${packaging}\n${weight_kg ? '重量：' + weight_kg + 'KG\n' : ''}${volume_cbm ? '体积：' + volume_cbm + 'CBM\n' : ''}${notes ? '备注：' + notes : ''}\n\n请前往「物流询价 → 待报价」查看详情并报价。`;
           await db('messages').insert({
             id: uuidv4(), sender_id: req.user!.id, receiver_id: fwd.id,
-            content: `📬 新的询价通知\n\n${senderCompany} ${senderName} 正在寻找至「${dest}」的物流方案，请前往「物流询价 → 待报价」查看详情并报价。`,
-            is_read: false, created_at: new Date().toISOString(),
+            content, is_read: false, created_at: new Date().toISOString(),
           });
+          // 邮件通知
+          const fwdUser = await db('users').where({ id: fwd.id }).select('email', 'email_verified', 'display_name').first() as any;
+          if (fwdUser?.email && fwdUser?.email_verified) {
+            try {
+              await sendNewMessageNotification(fwdUser.email, fwdUser.display_name || '', senderName, senderCompany, content);
+            } catch {}
+          }
         } catch {}
       }
 
