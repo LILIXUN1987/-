@@ -1055,32 +1055,6 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
         {/* ─── 左列 ─── */}
         <div className="lg:col-span-2 space-y-5">
-          {/* 我的数据统计 */}
-          {(isForwarder || isOverseasAgent) && (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-              <SectionTitle icon={<BarChart3 className="w-4 h-4 text-primary-500" />} title={lang === 'en' ? 'My Stats' : '我的数据'} />
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                <StatCard value={data?.myStats?.activeCargos} label={lang === 'en' ? 'Active' : '有效舱位'} icon={<Package className="w-4 h-4 text-white" />} color="from-primary-500 to-primary-600" />
-                <StatCard value={data?.myStats?.totalViews} label={lang === 'en' ? 'Views' : '被查看'} icon={<Eye className="w-4 h-4 text-white" />} color="from-green-500 to-green-600" />
-                <StatCard value={data?.myStats?.totalInquiries} label={lang === 'en' ? 'Inquiries' : '被询价'} icon={<MessageSquare className="w-4 h-4 text-white" />} color="from-amber-500 to-amber-600" />
-                <StatCard value={data?.myStats?.totalCargos} label={lang === 'en' ? 'Total' : '累计发布'} icon={<FileUp className="w-4 h-4 text-white" />} color="from-purple-500 to-purple-600" />
-              </div>
-              {data?.myStats?.topRoutes && data.myStats.topRoutes.length > 0 && (
-                <>
-                  <div className="text-xs font-semibold text-gray-500 uppercase mb-2">{lang === 'en' ? 'Top Routes' : '热门路线'} </div>
-                  <div className="space-y-1">
-                    {data.myStats.topRoutes.slice(0, 3).map((route, i) => (
-                      <div key={i} className="flex items-center justify-between text-sm bg-gray-50 rounded-lg px-3 py-2">
-                        <span className="text-gray-700"><MapPin className="w-3 h-3 inline mr-1 text-primary-400" />{route.origin_port || '?'} → {route.dest_port || route.region || '?'}</span>
-                        <span className="text-xs text-gray-400">👁 {route.view_count || 0} · 📩 {route.inquiry_count || 0}</span>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-          )}
-
           {/* 货代考核进度（仅考核中用户可见） */}
           {isForwarder && probation?.current && (
             <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border border-orange-200 shadow-sm p-5">
@@ -1197,57 +1171,6 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* ─── 右列 ─── */}
-        <div className="space-y-5">
-          {/* 平台数据 */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-            <SectionTitle icon={<Activity className="w-4 h-4 text-primary-500" />} title={lang === 'en' ? 'Platform' : '平台数据'} />
-            <div className="space-y-3">
-              <StatRow icon={<Users className="w-3.5 h-3.5 text-gray-400" />} label={lang === 'en' ? 'Users' : '注册用户'} value={data?.globalStats?.totalUsers || 0} />
-              <StatRow icon={<Package className="w-3.5 h-3.5 text-gray-400" />} label={lang === 'en' ? 'Available' : '可用舱位'} value={data?.globalStats?.availableCargos || 0} />
-              <StatRow icon={<MapPin className="w-3.5 h-3.5 text-gray-400" />} label={lang === 'en' ? 'Regions' : '覆盖地区'} value={data?.globalStats?.regions || 0} />
-              <div className="border-t border-gray-100 pt-3 mt-3">
-                <div className="text-xs text-gray-500 mb-2">{lang === 'en' ? "Today's new" : '今日新发布'}</div>
-                <div className="grid grid-cols-4 gap-2">
-                  {[{ label: '✈️', value: data?.globalStats?.todayAir, bg: 'bg-sky-100 text-sky-700' }, { label: '🚢', value: data?.globalStats?.todaySea, bg: 'bg-blue-100 text-blue-700' }, { label: '🚚', value: data?.globalStats?.todayLand, bg: 'bg-amber-100 text-amber-700' }, { label: '📦', value: data?.globalStats?.todayExpress, bg: 'bg-green-100 text-green-700' }].map((s, i) => (
-                    <div key={i} className={`rounded-lg p-2 text-center text-sm font-bold ${s.bg}`}>
-                      <div>{s.label}</div>
-                      <div className="text-xs opacity-80">{s.value || 0}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 报关券 */}
-          {data?.couponInfo && (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-              <SectionTitle icon={<Gift className="w-4 h-4 text-pink-500" />} title={lang === 'en' ? 'Coupons' : '报关券'} />
-              {'subscribed' in data.couponInfo ? (
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500">{lang === 'en' ? 'Status' : '状态'}</span>
-                    <span className={data.couponInfo.subscribed ? 'text-green-600 font-semibold' : 'text-gray-400'}>{data.couponInfo.subscribed ? (lang === 'en' ? '✅ Active' : '✅ 已订阅') : (lang === 'en' ? 'Not subscribed' : '未订阅')}</span>
-                  </div>
-                  {data.couponInfo.subscribed && (
-                    <>
-                      <div className="flex justify-between"><span className="text-gray-500">{lang === 'en' ? 'Issued' : '已发放'}</span><span className="font-semibold">{data.couponInfo.total_issued || 0}</span></div>
-                      <div className="flex justify-between"><span className="text-gray-500">{lang === 'en' ? 'Sent' : '已赠送'}</span><span className="font-semibold text-pink-600">{data.couponInfo.sent || 0}</span></div>
-                      <div className="flex justify-between"><span className="text-gray-500">{lang === 'en' ? 'Used' : '已使用'}</span><span className="font-semibold text-green-600">{data.couponInfo.used || 0}</span></div>
-                    </>
-                  )}
-                </div>
-              ) : (
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between items-center"><span className="text-gray-500">{lang === 'en' ? 'Available' : '可用券'}</span><span className="text-xl font-bold text-pink-600">{data.couponInfo.available || 0}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">{lang === 'en' ? 'Used' : '已使用'}</span><span className="font-semibold">{data.couponInfo.used || 0}</span></div>
-                </div>
-              )}
-            </div>
-          )}
-
-        </div>
       </div>
     </div>
   );
