@@ -19,7 +19,6 @@ const LoginPage = lazy(() => import('./pages/public/LoginPage'));
 const CompanyPublicPage = lazy(() => import('./pages/public/CompanyPublicPage'));
 const FileUploadPage = lazy(() => import('./pages/admin/FileUploadPage'));
 const RawRecordsPage = lazy(() => import('./pages/admin/RawRecordsPage'));
-const LawyersPage = lazy(() => import('./pages/admin/LawyersPage'));
 const ProfilePage = lazy(() => import('./pages/admin/ProfilePage'));
 const ComplaintPage = lazy(() => import('./pages/admin/ComplaintPage'));
 const SuggestionPage = lazy(() => import('./pages/admin/SuggestionPage'));
@@ -31,8 +30,6 @@ const AdminRenewPage = lazy(() => import('./pages/admin/AdminRenewPage'));
 const AdminImportPage = lazy(() => import('./pages/admin/AdminImportPage'));
 const CompanyVerificationPage = lazy(() => import('./pages/admin/CompanyVerificationPage'));
 const PriceTablePage = lazy(() => import('./pages/admin/PriceTablePage'));
-const InspectorDirectoryPage = lazy(() => import('./pages/admin/InspectorDirectoryPage'));
-const InsurerDirectoryPage = lazy(() => import('./pages/admin/InsurerDirectoryPage'));
 const DgReviewPage = lazy(() => import('./pages/admin/DgReviewPage'));
 const ComplaintAppealPage = lazy(() => import('./pages/admin/ComplaintAppealPage'));
 const AuditLogPage = lazy(() => import('./pages/admin/AuditLogPage'));
@@ -59,8 +56,6 @@ const CustomerRelationsPage = lazy(() => import('./pages/admin/CustomerRelations
 const MyPostsPage = lazy(() => import('./pages/admin/MyPostsPage'));
 const FrequentPartnersPage = lazy(() => import('./pages/admin/FrequentPartnersPage'));
 const AdminCompanyProfilePage = lazy(() => import('./pages/admin/AdminCompanyProfilePage'));
-const LawyerConsultPage = lazy(() => import('./pages/admin/LawyerConsultPage'));
-const ServiceConsultPage = lazy(() => import('./pages/admin/ServiceConsultPage'));
 const CustomerFinderPage = lazy(() => import('./pages/admin/CustomerFinderPage'));
 const ConsigneePoolPage = lazy(() => import('./pages/admin/ConsigneePoolPage'));
 
@@ -140,14 +135,11 @@ export default function App() {
             <Route path="/admin/files" element={<FileUploadPage />} />
             <Route path="/admin/files/:id" element={<FileUploadPage />} />
             <Route path="/admin/raw-records" element={<RawRecordsPage />} />
-            <Route path="/admin/lawyers" element={<LawyersPage />} />
             <Route path="/admin/profile" element={<ProfilePage />} />
             <Route path="/admin/complaints" element={<ComplaintPage />} />
             <Route path="/admin/suggestions" element={<SuggestionPage />} />
             <Route path="/admin/inbox" element={<InboxPage />} />
             <Route path="/admin/price-tables" element={<PriceTablePage />} />
-            <Route path="/admin/inspector-directory" element={<InspectorDirectoryPage />} />
-            <Route path="/admin/insurer-directory" element={<InsurerDirectoryPage />} />
             <Route path="/admin/dg-review" element={<ProtectedRoute requiredRole="admin"><DgReviewPage /></ProtectedRoute>} />
             <Route path="/admin/favorites" element={<FavoritesPage />} />
             {/* 仅管理员可访问的页面 */}
@@ -179,8 +171,6 @@ export default function App() {
             <Route path="/admin/my-posts" element={<ProtectedRoute><MyPostsPage /></ProtectedRoute>} />
             <Route path="/admin/frequent-partners" element={<ProtectedRoute><FrequentPartnersPage /></ProtectedRoute>} />
             <Route path="/admin/company-profile" element={<ProtectedRoute><AdminCompanyProfilePage /></ProtectedRoute>} />
-            <Route path="/admin/lawyer-consults" element={<ProtectedRoute><LawyerConsultPage /></ProtectedRoute>} />
-            <Route path="/admin/service-consults" element={<ProtectedRoute><ServiceConsultPage /></ProtectedRoute>} />
             <Route path="/admin/customer-finder" element={<ProtectedRoute><CustomerFinderPage /></ProtectedRoute>} />
             <Route path="/admin/consignee-pool" element={<ProtectedRoute><ConsigneePoolPage /></ProtectedRoute>} />
           </Route>
