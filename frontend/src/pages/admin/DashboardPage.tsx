@@ -360,9 +360,15 @@ export default function DashboardPage() {
         </button>
       )}
 
-      {/* ── 核心业务：2列大Banner ── */}
+      {/* ── 核心业务：3列大Banner ── */}
       {(!isOverseasAgent) && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+          {(isForwarder || isAdmin) && (
+            <BannerCard icon={Package} title={lang === 'en' ? '🤝 Swap Routes' : '🤝 互换优势航线'}
+              subtitle={lang === 'en' ? 'Share capacity, get matched with customers' : '亮出运力，换取精准直客匹配'}
+              badge={lang === 'en' ? 'Earn Leads' : '获取商机'} color="blue"
+              onClick={() => navigate('/admin/files?tab=entry')} />
+          )}
           {!isOverseasAgent && (
             <BannerCard icon={Search} title={lang === 'en' ? '👁 Live Monitor' : '👁 实时监控'}
               subtitle={lang === 'en' ? 'See who is searching right now' : '不是在看价——是在看活人，看谁在找你的航线'}
