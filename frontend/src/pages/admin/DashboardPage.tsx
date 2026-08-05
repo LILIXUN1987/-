@@ -319,6 +319,65 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* ═══ 📡 雷达核心：反向匹配客户（仅货代） ═══ */}
+      {(isForwarder || isAdmin) && (
+        <button
+          onClick={() => navigate('/admin/customer-finder')}
+          className="w-full group relative overflow-hidden rounded-2xl mb-4 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900" />
+          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+          <div className="absolute top-0 left-1/2 w-1 h-full bg-gradient-to-b from-transparent via-emerald-400 to-transparent opacity-20 -translate-x-1/2" style={{ animation: 'radar-sweep 3s ease-in-out infinite' }} />
+          <div className="absolute -top-20 -right-10 w-64 h-64 bg-emerald-400 rounded-full blur-[120px] opacity-15 group-hover:opacity-25 transition-opacity" />
+          <div className="absolute -bottom-10 left-10 w-48 h-48 bg-cyan-400 rounded-full blur-[80px] opacity-10 group-hover:opacity-20 transition-opacity" />
+          <div className="relative p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center gap-5">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center flex-shrink-0 shadow-xl shadow-emerald-500/30 group-hover:scale-105 transition-transform duration-300">
+              <span className="text-3xl">📡</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[11px] font-bold bg-emerald-500/30 text-emerald-200 px-2 py-0.5 rounded-full animate-pulse">
+                  {lang === 'en' ? '📡 RADAR ACTIVE' : '📡 雷达运行中'}
+                </span>
+                <span className="text-[11px] font-bold bg-white/10 text-white/70 px-2 py-0.5 rounded-full">
+                  {lang === 'en' ? 'Your Private Radar' : '你的私人雷达'}
+                </span>
+              </div>
+              <h2 className="text-xl md:text-2xl font-black text-white tracking-tight">
+                {lang === 'en' ? '📡 Reverse Radar — Intercept Customers Before Competitors' : '📡 反向雷达——在竞争对手之前拦截客户'}
+              </h2>
+              <p className="text-sm text-emerald-100 mt-1.5 max-w-2xl leading-relaxed">
+                {lang === 'en'
+                  ? 'Enter any port code. The radar instantly reveals who searched for it.'
+                  : '输入港口代码，雷达立即显示谁在找这条航线。输入港口代码→扫描搜索记录→拦截客户。'}
+              </p>
+            </div>
+            <div className="flex-shrink-0 flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-400 text-slate-900 font-black text-sm shadow-xl shadow-emerald-500/30 group-hover:bg-yellow-400 transition-all group-hover:scale-105">
+              <span>{lang === 'en' ? '🚨 Scan Now' : '🚨 立即扫描'}</span>
+              <span className="text-xl group-hover:translate-x-1 transition-transform">→</span>
+            </div>
+          </div>
+        </button>
+      )}
+
+      {/* ── 核心业务：2列大Banner ── */}
+      {(!isOverseasAgent) && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          {!isOverseasAgent && (
+            <BannerCard icon={Search} title={lang === 'en' ? '👁 Live Monitor' : '👁 实时监控'}
+              subtitle={lang === 'en' ? 'See who is searching right now' : '不是在看价——是在看活人，看谁在找你的航线'}
+              badge={lang === 'en' ? 'Live' : '实时'} color="emerald"
+              onClick={() => navigate('/admin/files?tab=query')} />
+          )}
+          {!isOverseasAgent && !(FEATURES.AUDIT_MODE && !rc.isAdmin) && (
+            <BannerCard icon={MessageSquare} title={lang === 'en' ? '📩 Get Quotes' : '📩 坐等报价'}
+              subtitle={lang === 'en' ? 'Post demand, forwarders bid' : '发布需求，多家货代主动报价——坐着等就行'}
+              badge={lang === 'en' ? 'Free' : '免费'} color="orange"
+              onClick={() => navigate('/admin/quote')} />
+          )}
+        </div>
+      )}
+
       {/* ═══ 实时动态：用户在寻找舱位价格 ═══ */}
       {data?.recentActivities && data.recentActivities.length > 0 && (
         <div className="bg-white rounded-xl border border-blue-100 shadow-sm mb-6 overflow-hidden">
@@ -707,25 +766,6 @@ export default function DashboardPage() {
       </div>
 
 
-      {/* ── 核心业务：3列大Banner ── */}
-      {(isForwarder || !isOverseasAgent) && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-          {!isOverseasAgent && (
-            <BannerCard icon={Search} title={lang === 'en' ? '👁 Live Monitor' : '👁 实时监控'}
-              subtitle={lang === 'en' ? 'See who is searching right now' : '不是在看价——是在看活人，看谁在找你的航线'}
-              badge={lang === 'en' ? 'Live' : '实时'} color="emerald"
-              onClick={() => navigate('/admin/files?tab=query')} />
-          )}
-          {!isOverseasAgent && !(FEATURES.AUDIT_MODE && !rc.isAdmin) && (
-            <BannerCard icon={MessageSquare} title={lang === 'en' ? '📩 Get Quotes' : '📩 坐等报价'}
-              subtitle={lang === 'en' ? 'Post demand, forwarders bid' : '发布需求，多家货代主动报价——坐着等就行'}
-              badge={lang === 'en' ? 'Free' : '免费'} color="orange"
-              onClick={() => navigate('/admin/quote')} />
-          )}
-        </div>
-      )}
-
-      {/* ═══ 📡 雷达核心：反向匹配客户（仅货代） ═══ */}
       {(isForwarder || isAdmin) && (
         <button
           onClick={() => navigate('/admin/customer-finder')}
