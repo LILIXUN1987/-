@@ -183,7 +183,7 @@ export default function DashboardPage() {
   const [selectedCargo, setSelectedCargo] = useState<any>(null);
   const [cargoPaused, setCargoPaused] = useState(false);
   const [inquiryTarget, setInquiryTarget] = useState<any>(null);
-  const [inquiryForm, setInquiryForm] = useState({ pieces: '', weight: '', volume: '', note: '' });
+  const [inquiryForm, setInquiryForm] = useState({ pieces: '', weight: '', volume: '', eta: '', battery: '', note: '' });
   const [inquirySending, setInquirySending] = useState(false);
 
   useEffect(() => {
@@ -617,7 +617,7 @@ export default function DashboardPage() {
                     {lang === 'en' ? 'Close' : '关闭'}
                   </button>
                   <button className="px-4 py-1.5 bg-primary-600 text-white font-bold text-xs rounded-lg hover:bg-primary-700 transition-all flex items-center gap-1.5"
-                    onClick={() => { setInquiryTarget(selectedCargo); setInquiryForm({ pieces: '', weight: '', volume: '', note: '' }); }}>
+                    onClick={() => { setInquiryTarget(selectedCargo); setInquiryForm({ pieces: '', weight: '', volume: '', eta: '', battery: '', note: '' }); }}>
                     <MessageSquare className="w-3.5 h-3.5" />
                     {lang === 'en' ? '📋 Inquire Now' : '📋 立即询价'}
                   </button>
@@ -948,6 +948,18 @@ export default function DashboardPage() {
                 <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Volume (CBM)' : '体积(CBM)'}</label>
                   <input className="input-field text-sm w-full" placeholder="e.g. 2.5" value={inquiryForm.volume} onChange={e => setInquiryForm(f => ({ ...f, volume: e.target.value }))} /></div>
               </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'ETA at Port' : '预计到口岸时间'}</label>
+                  <input className="input-field text-sm w-full" placeholder={lang === 'en' ? 'e.g. Aug 10' : '如：8月10号'} value={inquiryForm.eta} onChange={e => setInquiryForm(f => ({ ...f, eta: e.target.value }))} /></div>
+                <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Battery?' : '有无电池'}</label>
+                  <select className="input-field text-sm w-full" value={inquiryForm.battery} onChange={e => setInquiryForm(f => ({ ...f, battery: e.target.value }))}>
+                    <option value="">{lang === 'en' ? '-- Select --' : '-- 请选择 --'}</option>
+                    <option value="无电池">{lang === 'en' ? 'No battery (general cargo)' : '无电池（普货）'}</option>
+                    <option value="含内置电池">{lang === 'en' ? 'Built-in battery' : '含内置电池'}</option>
+                    <option value="含纯电池">{lang === 'en' ? 'Pure battery (DG)' : '含纯电池（危险品）'}</option>
+                    <option value="不确定">{lang === 'en' ? 'Not sure' : '不确定'}</option>
+                  </select></div>
+              </div>
               <div><label className="text-xs font-medium text-slate-500 mb-1 block">{lang === 'en' ? 'Note' : '备注'}</label>
                 <textarea className="input-field text-sm w-full min-h-[60px] resize-none" placeholder={lang === 'en' ? 'Cargo details, timeline, special requirements...' : '货物详情、时间要求、特殊需求...'} value={inquiryForm.note} onChange={e => setInquiryForm(f => ({ ...f, note: e.target.value }))} /></div>
               <button onClick={async () => {
@@ -959,6 +971,8 @@ export default function DashboardPage() {
                   inquiryForm.pieces ? '件数：' + inquiryForm.pieces + '件' : '',
                   inquiryForm.weight ? '毛重：' + inquiryForm.weight + 'KG' : '',
                   inquiryForm.volume ? '体积：' + inquiryForm.volume + 'CBM' : '',
+                  inquiryForm.eta ? '预计到口岸：' + inquiryForm.eta : '',
+                  inquiryForm.battery ? '电池情况：' + inquiryForm.battery : '',
                   inquiryForm.note ? '备注：' + inquiryForm.note : '',
                   '', sig || defaultSig,
                 ].filter(Boolean).join('\n');
