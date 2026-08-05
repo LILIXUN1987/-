@@ -139,7 +139,7 @@ export default function RegisterPage() {
     if (!form.password.trim()) newErrors.password = '请设置密码';
     else if (form.password.length < 6) newErrors.password = '密码长度不能少于6位';
     const effectiveRole = form.role === "enterprise_forwarder" ? "forwarder" : form.role === "enterprise_overseas_agent" ? "overseas_agent" : form.role;
-    if ((effectiveRole === "forwarder" || form.role === "lawyer" || form.role === "inspector" || form.role === "insurer" || form.role === "overseas_agent" || form.role === "enterprise_overseas_agent") && !cardImage) newErrors.card = '请上传公司名片';
+    if ((form.role === "lawyer" || form.role === "inspector" || form.role === "insurer" || form.role === "overseas_agent" || form.role === "enterprise_overseas_agent") && !cardImage) newErrors.card = '请上传公司名片';
     if ((form.role === "enterprise_forwarder" || form.role === "enterprise_overseas_agent") && !enterpriseLicense) newErrors.license = "请上传营业执照";
     if (Object.keys(newErrors).length > 0) { setFieldErrors(newErrors); return; }
     const finalCompanyName = isIndividual ? (lang === 'en' ? '(Individual)' : '个人用户') : form.company_name.trim();
@@ -453,7 +453,7 @@ export default function RegisterPage() {
                   </div>
                 </div>
                 <div className="mt-3">
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">{t(RegT.cardLabel, lang)}</label>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">{t(RegT.cardLabel, lang)}{form.role === 'forwarder' ? <span className="text-gray-400 font-normal">（选填）</span> : <span className="text-red-400">*</span>}</label>
                   {cardPreview ? (
                     <div className="relative inline-block">
                       <img src={cardPreview} alt="名片" className="max-h-36 rounded-xl border shadow-sm" />
@@ -463,7 +463,7 @@ export default function RegisterPage() {
                     <label className={`flex flex-col items-center gap-2 border-2 border-dashed rounded-xl p-5 cursor-pointer transition-all ${fieldErrors.card ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-primary-300 hover:bg-primary-50/30 bg-gray-50'}`}>
                       <Camera className={`w-8 h-8 ${fieldErrors.card ? 'text-red-400' : 'text-gray-400'}`} />
                       <span className={`text-sm ${fieldErrors.card ? 'text-red-600' : 'text-gray-500'}`}>
-                        {fieldErrors.card ? fieldErrors.card : t(RegT.cardUpload, lang)}
+                        {fieldErrors.card ? fieldErrors.card : (form.role === 'forwarder' ? (lang === 'en' ? 'Upload business card (optional)' : '上传公司名片（选填，认证后优先展示）') : t(RegT.cardUpload, lang))}
                       </span>
                       <span className="text-xs text-gray-400">{t(RegT.cardFormat, lang)}</span>
                       <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handleImage} />
