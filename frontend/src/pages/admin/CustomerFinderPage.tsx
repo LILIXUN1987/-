@@ -19,7 +19,9 @@ interface Searcher {
 const JC_MEMBERS = new Set(['济南佑田信息科技有限公司']);
 
 export default function CustomerFinderPage() {
+  const user = useAuthStore((s) => s.user);
   const lang = useAuthStore((s) => s.lang);
+  const sig = (user as any)?.signature || '';
   const [port, setPort] = useState('');
   const [days, setDays] = useState(90);
   const [loading, setLoading] = useState(false);
@@ -85,7 +87,7 @@ export default function CustomerFinderPage() {
       quoteForm.transit ? '时效：' + quoteForm.transit + '天' : '',
       quoteForm.validUntil ? '有效期至：' + quoteForm.validUntil : '',
       quoteForm.note ? '备注：' + quoteForm.note : '',
-      '', '——通过123cargo雷达系统自动匹配', '如有兴趣请联系我进一步沟通。',
+      '', sig ? sig : '——通过123cargo雷达系统自动匹配',
     ].filter(Boolean).join('\n');
     try {
       await client.post('/messages', { receiver_id: quoteModal.user_id, content: lines });

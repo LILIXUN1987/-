@@ -61,6 +61,7 @@ export interface UserPublic {
   alliance_name?: string;
   alliance_id?: string;
   subscribed_ports?: string;
+  signature?: string;
   trial_end?: string;
   referral_code?: string;
   role?: UserRole;

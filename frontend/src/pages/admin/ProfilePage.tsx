@@ -37,6 +37,7 @@ export default function ProfilePage() {
   }
 
   const phoneRef = useRef<HTMLInputElement>(null);
+  const sigRef = useRef<HTMLTextAreaElement>(null);
   const jcRef = useRef<HTMLInputElement>(null);
   const wcaRef = useRef<HTMLInputElement>(null);
   const allianceNameRef = useRef<HTMLSelectElement>(null);
@@ -163,6 +164,7 @@ export default function ProfilePage() {
     try {
       const fd = new FormData();
       fd.append('phone', phoneRef.current?.value || '');
+      fd.append('signature', sigRef.current?.value || '');
       fd.append('jc_trans_id', jcRef.current?.value || '');
       fd.append('wca_id', wcaRef.current?.value || '');
       fd.append('alliance_name', allianceNameRef.current?.value || '');
@@ -305,6 +307,13 @@ export default function ProfilePage() {
           <div className="mt-4">
             <label className="block text-sm font-medium text-gray-700 mb-1"><Phone className="w-4 h-4 inline mr-1" />{t(ProfileT.phone, lang)}</label>
             <input className="input-field" ref={phoneRef} defaultValue={user?.phone || ''} />
+          </div>
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">✍️ {lang === 'en' ? 'Message Signature' : '消息签名档'}</label>
+            <p className="text-xs text-gray-400 mb-1">{lang === 'en' ? 'Auto-appended to radar quotes & inquiry replies' : '雷达报价和询盘回复时自动附加到消息末尾'}</p>
+            <textarea className="input-field w-full min-h-[70px] text-sm resize-none" ref={sigRef}
+              defaultValue={user?.signature || ''}
+              placeholder={lang === 'en' ? 'e.g. Best regards,\nTom Wang\nShenzhen Global Logistics\nTel/WeChat: 13800138000' : '如：此致\n王明\n深圳天运国际物流\n电话/微信：13800138000\n专注JFK/LAX空运舱位'} />
           </div>
           <div className="mt-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">✉️ {t(ProfileT.email, lang)}</label>
