@@ -154,6 +154,7 @@ export default function DashboardPage() {
   const [quoteSending, setQuoteSending] = useState(false);
 
   const handleQuoteSend = async () => {
+    if (!quoteTarget?.user_id) { alert(lang === 'en' ? 'Error: Cannot identify receiver' : '错误：无法识别接收人ID'); return; }
     if (!quoteForm.price.trim()) { alert(lang === 'en' ? 'Please enter price' : '请输入报价'); return; }
     setQuoteSending(true);
     const sig = (user as any)?.signature || '';
@@ -168,10 +169,15 @@ export default function DashboardPage() {
       '', sig || defaultSig,
     ].filter(Boolean).join('\n');
     try {
-      await client.post('/messages', { receiver_id: quoteTarget.user_id, content: lines });
-      alert(lang === 'en' ? '✅ Quote sent!' : '✅ 报价已发送！');
-      setQuoteTarget(null);
-    } catch { alert(lang === 'en' ? 'Failed' : '发送失败'); }
+      const res = await client.post('/messages', { receiver_id: quoteTarget.user_id, content: lines });
+      if (res.status === 201 || res.status === 200) {
+        alert(lang === 'en' ? '✅ Quote sent! The client will receive it in their inbox.' : '✅ 报价已发送！对方将在站内信收到。');
+        setQuoteTarget(null);
+      }
+    } catch (e: any) {
+      const errMsg = e?.response?.data?.error || e?.message || '';
+      alert((lang === 'en' ? 'Send failed: ' : '发送失败：') + errMsg);
+    }
     setQuoteSending(false);
   };
   const [selectedCargo, setSelectedCargo] = useState<any>(null);

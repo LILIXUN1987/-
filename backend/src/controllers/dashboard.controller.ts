@@ -116,10 +116,11 @@ export const dashboardController = {
         };
       }
 
-      // ── 7. 近期活动 ──
+      // ── 7. 近期活动（仅展示外贸用户的搜索——方便货代拦截） ──
       const recentActivities = await db('search_logs')
         .leftJoin('users', 'search_logs.user_id', 'users.id')
         .whereNotNull('users.company_name')
+        .where('users.role', 'trader')
         .select('search_logs.keyword', 'search_logs.created_at', 'users.id as user_id', 'users.company_name', 'users.display_name')
         .orderBy('search_logs.created_at', 'desc')
         .limit(8) as any[];
