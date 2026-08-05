@@ -211,7 +211,7 @@ export default function FileUploadPage() {
                     {lang === 'en' ? '🤝 Route Exchange Hub' : '🤝 航线资源互换站'}
                   </h2>
                   <p className="text-xs text-slate-500">
-                    {lang === 'en' ? 'Share your capacity — get matched with direct customers & overseas agent services' : '发布您的优势运力，换取平台精准直客匹配与海外代理托管服务'}
+                    {lang === 'en' ? 'Share what you have, get what you need — routes for leads, capacity for customers' : '你出运力，我出直客——每条优势航线都换来真实商机，共建共享共赢'}
                   </p>
                 </div>
               </div>
@@ -227,9 +227,9 @@ export default function FileUploadPage() {
             {/* KPI 卡片 */}
             <div className="grid grid-cols-3 gap-3">
               {[
-                { v: '378', l: lang === 'en' ? 'Potential Customers' : '全网潜在客户', s: '↑ 12%', c: 'text-indigo-600' },
-                { v: '39', l: lang === 'en' ? 'Hot Leads Today' : '今日高意向询盘', s: '↑ 5%', c: 'text-emerald-600' },
-                { v: '23', l: lang === 'en' ? 'JC/WCA Certified' : '联盟认证货主', s: '🤝', c: 'text-amber-600' },
+                { v: '378', l: lang === 'en' ? 'Partners in Network' : '共建伙伴', s: '与你互换资源', c: 'text-indigo-600' },
+                { v: '39', l: lang === 'en' ? 'Active Swaps Today' : '今日互换成功', s: '↑ 5%', c: 'text-emerald-600' },
+                { v: '23', l: lang === 'en' ? 'Certified Partners' : '认证盟友', s: 'JC/WCA', c: 'text-amber-600' },
               ].map((k, i) => (
                 <div key={i} className="bg-slate-50 rounded-xl p-3 text-center">
                   <div className={`text-xl font-black ${k.c}`}>{k.v}</div>
@@ -248,13 +248,13 @@ export default function FileUploadPage() {
               <div className="bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-600 px-5 py-3.5 text-white">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5" />
-                  <h2 className="font-black text-base">{lang === 'en' ? '📡 AI Intelligence Input' : '📡 AI 情报录入'}</h2>
-                  <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-bold">JC TRANS · WCA</span>
+                  <h2 className="font-black text-base">{lang === 'en' ? '🤝 Share Your Routes' : '🤝 亮出你的优势航线'}</h2>
+                  <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-bold">以航线换商机</span>
                 </div>
                 <p className="text-xs text-indigo-100 mt-1">
                   {lang === 'en'
-                    ? 'JC TRANS member: your cargo will be prioritized to WCA overseas agents. Paste email/screenshot — AI auto-parses.'
-                    : '检测到您是 JC TRANS 联盟会员——录入的舱位将优先推送给 WCA 网络内的海外代理。粘贴邮件/截图，AI 自动解析。'}
+                    ? 'Paste your cargo info — AI parses it instantly. Your route enters the exchange pool and gets matched with real customers.'
+                    : '粘贴你的舱位信息，AI 秒级解析。你的航线进入互换池，系统自动匹配真实直客——你出运力，平台出客户。'}
                 </p>
               </div>
               <div className="p-5">
@@ -297,14 +297,14 @@ export default function FileUploadPage() {
             {/* 联盟特权说明 */}
             <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-4">
               <h3 className="text-sm font-black text-amber-800 mb-3 flex items-center gap-2">
-                <Shield className="w-4 h-4" />{lang === 'en' ? 'Alliance Privileges' : '联盟特权说明'}
+                <Shield className="w-4 h-4" />{lang === 'en' ? 'How It Works' : '互换规则——共建共赢'}
               </h3>
               <ul className="text-xs space-y-2">
                 {[
-                  { icon: '✅', zh: '认证会员曝光特权——舱位优先展示给 JC/WCA 网络', en: 'Verified member exposure — prioritized to JC/WCA network' },
-                  { icon: '✅', zh: '跨网结算保障（GCP）——联盟内交易有赔付保障', en: 'Cross-network settlement (GCP) — transaction protection' },
-                  { icon: '✅', zh: '优先匹配高净值货主——认证货主主动找认证代理', en: 'Priority match — certified traders seek certified forwarders' },
-                  { icon: '📡', zh: '录入即进入雷达扫描——有人搜索立即通知', en: 'Entered = radar active — instant alerts on searches' },
+                  { icon: '🤝', zh: '你出运力：录入优势航线 → 进入互换池', en: 'You share routes → enters exchange pool' },
+                  { icon: '🎯', zh: '平台出客户：精准匹配搜索者 → 推送给你', en: 'Platform matches searchers → pushes to you' },
+                  { icon: '📡', zh: '有人搜索即通知：站内信+邮件双通道', en: 'Instant alerts on searches — inbox + email' },
+                  { icon: '🏆', zh: '共建共赢：每条航线都是商机入口', en: 'Win-win: every route is a lead magnet' },
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-amber-800">
                     <span className="flex-shrink-0">{item.icon}</span>
@@ -321,16 +321,16 @@ export default function FileUploadPage() {
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{lang === 'en' ? 'Live Feed' : '实时动态'}</span>
               </div>
               <div className="text-[10px] text-slate-400 space-y-1.5">
-                <p>🟢 深圳天运（JC）刚刚通过雷达拦截了 JFK 询盘</p>
-                <p>🟡 济南佑田（WCA）正在查看你的舱位报价</p>
-                <p>🔴 JFK-DDP 舱位紧缺，已有 5 家代理开启抢位</p>
+                <p>🟢 深圳天运刚用 JFK 航线换到一个直客询盘</p>
+                <p>🟡 济南佑田的 LAX 航线正在被 3 个客户同时查看</p>
+                <p>🔴 广州万邦刚亮出 FRA 运力，立即收到 2 条报价请求</p>
               </div>
             </div>
 
             {/* 情报录入历史 */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-slate-700">{lang === 'en' ? '📋 Entry History' : '📋 情报录入历史'}</h3>
+                <h3 className="text-sm font-bold text-slate-700">{lang === 'en' ? '📋 My Swap History' : '📋 我的互换记录'}</h3>
                 <a href="/admin/raw-records" className="text-xs font-bold text-indigo-600 hover:text-indigo-700">{lang === 'en' ? 'View All →' : '查看全部 →'}</a>
               </div>
               <RawRecordsMini />
@@ -723,7 +723,7 @@ function RawRecordsMini() {
   });
 
   if (isLoading) return <div className="text-center py-4 text-gray-400 text-xs"><Loader2 className="w-4 h-4 animate-spin inline mr-1" />加载中...</div>;
-  if (!data?.data?.length) return <div className="text-center py-8 text-gray-400 text-xs">暂无录入记录，请在上方录入您的第一条推广信息</div>;
+  if (!data?.data?.length) return <div className="text-center py-8 text-gray-400 text-xs">暂无互换记录，亮出你的第一条优势航线开启共建</div>;
 
   return (
     <div className="space-y-1.5">
