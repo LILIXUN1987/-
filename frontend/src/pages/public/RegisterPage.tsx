@@ -43,7 +43,7 @@ export default function RegisterPage() {
   useEffect(() => { if (!FEATURES.REGISTRATION) navigate('/', { replace: true }); }, [navigate]);
   const refCode = searchParams.get('ref') || '';
   const [form, setForm] = useState({
-    username: '', password: '', display_name: '', gender: '', company_name: '', phone: '', email: '', emailCode: '',
+    username: '', password: '', display_name: '', company_name: '', phone: '', email: '', emailCode: '',
     role: 'trader', jc_trans_id: '', wca_id: '', is_newbie: false, is_enterprise: false,
   });
   const [cardImage, setCardImage] = useState<File | null>(null);
@@ -337,14 +337,6 @@ export default function RegisterPage() {
                   <label className="block text-xs font-medium text-gray-500 mb-1.5">{t(RegT.name, lang)}</label>
                   <input className={inputCls('display_name')} value={form.display_name} onChange={e => update('display_name', e.target.value)} placeholder={t(RegT.namePlaceholder, lang)} />
                   <ErrorTip field="display_name" errors={fieldErrors} />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">{t(RegT.gender, lang)}</label>
-                  <select className="w-full px-4 py-2.5 text-sm bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-400" value={form.gender} onChange={e => update('gender', e.target.value)}>
-                    <option value="">{t(RegT.genderSelect, lang)}</option>
-                    <option value="male">{t(RegT.male, lang)}</option>
-                    <option value="female">{t(RegT.female, lang)}</option>
-                  </select>
                 </div>
               </div>
 

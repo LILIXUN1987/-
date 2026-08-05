@@ -14,7 +14,7 @@ export const registerApi = {
     username: string;
     password: string;
     display_name: string;
-    gender: string;
+    gender?: string;
     company_name: string;
     phone: string;
     email: string;
