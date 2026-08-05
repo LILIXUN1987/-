@@ -50,7 +50,6 @@ const ApiKeysPage = lazy(() => import('./pages/admin/ApiKeysPage'));
 const SubscribePage = lazy(() => import('./pages/admin/SubscribePage'));
 const BrokerConsolePage = lazy(() => import('./pages/admin/BrokerConsolePage'));
 const CouponPoolPage = lazy(() => import('./pages/admin/CouponPoolPage'));
-const BrokerDirectoryPage = lazy(() => import('./pages/admin/BrokerDirectoryPage'));
 const InquiriesPage = lazy(() => import('./pages/admin/InquiriesPage'));
 const CustomerRelationsPage = lazy(() => import('./pages/admin/CustomerRelationsPage'));
 const MyPostsPage = lazy(() => import('./pages/admin/MyPostsPage'));
@@ -165,7 +164,6 @@ export default function App() {
             <Route path="/admin/subscribe" element={<ProtectedRoute><SubscribePage /></ProtectedRoute>} />
             <Route path="/admin/broker-console" element={<ProtectedRoute><BrokerConsolePage /></ProtectedRoute>} />
             <Route path="/admin/coupon-pool" element={<ProtectedRoute><CouponPoolPage /></ProtectedRoute>} />
-            <Route path="/admin/broker-directory" element={<ProtectedRoute><BrokerDirectoryPage /></ProtectedRoute>} />
             <Route path="/admin/inquiries" element={<ProtectedRoute><InquiriesPage /></ProtectedRoute>} />
             <Route path="/admin/customer-relations" element={<ProtectedRoute><CustomerRelationsPage /></ProtectedRoute>} />
             <Route path="/admin/my-posts" element={<ProtectedRoute><MyPostsPage /></ProtectedRoute>} />
