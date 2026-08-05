@@ -5,7 +5,7 @@ import TextCargoInput from '../../components/admin/TextCargoInput';
 import { cargoApi } from '../../api/cargo.api';
 import { getRoleChecks } from '../../types';
 import {
-  CheckCircle, MapPin, Users, Plane, Ship, Truck, Package,
+  CheckCircle, MapPin, Users, Plane, Ship, Truck, Package, AlertTriangle,
   Search, Zap, Sparkles, Loader2, Globe, Shield, BarChart3,
   ArrowRight, Compass, TrendingUp, Award,
 } from 'lucide-react';
@@ -531,6 +531,44 @@ export default function FileUploadPage() {
                   </div>
                 </div>
               )}
+
+              {/* ── 危险品运输查询 ── */}
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md hover:border-red-200 transition-all duration-300">
+                <div className="h-1.5 bg-gradient-to-r from-red-400 to-orange-500" />
+                <div className="px-5 py-4">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-100 to-orange-100 flex items-center justify-center">
+                      <AlertTriangle className="w-5 h-5 text-red-600" />
+                    </div>
+                    <h3 className="font-bold text-gray-800">{lang === 'en' ? '☣️ Air DG' : '☣️ 空运危险品'}</h3>
+                  </div>
+                  <CategoryQueryPanel showOnly="空运危险品" />
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md hover:border-red-200 transition-all duration-300">
+                <div className="h-1.5 bg-gradient-to-r from-red-500 to-rose-600" />
+                <div className="px-5 py-4">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-100 to-rose-100 flex items-center justify-center">
+                      <AlertTriangle className="w-5 h-5 text-red-600" />
+                    </div>
+                    <h3 className="font-bold text-gray-800">{lang === 'en' ? '☣️ Sea DG' : '☣️ 海运危险品'}</h3>
+                  </div>
+                  <CategoryQueryPanel showOnly="海运危险品" />
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md hover:border-red-200 transition-all duration-300">
+                <div className="h-1.5 bg-gradient-to-r from-orange-500 to-amber-600" />
+                <div className="px-5 py-4">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center">
+                      <AlertTriangle className="w-5 h-5 text-orange-600" />
+                    </div>
+                    <h3 className="font-bold text-gray-800">{lang === 'en' ? '☣️ Land DG' : '☣️ 陆运危险品'}</h3>
+                  </div>
+                  <CategoryQueryPanel showOnly="陆运危险品" />
+                </div>
+              </div>
 
               {isTrader && (
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md hover:border-pink-200 transition-all duration-300">

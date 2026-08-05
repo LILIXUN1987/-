@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, CheckCircle, AlertCircle, Package, Plane, Ship, Truck, FileText, Clock, MessageSquare, X, Sparkles, Zap, Bot, Wand2, Rocket, Users, Megaphone } from 'lucide-react';
+import { Send, Loader2, CheckCircle, AlertCircle, Package, Plane, Ship, Truck, FileText, Clock, MessageSquare, X, Sparkles, Zap, Bot, Wand2, Rocket, Users, Megaphone, AlertTriangle } from 'lucide-react';
 import client from '../../api/client';
 import { useAuthStore } from '../../store/authStore';
 import dayjs from 'dayjs';
@@ -35,6 +35,9 @@ const CATEGORIES = [
   { key: 'WCA会员', label: 'WCA会员', icon: Truck },
   { key: '空运包税出口', label: '空运包税出口', icon: Plane },
   { key: '海运包税出口', label: '海运包税出口', icon: Ship },
+  { key: '空运危险品', label: '☣️ 空运危险品', icon: AlertTriangle },
+  { key: '海运危险品', label: '☣️ 海运危险品', icon: AlertTriangle },
+  { key: '陆运危险品', label: '☣️ 陆运危险品', icon: AlertTriangle },
 ] as const;
 
 const HISTORY_KEY = 'cargo_parse_history';
