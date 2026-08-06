@@ -15,61 +15,40 @@ router.post('/public-submit', async (req, res) => {
     const { default: db } = await import('../config/database');
     const { v4: uuidv4 } = await import('uuid');
 
-    // 检查是否已注册
-    let user = null;
+    // 赏金猎人始终独立开户，不合并已有账户
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+    const seed = email?.trim() || phone?.trim() || ('bounty_' + Date.now());
+    const baseUsername = (email?.trim() || ('hunter_' + Date.now())).split('@')[0];
+    const nameExists = await db('users').where({ username: baseUsername }).first();
+    const finalUsername = nameExists ? baseUsername + '_' + Math.random().toString(36).substring(2, 5) : baseUsername;
+    const password = Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    const bcrypt = await import('bcryptjs');
+    const passwordHash = await bcrypt.hash(password, 12);
+    const userId = uuidv4();
+    await db('users').insert({
+      id: userId, username: finalUsername, password_hash: passwordHash,
+      display_name: company_name.trim().substring(0, 50),
+      phone: phone?.trim() || null,
+      email: email?.trim()?.toLowerCase() || null,
+      email_verified: email?.trim() ? 1 : 0,
+      role: 'bounty_hunter', status: 'approved',
+      trial_end: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0],
+      referral_code: 'RF' + Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join(''),
+      created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+    });
+    // 发邮件通知
     if (email?.trim()) {
-      user = await db('users').where({ email: email.trim().toLowerCase() }).first();
-    }
-
-    let userId: string;
-    let password = '';
-    if (user) {
-      userId = (user as any).id;
-    } else {
-      // 自动开户
-      const username = (email?.trim() || 'bounty_' + Date.now()).split('@')[0];
-      const nameExists = await db('users').where({ username }).first();
-      const finalUsername = nameExists ? username + '_' + Math.random().toString(36).substring(2, 5) : username;
-      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-      password = Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-      const bcrypt = await import('bcryptjs');
-      const passwordHash = await bcrypt.hash(password, 12);
-      userId = uuidv4();
-      await db('users').insert({
-        id: userId, username: finalUsername, password_hash: passwordHash,
-        display_name: company_name.trim().substring(0, 50),
-        phone: phone?.trim() || null,
-        email: email?.trim()?.toLowerCase() || null,
-        email_verified: email?.trim() ? 1 : 0,
-        role: 'bounty_hunter', status: 'approved',
-        trial_end: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0],
-        referral_code: 'RF' + Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join(''),
-        created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-      });
-      // 发邮件通知
-      if (email?.trim()) {
-        try {
-          const { getTransporter } = await import('../services/email.service');
-          const { env } = await import('../config/env');
-          const transport = getTransporter();
-          await transport.sendMail({
-            from: `"123cargo" <${env.smtp.user}>`,
-            to: email.trim(),
-            subject: '🎯 123cargo 赏金猎人账户已开通',
-            html: `<div style="font-family:Arial;max-width:480px;margin:0 auto;padding:24px">
-              <h2 style="color:#d97706">🎯 欢迎加入 123cargo 赏金猎人</h2>
-              <p>您提交的线索「<strong>${company_name.trim()}</strong>」已收到。</p>
-              <p>我们已为您自动开通账户：</p>
-              <div style="background:#fef3c7;padding:16px;border-radius:8px;margin:12px 0">
-                <p>🔑 用户名：<strong>${finalUsername}</strong></p>
-                <p>🔐 密码：<strong>${password}</strong></p>
-              </div>
-              <a href="${env.frontendUrl}/login" style="display:inline-block;background:#d97706;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold">立即登录</a>
-              <p style="color:#9ca3af;font-size:12px;margin-top:16px">登录后可查看线索核验进度和奖励余额。</p>
-            </div>`,
-          });
-        } catch (e: any) { console.error('[bounty] 邮件发送失败:', email, e.message); }
-      }
+      try {
+        const { getTransporter } = await import('../services/email.service');
+        const { env } = await import('../config/env');
+        const transport = getTransporter();
+        await transport.sendMail({
+          from: `"123cargo" <${env.smtp.user}>`,
+          to: email.trim(),
+          subject: '🎯 123cargo 赏金猎人账户已开通',
+          html: '<div style="font-family:Arial;max-width:480px;margin:0 auto;padding:24px"><h2 style="color:#d97706">🎯 欢迎加入 123cargo 赏金猎人</h2><p>您提交的线索<strong>' + company_name.trim() + '</strong>已收到。</p><p>我们已为您自动开通赏金猎人账户：</p><div style="background:#fef3c7;padding:16px;border-radius:8px;margin:12px 0"><p>🔑 用户名：<strong>' + finalUsername + '</strong></p><p>🔐 密码：<strong>' + password + '</strong></p></div><a href="' + env.frontendUrl + '/login" style="display:inline-block;background:#d97706;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold">立即登录</a><p style="color:#9ca3af;font-size:12px;margin-top:16px">登录后可查看线索核验进度和奖励余额。</p></div>',
+        });
+      } catch (e: any) { console.error('[bounty] 邮件发送失败:', email, e.message); }
     }
 
     // 提交线索
@@ -86,8 +65,7 @@ router.post('/public-submit', async (req, res) => {
     });
 
     res.status(201).json({
-      message: user ? '线索已提交！登录查看进度。' : '线索已提交！账户已开通，密码已发至邮箱。',
-      isNewUser: !user,
+      message: '线索已提交！赏金猎人账户已开通，密码已发至邮箱。',
     });
   } catch (err: any) { res.status(500).json({ error: err.message }); }
 });
