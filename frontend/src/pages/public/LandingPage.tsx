@@ -208,41 +208,70 @@ function BountyWidget() {
   );
 
   return (
-    <div className="bg-gradient-to-br from-amber-400 via-orange-400 to-yellow-500 rounded-2xl p-6 shadow-xl shadow-amber-200">
-      <div className="flex items-center gap-3 mb-4">
-        <span className="text-2xl">🎯</span>
-        <div>
-          <h3 className="text-lg font-black text-white">{t('赏金猎人 · 赚现金', 'Bounty Hunter · Earn Cash')}</h3>
-          <p className="text-sm text-white/80">{t('提交海外直客线索，成交最高得 ¥1,000 或 25% 利润分红', 'Submit overseas leads — earn up to ¥1,000 or 25% profit share')}</p>
+    <div className="bg-white rounded-2xl shadow-xl shadow-amber-200 border-2 border-amber-300 overflow-hidden">
+      {/* 头部 */}
+      <div className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-500 px-6 py-4">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">🎯</span>
+          <div>
+            <h3 className="text-lg font-black text-white">{t('赏金猎人 · 赚现金', 'Bounty Hunter · Earn Cash')}</h3>
+            <p className="text-sm text-white/80">{t('提交海外直客线索，成交最高 ¥1,000 或 25% 利润分红', 'Earn up to ¥1,000 or 25% profit share')}</p>
+          </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
-        <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
-          placeholder={t('公司名 *', 'Company Name *')} value={form.company_name}
-          onChange={e => setForm(f => ({ ...f, company_name: e.target.value }))} />
-        <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
-          placeholder={t('国家', 'Country')} value={form.country}
-          onChange={e => setForm(f => ({ ...f, country: e.target.value }))} />
-        <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white uppercase"
-          placeholder={t('目的港 如JFK', 'Port e.g. JFK')} value={form.pod}
-          onChange={e => setForm(f => ({ ...f, pod: e.target.value }))} />
-        <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
-          placeholder={t('品类 如纺织品', 'Goods e.g. textiles')} value={form.goods_guess}
-          onChange={e => setForm(f => ({ ...f, goods_guess: e.target.value }))} />
-        <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
-          placeholder={t('你的手机号', 'Your Phone')} value={form.phone}
-          onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
-        <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
-          placeholder={t('你的邮箱(收密码)', 'Your Email')} value={form.email}
-          onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+
+      <div className="p-5 space-y-4">
+        {/* 直客信息 */}
+        <div>
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2 block">
+            🌍 {t('海外直客信息 (你提供的线索)', 'Overseas Customer Info (Your Lead)')}
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            <input className="px-3 py-2.5 rounded-xl bg-slate-50 border-2 border-slate-200 focus:border-amber-400 focus:bg-white text-sm placeholder:text-slate-400 focus:outline-none"
+              placeholder={t('公司名称 *', 'Company Name *')} value={form.company_name}
+              onChange={e => setForm(f => ({ ...f, company_name: e.target.value }))} />
+            <input className="px-3 py-2.5 rounded-xl bg-slate-50 border-2 border-slate-200 focus:border-amber-400 focus:bg-white text-sm placeholder:text-slate-400 focus:outline-none"
+              placeholder={t('国家', 'Country')} value={form.country}
+              onChange={e => setForm(f => ({ ...f, country: e.target.value }))} />
+            <input className="px-3 py-2.5 rounded-xl bg-slate-50 border-2 border-slate-200 focus:border-amber-400 focus:bg-white text-sm placeholder:text-slate-400 focus:outline-none uppercase font-bold"
+              placeholder={t('目的港 如 JFK', 'Port e.g. JFK')} value={form.pod}
+              onChange={e => setForm(f => ({ ...f, pod: e.target.value }))} />
+            <input className="px-3 py-2.5 rounded-xl bg-slate-50 border-2 border-slate-200 focus:border-amber-400 focus:bg-white text-sm placeholder:text-slate-400 focus:outline-none"
+              placeholder={t('品类 如 纺织品', 'Goods e.g. textiles')} value={form.goods_guess}
+              onChange={e => setForm(f => ({ ...f, goods_guess: e.target.value }))} />
+          </div>
+        </div>
+
+        {/* 分隔线 */}
+        <div className="flex items-center gap-3">
+          <div className="flex-1 h-px bg-slate-200" />
+          <span className="text-xs text-slate-400 font-medium">{t('你的联系方式', 'Your Contact')}</span>
+          <div className="flex-1 h-px bg-slate-200" />
+        </div>
+
+        {/* 提交者信息 */}
+        <div>
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2 block">
+            📱 {t('你的联系方式 (用于接收奖励通知)', 'Your Contact (for reward notification)')}
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            <input className="px-3 py-2.5 rounded-xl bg-slate-50 border-2 border-slate-200 focus:border-amber-400 focus:bg-white text-sm placeholder:text-slate-400 focus:outline-none"
+              placeholder={t('你的手机号', 'Your Phone Number')} value={form.phone}
+              onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
+            <input className="px-3 py-2.5 rounded-xl bg-slate-50 border-2 border-slate-200 focus:border-amber-400 focus:bg-white text-sm placeholder:text-slate-400 focus:outline-none"
+              placeholder={t('你的邮箱 (收账户密码)', 'Your Email (receive password)')} value={form.email}
+              onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+          </div>
+        </div>
+
+        <button onClick={handleSubmit} disabled={submitting || !form.company_name.trim()}
+          className="w-full py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black text-base rounded-xl hover:from-amber-600 hover:to-orange-600 disabled:opacity-50 transition-all shadow-lg shadow-amber-200">
+          {submitting ? '⏳ 提交中...' : t('🎯 提交线索 · 赚取赏金', '🎯 Submit Lead · Earn Bounty')}
+        </button>
+        <p className="text-xs text-slate-400 text-center">
+          {t('无需注册，提交即自动开户。线索核验通过即获 ¥30 奖励。', 'No signup needed. Auto-account created. ¥30 reward on verification.')}
+        </p>
       </div>
-      <button onClick={handleSubmit} disabled={submitting || !form.company_name.trim()}
-        className="w-full py-3 bg-white text-amber-700 font-black text-base rounded-xl hover:bg-amber-50 disabled:opacity-50 transition-all shadow-lg">
-        {submitting ? '⏳ 提交中...' : t('🎯 提交线索 · 赚取赏金', '🎯 Submit Lead · Earn Bounty')}
-      </button>
-      <p className="text-[11px] text-white/60 text-center mt-2">
-        {t('无需注册，提交即自动开户。线索核验通过即获 ¥30 奖励。', 'No signup needed. Auto-account created. ¥30 reward on verification.')}
-      </p>
     </div>
   );
 }
