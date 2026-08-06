@@ -55,7 +55,7 @@ export default function AdminLayout() {
 
       {/* ═══ 侧边栏 ═══ */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-100 shadow-sm transform transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} flex flex-col`}
+        className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-slate-900 border-r border-slate-800 shadow-xl transform transition-transform duration-200 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} flex flex-col`}
       >
         {/* 侧边栏头部 */}
         <div className="bg-gradient-to-r from-primary-600 via-primary-700 to-indigo-700 text-white p-4">
@@ -163,7 +163,7 @@ export default function AdminLayout() {
 
           <button
             onClick={() => setContactOpen(true)}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-blue-600 hover:bg-blue-50 hover:border hover:border-blue-200 border border-transparent transition-all duration-150 mt-4"
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 border border-transparent transition-all duration-200 mt-4"
           >
             <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-500 flex items-center justify-center flex-shrink-0">
               <HelpCircle className="w-4 h-4" />
@@ -173,10 +173,10 @@ export default function AdminLayout() {
         </nav>
 
         {/* 退出登录 */}
-        <div className="p-3 border-t border-gray-100">
+        <div className="p-3 border-t border-slate-800">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-red-50 hover:text-red-600 hover:border hover:border-red-200 border border-transparent transition-all duration-150"
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-slate-500 hover:text-red-400 hover:bg-white/5 border border-transparent transition-all duration-200"
           >
             <div className="w-8 h-8 rounded-lg bg-gray-100 text-gray-400 flex items-center justify-center flex-shrink-0">
               <LogOut className="w-4 h-4" />
