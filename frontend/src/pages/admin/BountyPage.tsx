@@ -92,9 +92,9 @@ export default function BountyPage() {
             { step: '03', icon: '💬', title: lang === 'en' ? 'Engagement / Interaction' : '平台联系直客 · 已互动',
               desc: lang === 'en' ? 'Platform contacts the direct customer. When they reply or show interest, the lead enters engaged status.' : '平台主动联系该直客。对方回复或表达兴趣后，线索进入已互动状态。',
               reward: lang === 'en' ? '+ ¥50 FROZEN' : '+ ¥50 冻结', color: 'border-amber-400 bg-amber-50' },
-            { step: '04', icon: '💰', title: lang === 'en' ? 'Deal Closed → Cash Unlocked' : '成交 → 全部解冻转现金',
-              desc: lang === 'en' ? 'When the lead converts to an actual deal, ALL frozen cash (30+50=80) is unlocked and available for payout. The more leads you submit, the more you earn.' : '线索成交后，全部冻结金额（30+50=80元）解冻转为可提现金。提交越多，赚得越多，上不封顶。',
-              reward: lang === 'en' ? '💰 ¥80+ UNLOCKED' : '💰 ¥80+ 解冻可提', color: 'border-emerald-400 bg-emerald-50' },
+            { step: '04', icon: '💰', title: lang === 'en' ? 'Deal Closed → Profit Share Unlocked' : '成交 → 利润分红解锁',
+              desc: lang === 'en' ? 'Lead converted to actual deal! You earn the HIGHER of: ¥1,000 cash reward OR 25% of the deal profit. Previous frozen amounts (¥80) count toward the final payout. Example: deal profit ¥10,000 → you earn ¥2,500 (25%) > ¥1,000, so you get ¥2,500.' : '线索成功成交！贡献者获得 ¥1,000 元 或 该笔利润的 25%，以两者高者为准。前期冻结的 ¥80 计入最终分红。例：成交利润 ¥10,000 → 你得 ¥2,500（25%）> ¥1,000，按 ¥2,500 发放。',
+              reward: lang === 'en' ? '💰 ¥1,000 or 25% profit' : '💰 ¥1,000 或 25%利润分红', color: 'border-emerald-400 bg-emerald-50' },
           ].map((item, i) => (
             <div key={i} className={`flex items-start gap-4 rounded-xl border-2 p-4 ${item.color}`}>
               <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-lg font-black text-slate-700 flex-shrink-0 shadow-sm">
