@@ -73,25 +73,63 @@ export default function BountyPage() {
         </div>
       </div>
 
-      {/* 规则说明 */}
-      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl border-2 border-amber-200 p-5">
-        <h3 className="text-sm font-black text-amber-800 mb-3">📋 {lang === 'en' ? 'Reward Rules' : '悬赏规则'}</h3>
-        <div className="grid grid-cols-3 gap-3 text-center text-sm">
+      {/* 全民悬赏规则 */}
+      <div className="bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 rounded-2xl border-2 border-amber-300 p-6">
+        <div className="flex items-center gap-2 mb-5">
+          <span className="text-2xl">📋</span>
+          <h3 className="text-lg font-black text-amber-900">{lang === 'en' ? 'Bounty Reward Policy' : '全民悬赏 · 全程奖励政策'}</h3>
+        </div>
+
+        {/* 流程步骤 */}
+        <div className="space-y-4">
           {[
-            { step: '1', label: lang === 'en' ? 'Submit Lead' : '提交线索', reward: lang === 'en' ? 'Pending review' : '待核验' },
-            { step: '2', label: lang === 'en' ? 'Verified' : '核验通过', reward: '+30元 冻结', cls: 'text-blue-700' },
-            { step: '3', label: lang === 'en' ? 'Engaged' : '已互动', reward: '+50元 冻结', cls: 'text-amber-700' },
-          ].map((r, i) => (
-            <div key={i} className="bg-white rounded-xl p-3 border border-amber-100">
-              <div className="text-xs text-slate-400">Step {r.step}</div>
-              <div className="font-bold mt-1">{r.label}</div>
-              <div className={`text-xs mt-0.5 font-black ${r.cls || 'text-slate-500'}`}>{r.reward}</div>
+            { step: '01', icon: '📝', title: lang === 'en' ? 'Submit a Lead' : '提交海外直客线索',
+              desc: lang === 'en' ? 'Submit company name, country, port, goods info. No limit on submissions.' : '提交海外收货人公司名、国家、目的港、品类等信息。不限提交次数，多多益善。',
+              reward: '', color: 'border-slate-300 bg-white' },
+            { step: '02', icon: '🔍', title: lang === 'en' ? 'AI + Manual Verification' : 'AI + 人工核验',
+              desc: lang === 'en' ? 'System checks data validity. Verified leads earn rewards. Invalid leads are rejected with explanation.' : '平台核验线索真实性。核验通过即获奖励，无效线索会注明原因驳回。',
+              reward: lang === 'en' ? '+ ¥30 FROZEN' : '+ ¥30 冻结', color: 'border-blue-400 bg-blue-50' },
+            { step: '03', icon: '💬', title: lang === 'en' ? 'Engagement / Interaction' : '平台联系直客 · 已互动',
+              desc: lang === 'en' ? 'Platform contacts the direct customer. When they reply or show interest, the lead enters engaged status.' : '平台主动联系该直客。对方回复或表达兴趣后，线索进入已互动状态。',
+              reward: lang === 'en' ? '+ ¥50 FROZEN' : '+ ¥50 冻结', color: 'border-amber-400 bg-amber-50' },
+            { step: '04', icon: '💰', title: lang === 'en' ? 'Deal Closed → Cash Unlocked' : '成交 → 全部解冻转现金',
+              desc: lang === 'en' ? 'When the lead converts to an actual deal, ALL frozen cash (30+50=80) is unlocked and available for payout. The more leads you submit, the more you earn.' : '线索成交后，全部冻结金额（30+50=80元）解冻转为可提现金。提交越多，赚得越多，上不封顶。',
+              reward: lang === 'en' ? '💰 ¥80+ UNLOCKED' : '💰 ¥80+ 解冻可提', color: 'border-emerald-400 bg-emerald-50' },
+          ].map((item, i) => (
+            <div key={i} className={`flex items-start gap-4 rounded-xl border-2 p-4 ${item.color}`}>
+              <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-lg font-black text-slate-700 flex-shrink-0 shadow-sm">
+                {item.step}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-base mr-1">{item.icon}</span>
+                  <h4 className="text-sm font-black text-slate-800">{item.title}</h4>
+                  {item.reward && (
+                    <span className={`text-xs font-black px-2 py-0.5 rounded-full ${
+                      item.reward.includes('FROZEN') || item.reward.includes('冻结') ? 'bg-amber-100 text-amber-700' :
+                      item.reward.includes('UNLOCKED') || item.reward.includes('解冻') ? 'bg-emerald-500 text-white' : ''
+                    }`}>{item.reward}</span>
+                  )}
+                </div>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">{item.desc}</p>
+              </div>
             </div>
           ))}
         </div>
-        <p className="text-xs text-amber-600 mt-3 text-center">
-          {lang === 'en' ? '💰 Conversion unlocks all frozen cash. 1 point = 1 RMB.' : '💰 成交后全部冻结金额解锁转为现金。积分=冻结现金，仅记账不可消费。'}
-        </p>
+
+        {/* 重要说明 */}
+        <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+          {[
+            { icon: '🔒', zh: '冻结金额不可消费、不可提现，仅作为记账凭证', en: 'Frozen cash is bookkeeping only — no spending or withdrawal' },
+            { icon: '📈', zh: '1积分 = 1元人民币，成交后全额解锁', en: '1 point = 1 RMB, fully unlocked on deal close' },
+            { icon: '🚫', zh: '虚假线索一经发现，冻结清零并取消资格', en: 'Fraudulent leads result in forfeiture and disqualification' },
+          ].map((item, i) => (
+            <div key={i} className="bg-white/70 rounded-lg px-3 py-2 border border-amber-200">
+              <span className="mr-1">{item.icon}</span>
+              <span className="text-amber-800">{lang === 'en' ? item.en : item.zh}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* 提交表单 */}
