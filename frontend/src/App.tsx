@@ -57,6 +57,7 @@ const FrequentPartnersPage = lazy(() => import('./pages/admin/FrequentPartnersPa
 const AdminCompanyProfilePage = lazy(() => import('./pages/admin/AdminCompanyProfilePage'));
 const CustomerFinderPage = lazy(() => import('./pages/admin/CustomerFinderPage'));
 const ConsigneePoolPage = lazy(() => import('./pages/admin/ConsigneePoolPage'));
+const BountyPage = lazy(() => import('./pages/admin/BountyPage'));
 
 function PageLoading() {
   return <div className="flex items-center justify-center py-20"><div className="w-6 h-6 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" /></div>;
@@ -171,6 +172,7 @@ export default function App() {
             <Route path="/admin/company-profile" element={<ProtectedRoute><AdminCompanyProfilePage /></ProtectedRoute>} />
             <Route path="/admin/customer-finder" element={<ProtectedRoute><CustomerFinderPage /></ProtectedRoute>} />
             <Route path="/admin/consignee-pool" element={<ProtectedRoute><ConsigneePoolPage /></ProtectedRoute>} />
+            <Route path="/admin/bounty" element={<ProtectedRoute><BountyPage /></ProtectedRoute>} />
           </Route>
 
           {/* 404 */}

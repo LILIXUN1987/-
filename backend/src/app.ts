@@ -44,6 +44,7 @@ import aiAskRoutes from './routes/aiAsk.routes';
 import planRoutes from './routes/plan.routes';
 import directoryRoutes from './routes/directory.routes';
 import consigneeRoutes from './routes/consignees.routes';
+import bountyRoutes from './routes/bounty.routes';
 
 const app = express();
 
@@ -192,6 +193,7 @@ app.use('/api/ai', aiAskRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/directory', directoryRoutes);
 app.use('/api/consignees', consigneeRoutes);
+app.use('/api/bounty', bountyRoutes);
 
 // ── 生产环境：服务前端静态文件 ──
 const frontendDist = path.resolve(__dirname, '../../frontend/dist');
