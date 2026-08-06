@@ -90,7 +90,8 @@ export default function AdminLayout() {
                user?.role === 'lawyer' ? t(AdminT.roleLabelLawyer, lang) :
                user?.role === 'inspector' ? t(AdminT.roleLabelInspector, lang) :
                user?.role === 'insurer' ? t(AdminT.roleLabelInsurer, lang) :
-               user?.role === 'overseas_agent' ? t(AdminT.roleLabelOverseasAgent, lang) : ''}
+               user?.role === 'overseas_agent' ? t(AdminT.roleLabelOverseasAgent, lang) :
+               user?.role === 'bounty_hunter' ? '🎯 赏金猎人' : ''}
             </span>
             {user?.is_newbie && (
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/30 text-amber-200 font-medium">{t(AdminT.newbieBadge, lang)}</span>

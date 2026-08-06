@@ -41,7 +41,7 @@ router.post('/public-submit', async (req, res) => {
         phone: phone?.trim() || null,
         email: email?.trim()?.toLowerCase() || null,
         email_verified: email?.trim() ? 1 : 0,
-        role: 'forwarder', status: 'approved',
+        role: 'bounty_hunter', status: 'approved',
         trial_end: new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0],
         referral_code: 'RF' + Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join(''),
         created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
@@ -68,7 +68,7 @@ router.post('/public-submit', async (req, res) => {
               <p style="color:#9ca3af;font-size:12px;margin-top:16px">登录后可查看线索核验进度和奖励余额。</p>
             </div>`,
           });
-        } catch {}
+        } catch (e: any) { console.error('[bounty] 邮件发送失败:', email, e.message); }
       }
     }
 

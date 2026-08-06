@@ -20,6 +20,7 @@ export function useNavItems() {
   const isOverseasAgent = rc.isOverseasAgent;
   const isBroker = rc.isBroker;
   const isLawyer = rc.isLawyer;
+  const isBountyHunter = rc.isBountyHunter;
 
   const restrictedItems: any[] = isRestricted ? [
     { to: '/admin/port-services', label: lang === 'en' ? 'Port Services' : '口岸服务', icon: Search },
@@ -53,6 +54,10 @@ export function useNavItems() {
     { to: '/admin/port-services', label: lang === 'en' ? 'Port Services' : '口岸服务', icon: Search },
     { to: '/admin/company-profile', label: lang === 'en' ? 'Company Page' : '公司主页', icon: Building2 },
     { to: '/admin/tools', label: lang === 'en' ? 'Tools' : '工具箱', icon: Bookmark },
+    ...(FEATURES.INBOX ? [{ to: '/admin/inbox', label: t(AdminT.inbox, lang), icon: Mail }] : []),
+    { to: '/admin/profile', label: t(AdminT.profile, lang), icon: User },
+  ] : isBountyHunter ? [
+    { to: '/admin/dashboard', label: lang === 'en' ? '🎯 Bounty' : '🎯 悬赏中心', icon: LayoutDashboard },
     ...(FEATURES.INBOX ? [{ to: '/admin/inbox', label: t(AdminT.inbox, lang), icon: Mail }] : []),
     { to: '/admin/profile', label: t(AdminT.profile, lang), icon: User },
   ] : [

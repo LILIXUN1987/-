@@ -1,7 +1,7 @@
 // ════════════════════════════════════════════
 // 角色类型体系
 // ════════════════════════════════════════════
-export const USER_ROLES = ['admin', 'forwarder', 'trader', 'lawyer', 'inspector', 'insurer', 'overseas_agent', 'broker'] as const;
+export const USER_ROLES = ['admin', 'forwarder', 'trader', 'lawyer', 'inspector', 'insurer', 'overseas_agent', 'broker', 'bounty_hunter'] as const;
 export type UserRole = typeof USER_ROLES[number];
 
 export const RoleGroup = {
@@ -26,6 +26,7 @@ export interface RoleChecks {
   isInsurer: boolean;
   isOverseasAgent: boolean;
   isBroker: boolean;
+  isBountyHunter: boolean;
   isBusiness: boolean;
   isRestricted: boolean;
 }
@@ -40,6 +41,7 @@ export function getRoleChecks(role: string | undefined): RoleChecks {
     isInsurer: role === 'insurer',
     isOverseasAgent: role === 'overseas_agent',
     isBroker: role === 'broker',
+    isBountyHunter: role === 'bounty_hunter',
     isBusiness: isBusinessRole(role),
     isRestricted: isRestrictedRole(role),
   };
