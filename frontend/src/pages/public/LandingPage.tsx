@@ -177,6 +177,77 @@ const STATS = [
   { icon: Globe, labelZh: '覆盖国家', labelEn: 'Countries', value: '50+' },
 ];
 
+/* ── 赏金猎人组件 ── */
+function BountyWidget() {
+  const [form, setForm] = useState({ company_name: '', country: '', pod: '', goods_guess: '', phone: '', email: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+  const t = (zh: string, en: string) => {
+    try { const s = useAuthStore.getState?.(); return (s as any)?.lang === 'en' ? en : zh; } catch { return zh; }
+  };
+
+  const handleSubmit = async () => {
+    if (!form.company_name.trim()) return;
+    setSubmitting(true);
+    try {
+      const client = (await import('../../api/client')).default;
+      await client.post('/bounty/public-submit', form);
+      setDone(true);
+    } catch {}
+    setSubmitting(false);
+  };
+
+  if (done) return (
+    <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-300 rounded-2xl p-6 text-center">
+      <span className="text-3xl">🎉</span>
+      <h3 className="text-lg font-black text-amber-800 mt-2">线索已提交！</h3>
+      <p className="text-sm text-amber-600 mt-1">我们将在24小时内核验。如有邮箱，密码已发送。</p>
+      <button onClick={() => { setDone(false); setForm({ company_name: '', country: '', pod: '', goods_guess: '', phone: '', email: '' }); }}
+        className="text-sm font-bold text-amber-700 mt-3 underline">再提交一条</button>
+    </div>
+  );
+
+  return (
+    <div className="bg-gradient-to-br from-amber-400 via-orange-400 to-yellow-500 rounded-2xl p-6 shadow-xl shadow-amber-200">
+      <div className="flex items-center gap-3 mb-4">
+        <span className="text-2xl">🎯</span>
+        <div>
+          <h3 className="text-lg font-black text-white">{t('赏金猎人 · 赚现金', 'Bounty Hunter · Earn Cash')}</h3>
+          <p className="text-sm text-white/80">{t('提交海外直客线索，成交最高得 ¥1,000 或 25% 利润分红', 'Submit overseas leads — earn up to ¥1,000 or 25% profit share')}</p>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
+        <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
+          placeholder={t('公司名 *', 'Company Name *')} value={form.company_name}
+          onChange={e => setForm(f => ({ ...f, company_name: e.target.value }))} />
+        <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
+          placeholder={t('国家', 'Country')} value={form.country}
+          onChange={e => setForm(f => ({ ...f, country: e.target.value }))} />
+        <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white uppercase"
+          placeholder={t('目的港 如JFK', 'Port e.g. JFK')} value={form.pod}
+          onChange={e => setForm(f => ({ ...f, pod: e.target.value }))} />
+        <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
+          placeholder={t('品类 如纺织品', 'Goods e.g. textiles')} value={form.goods_guess}
+          onChange={e => setForm(f => ({ ...f, goods_guess: e.target.value }))} />
+        <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
+          placeholder={t('手机号', 'Phone')} value={form.phone}
+          onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
+        <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
+          placeholder={t('邮箱 (收密码)', 'Email (get password)')} value={form.email}
+          onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+      </div>
+      <button onClick={handleSubmit} disabled={submitting || !form.company_name.trim()}
+        className="w-full py-3 bg-white text-amber-700 font-black text-base rounded-xl hover:bg-amber-50 disabled:opacity-50 transition-all shadow-lg">
+        {submitting ? '⏳ 提交中...' : t('🎯 提交线索 · 赚取赏金', '🎯 Submit Lead · Earn Bounty')}
+      </button>
+      <p className="text-[11px] text-white/60 text-center mt-2">
+        {t('无需注册，提交即自动开户。线索核验通过即获 ¥30 奖励。', 'No signup needed. Auto-account created. ¥30 reward on verification.')}
+      </p>
+    </div>
+  );
+}
+
+
 export default function LandingPage() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const lang = useAuthStore((s) => s.lang);
@@ -314,6 +385,11 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* ═══ 赏金猎人入口 ═══ */}
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <BountyWidget />
       </section>
 
       {/* ═══════════════════════════════════════
