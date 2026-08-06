@@ -230,10 +230,10 @@ function BountyWidget() {
           placeholder={t('品类 如纺织品', 'Goods e.g. textiles')} value={form.goods_guess}
           onChange={e => setForm(f => ({ ...f, goods_guess: e.target.value }))} />
         <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
-          placeholder={t('手机号', 'Phone')} value={form.phone}
+          placeholder={t('你的手机号', 'Your Phone')} value={form.phone}
           onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
         <input className="px-3 py-2.5 rounded-xl bg-white/20 backdrop-blur text-white placeholder:text-white/60 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
-          placeholder={t('邮箱 (收密码)', 'Email (get password)')} value={form.email}
+          placeholder={t('你的邮箱(收密码)', 'Your Email')} value={form.email}
           onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
       </div>
       <button onClick={handleSubmit} disabled={submitting || !form.company_name.trim()}

@@ -11,6 +11,18 @@ export default function BountyPage() {
   const [leads, setLeads] = useState<any[]>([]);
   const [account, setAccount] = useState({ pending_cash: 0, total_earned: 0 });
   const [loading, setLoading] = useState(true);
+  const user = useAuthStore((s) => s.user);
+  const isAdmin = user?.role === 'admin';
+  const [pendingLeads, setPendingLeads] = useState<any[]>([]);
+  const [adminLoading, setAdminLoading] = useState(false);
+
+  const fetchPending = async () => {
+    if (!isAdmin) return;
+    setAdminLoading(true);
+    try { const r = await client.get('/bounty/pending'); setPendingLeads(r.data.data || []); } catch {}
+    setAdminLoading(false);
+  };
+  useEffect(() => { fetchPending(); }, [isAdmin]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -204,6 +216,52 @@ export default function BountyPage() {
           </div>
         )}
       </div>
+
+      {/* ── 管理员：待核验线索池 ── */}
+      {isAdmin && (
+        <div className="bg-white rounded-2xl border-2 border-red-200 shadow-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-red-500 to-orange-500 px-5 py-3 text-white">
+            <h3 className="text-sm font-black">🛡️ {lang === 'en' ? 'Admin: Pending Review' : '管理员审核台'}</h3>
+            <p className="text-xs text-red-100">{pendingLeads.length} {lang === 'en' ? 'pending leads' : '条待核验线索'}</p>
+          </div>
+          {adminLoading ? (
+            <div className="flex justify-center py-12"><Loader2 className="w-5 h-5 animate-spin text-slate-300" /></div>
+          ) : pendingLeads.length === 0 ? (
+            <div className="text-center py-12 text-slate-400">
+              <CheckCircle className="w-10 h-10 mx-auto mb-3 opacity-20" />
+              <p>{lang === 'en' ? 'All clear! No pending leads.' : '暂无待核验线索'}</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-slate-50">
+              {pendingLeads.map((l: any) => (
+                <div key={l.id} className="flex items-center gap-4 px-5 py-4 hover:bg-slate-50 transition-colors">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-bold text-slate-800">{l.company_name}</div>
+                    <div className="text-xs text-slate-500 flex flex-wrap gap-2 mt-0.5">
+                      {l.country && <span>🌍 {l.country}</span>}
+                      {l.pod && <span>📍 {l.pod}</span>}
+                      {l.goods_guess && <span>📦 {l.goods_guess}</span>}
+                      <span className="text-slate-400"><Clock className="w-3 h-3 inline mr-0.5" />{l.created_at?.substring(0, 10)}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <button onClick={async () => {
+                      try { await client.post(`/bounty/verify/${l.id}`, { action: 'approve' }); toast.success('已通过 +30元'); fetchPending(); fetchData(); } catch {}
+                    }} className="text-xs font-bold bg-emerald-500 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-600 transition-colors">
+                      ✅ {lang === 'en' ? 'Approve' : '通过'}
+                    </button>
+                    <button onClick={async () => {
+                      try { await client.post(`/bounty/verify/${l.id}`, { action: 'reject' }); toast.success('已拒绝'); fetchPending(); } catch {}
+                    }} className="text-xs font-bold bg-slate-200 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-300 transition-colors">
+                      ✕ {lang === 'en' ? 'Reject' : '拒绝'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
