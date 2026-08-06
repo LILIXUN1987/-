@@ -24,6 +24,9 @@ export default function ProfilePage() {
   const rc = getRoleChecks(user?.role);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // 赏金猎人：极简设置页
+  if (rc.isBountyHunter) return <BountyHunterProfile />;
+
   // 网安审核模式：非管理员隐藏个人信息
   if (FEATURES.AUDIT_MODE && !rc.isAdmin) {
     return (
@@ -591,6 +594,57 @@ export default function ProfilePage() {
             </details>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/** 赏金猎人极简设置 */
+function BountyHunterProfile() {
+  const { user, lang } = useAuthStore();
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [payment, setPayment] = useState((user as any)?.payment_account || '');
+  const [saving, setSaving] = useState(false);
+  const [done, setDone] = useState(false);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const { default: client } = await import('../../api/client');
+      await client.put('/auth/profile', { phone: phone.trim(), payment_account: payment.trim() });
+      setDone(true); setTimeout(() => setDone(false), 2000);
+    } catch {}
+    setSaving(false);
+  };
+
+  return (
+    <div className="max-w-md mx-auto pt-8">
+      <h1 className="text-xl font-black text-slate-900 mb-6">👤 个人设置</h1>
+
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div>
+          <label className="text-xs font-medium text-slate-500 mb-1 block">用户名</label>
+          <input className="input-field bg-slate-50 text-slate-500 cursor-not-allowed w-full" value={user?.username || ''} disabled />
+        </div>
+        <div>
+          <label className="text-xs font-medium text-slate-500 mb-1 block">📱 手机号</label>
+          <input className="input-field w-full" value={phone} onChange={e => setPhone(e.target.value)} placeholder="用于接收奖励通知" />
+        </div>
+        <div>
+          <label className="text-xs font-medium text-slate-500 mb-1 block">📧 邮箱</label>
+          <input className="input-field bg-slate-50 text-slate-500 cursor-not-allowed w-full" value={user?.email || ''} disabled />
+        </div>
+        <div className="border-t border-slate-100 pt-4">
+          <label className="text-xs font-bold text-amber-700 mb-1 block">💰 转款账号（成交后打款用）</label>
+          <p className="text-[11px] text-slate-400 mb-2">填写你的支付宝/微信/银行卡号，成交后平台按此账号打款</p>
+          <textarea className="input-field w-full min-h-[80px] text-sm resize-none"
+            value={payment} onChange={e => setPayment(e.target.value)}
+            placeholder="如：支付宝 138xxxx / 招商银行 6222xxxx / 微信 138xxxx" />
+        </div>
+        <button onClick={handleSave} disabled={saving}
+          className="w-full py-2.5 bg-indigo-600 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-all">
+          {done ? '✅ 已保存' : saving ? '保存中...' : '保存设置'}
+        </button>
       </div>
     </div>
   );

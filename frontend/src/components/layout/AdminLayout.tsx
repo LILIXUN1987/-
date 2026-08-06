@@ -96,7 +96,7 @@ export default function AdminLayout() {
             {user?.is_newbie && (
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/30 text-amber-200 font-medium">{t(AdminT.newbieBadge, lang)}</span>
             )}
-            {planStatus && (
+            {planStatus && user?.role !== 'bounty_hunter' && (
               <span className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full font-bold border ${
                 planStatus.tier !== 'free' && !planStatus.isExpired
                   ? 'bg-green-500 text-white border-green-300 shadow-sm'
@@ -114,7 +114,7 @@ export default function AdminLayout() {
               </span>
             )}
             {/* ── 试用剩余天数 ── */}
-            {planStatus?.trialEnd && (() => {
+            {user?.role !== 'bounty_hunter' && planStatus?.trialEnd && (() => {
               const now = new Date();
               const end = new Date((planStatus.trialEnd as string) + 'T23:59:59');
               const remaining = Math.max(0, Math.ceil((end.getTime() - now.getTime()) / 86400000));
