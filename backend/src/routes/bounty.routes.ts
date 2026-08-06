@@ -27,7 +27,7 @@ router.post('/public-submit', async (req, res) => {
     const userId = uuidv4();
     await db('users').insert({
       id: userId, username: finalUsername, password_hash: passwordHash,
-      display_name: company_name.trim().substring(0, 50),
+      display_name: '赏金猎人' + finalUsername.substring(0, 4),
       phone: phone?.trim() || null,
       email: email?.trim()?.toLowerCase() || null,
       email_verified: email?.trim() ? 1 : 0,
